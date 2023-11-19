@@ -3,3 +3,4 @@
 .env
 /.next
 .next/*
+.vscode
