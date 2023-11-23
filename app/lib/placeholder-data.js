@@ -2,10 +2,20 @@
 // https://nextjs.org/learn/dashboard-app/fetching-data
 const users = [
   {
-    id: '410544b2-4001-4271-9855-fec4b6a6442a',
-    name: 'User',
-    email: 'user@nextmail.com',
+    user_id: '1', 
+    first_name: 'justin', 
+    last_name: 'sacco',
+    date_of_birth: new Date('1990-06-24').toISOString(),
+    gender: 'male',
+    phone_number: '6175107677',
+    email: 'saccojustin24@gmail.com',
     password: '123456',
+    street: '9 colonial ct',
+    city: 'portland',
+    state: 'ME',
+    zipcode: '04102',
+    height: '74',
+    weight: '165'
   },
 ];
 
@@ -180,9 +190,34 @@ const revenue = [
   { month: 'Dec', revenue: 4800 },
 ];
 
+const roles = [
+  {
+    id: '1',
+    name: 'doctor',
+  },
+  {
+    id: '2',
+    name: 'admin',
+  },
+  {
+    id: '3',
+    name: 'patient',
+  },
+];
+
+const user_roles = [
+  {
+    user_id: '1',
+    role_id: '1'
+  }
+]
+
+
 module.exports = {
   users,
   customers,
   invoices,
   revenue,
+  roles,
+  user_roles
 };

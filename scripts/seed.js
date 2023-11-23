@@ -4,19 +4,30 @@ const {
   customers,
   revenue,
   users,
+  roles,
+  user_roles
 } = require('../app/lib/placeholder-data.js');
 const bcrypt = require('bcrypt');
 
 async function seedUsers(client) {
   try {
-    await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
     // Create the "users" table if it doesn't exist
     const createTable = await client.sql`
       CREATE TABLE IF NOT EXISTS users (
-        id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-        name VARCHAR(255) NOT NULL,
-        email TEXT NOT NULL UNIQUE,
-        password TEXT NOT NULL
+        user_id INT PRIMARY KEY UNIQUE,
+        first_name VARCHAR(50) NOT NULL,
+        last_name VARCHAR(50) NOT NULL,
+        date_of_birth DATE,
+        gender VARCHAR(10),
+        phone_number VARCHAR(20),
+        email VARCHAR(100) UNIQUE,
+        password TEXT NULL,
+        street VARCHAR(100),
+        city VARCHAR(50),
+        state VARCHAR(50),
+        zipcode VARCHAR(20),
+        height DECIMAL(5, 2),
+        weight DECIMAL(5, 2)
       );
     `;
 
@@ -27,9 +38,39 @@ async function seedUsers(client) {
       users.map(async (user) => {
         const hashedPassword = await bcrypt.hash(user.password, 10);
         return client.sql`
-        INSERT INTO users (id, name, email, password)
-        VALUES (${user.id}, ${user.name}, ${user.email}, ${hashedPassword})
-        ON CONFLICT (id) DO NOTHING;
+        INSERT INTO users (
+          user_id, 
+          first_name, 
+          last_name,
+          date_of_birth,
+          gender,
+          phone_number,
+          email,
+          password,
+          street,
+          city,
+          state,
+          zipcode,
+          height,
+          weight
+        )
+        VALUES (
+          ${user.user_id}, 
+          ${user.first_name}, 
+          ${user.last_name},
+          ${user.date_of_birth}, 
+          ${user.gender}, 
+          ${user.phone_number}, 
+          ${user.email}, 
+          ${hashedPassword}, 
+          ${user.street}, 
+          ${user.city}, 
+          ${user.state}, 
+          ${user.zipcode}, 
+          ${user.height}, 
+          ${user.weight}
+        )
+        ON CONFLICT (user_id) DO NOTHING;
       `;
       }),
     );
@@ -42,6 +83,78 @@ async function seedUsers(client) {
     };
   } catch (error) {
     console.error('Error seeding users:', error);
+    throw error;
+  }
+}
+
+async function seedRoles(client) {
+  try {
+    // Create the "roles" table if it doesn't exist
+    const createTable = await client.sql`
+      CREATE TABLE IF NOT EXISTS roles (
+        role_id INT PRIMARY KEY UNIQUE,
+        role_name VARCHAR(50) UNIQUE NOT NULL
+      );
+    `;
+
+    console.log(`Created "roles" table`);
+
+    // Insert data into the "roles" table
+    const insertedRoles = await Promise.all(
+      roles.map(async (role) => {
+        return client.sql`
+        INSERT INTO roles (role_id, role_name)
+        VALUES (${role.id}, ${role.name})
+        ON CONFLICT (role_id) DO NOTHING;
+      `;
+      }),
+    );
+
+    console.log(`Seeded ${insertedRoles.length} roles`);
+
+    return {
+      createTable,
+      roles: insertedRoles,
+    };
+  } catch (error) {
+    console.error('Error seeding roles:', error);
+    throw error;
+  }
+}
+
+async function seedUserRoles(client) {
+  try {
+    // Create the "user_roles" table if it doesn't exist
+    const createTable = await client.sql`
+      CREATE TABLE IF NOT EXISTS user_roles (
+        user_id INT,
+        role_id INT,
+        PRIMARY KEY (user_id, role_id),
+        FOREIGN KEY (user_id) REFERENCES Users(user_id),
+        FOREIGN KEY (role_id) REFERENCES Roles(role_id)
+      );
+    `;
+
+    console.log(`Created "user_roles" table`);
+
+    // Insert data into the "user_roles" table
+    const insertedUserRoles = await Promise.all(
+      user_roles.map(async (user_role) => {
+        return client.sql`
+        INSERT INTO user_roles (user_id, role_id)
+        VALUES (${user_role.user_id}, ${user_role.role_id})
+      `;
+      }),
+    );
+
+    console.log(`Seeded ${insertedUserRoles.length} user_roles`);
+
+    return {
+      createTable,
+      roles: insertedUserRoles,
+    };
+  } catch (error) {
+    console.error('Error seeding user_roles:', error);
     throw error;
   }
 }
@@ -163,11 +276,13 @@ async function seedRevenue(client) {
 async function main() {
   const client = await db.connect();
 
+  // await seedUsers(client);
+  // await seedCustomers(client);
+  // await seedInvoices(client);
+  // await seedRevenue(client);
   await seedUsers(client);
-  await seedCustomers(client);
-  await seedInvoices(client);
-  await seedRevenue(client);
-
+  await seedRoles(client);
+  await seedUserRoles(client);
   await client.end();
 }
 
