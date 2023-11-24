@@ -5,18 +5,23 @@
 export type User = {
   id: string;
   firstName: string;
-  last_name: string;
-  date_of_birth: Date;
+  lastName: string;
+  dateOfBirth: Date;
   gender: string;
-  phone_number: string;
+  phoneNumber: string;
   email: string;
+  emailVerified: string;
   password: string;
   street: string;
   city: string;
   state: string;
-  zipcode: string;
+  zipCode: string;
   height: number;
   weight: number;
+  Image: any;
+  Accouts: any;
+  Sessions: any;
+  Roles: any;
 };
 
 export type Customer = {

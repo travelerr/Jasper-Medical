@@ -11,6 +11,7 @@ npm 8.19.2
 npx prisma format
 npx prisma db push
 npx prisma studio
+npx prisma generate
 
 ## Built off Next.js App
 
