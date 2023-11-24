@@ -3,20 +3,20 @@
 // For simplicity of teaching, we're manually defining these types.
 // However, these types are generated automatically if you're using an ORM such as Prisma.
 export type User = {
-  user_id: string, 
-  first_name: string, 
-  last_name: string,
-  date_of_birth: Date,
-  gender: string,
-  phone_number: string,
-  email: string,
-  password: string,
-  street: string,
-  city: string,
-  state: string,
-  zipcode: string,
-  height: number,
-  weight: number
+  id: string;
+  firstName: string;
+  last_name: string;
+  date_of_birth: Date;
+  gender: string;
+  phone_number: string;
+  email: string;
+  password: string;
+  street: string;
+  city: string;
+  state: string;
+  zipcode: string;
+  height: number;
+  weight: number;
 };
 
 export type Customer = {
@@ -33,7 +33,7 @@ export type Invoice = {
   date: string;
   // In TypeScript, this is called a string union type.
   // It means that the "status" property can only be one of the two strings: 'pending' or 'paid'.
-  status: 'pending' | 'paid';
+  status: "pending" | "paid";
 };
 
 export type Revenue = {
@@ -50,7 +50,7 @@ export type LatestInvoice = {
 };
 
 // The database returns a number for amount, but we later format it to a string with the formatCurrency function
-export type LatestInvoiceRaw = Omit<LatestInvoice, 'amount'> & {
+export type LatestInvoiceRaw = Omit<LatestInvoice, "amount"> & {
   amount: number;
 };
 
@@ -62,7 +62,7 @@ export type InvoicesTable = {
   image_url: string;
   date: string;
   amount: number;
-  status: 'pending' | 'paid';
+  status: "pending" | "paid";
 };
 
 export type CustomersTable = {
@@ -94,5 +94,5 @@ export type InvoiceForm = {
   id: string;
   customer_id: string;
   amount: number;
-  status: 'pending' | 'paid';
+  status: "pending" | "paid";
 };
