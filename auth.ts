@@ -10,11 +10,12 @@ import type { Adapter } from "@auth/core/adapters";
 
 async function getUser(email: string): Promise<User | undefined> {
   try {
-    const user = await sql`SELECT * from USERS where email=${email}`;
     const user2 = await prisma.user.findFirst({
       where: { email: email },
+      include: {
+        roles: true,
+      },
     });
-    console.log(user);
     console.log(user2);
     return user2 as User;
   } catch (error) {
