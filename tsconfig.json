@@ -26,6 +26,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
+    "types/**/*.ts",
     ".next/types/**/*.ts",
     "sql/placeholder-data.js",
     "sql/seed.js"
