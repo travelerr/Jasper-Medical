@@ -1,8 +1,4 @@
 import type { NextAuthConfig } from "next-auth";
-import { PrismaAdapter } from "@auth/prisma-adapter";
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
 
 export const authConfig = {
   pages: {
@@ -22,12 +18,12 @@ export const authConfig = {
     },
     jwt({ user, token }) {
       // @ts-ignore
-      if (user) token.role = user.roles;
+      if (user) token.roles = user.roles;
       return token;
     },
     session({ session, token }) {
       // @ts-ignore
-      session.user.role = token.role;
+      session.user.roles = token.roles;
       return session;
     },
   },

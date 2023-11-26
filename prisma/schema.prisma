@@ -40,13 +40,13 @@ model Session {
 }
 
 model User {
-  id            Int         @id @default(autoincrement())
+  id            Int               @id @default(autoincrement())
   firstName     String?
   lastName      String?
   dateOfBirth   DateTime?
   gender        String?
   phoneNumber   String?
-  email         String?     @unique
+  email         String?           @unique
   emailVerified DateTime?
   password      String?
   street        String?
@@ -58,8 +58,8 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
-  roles         Role[] // Added relationship to roles
-  UserRoles     UserRoles[]
+  roles         UserRole[]
+  appointments  UserAppointment[]
 
   @@map("users")
 }
@@ -74,19 +74,39 @@ model VerificationToken {
 }
 
 model Role {
-  id     Int         @id @default(autoincrement())
-  name   String      @unique
-  users  UserRoles[] // Added relationship to users
-  User   User?       @relation(fields: [userId], references: [id])
-  userId Int?
+  id   Int        @id @default(autoincrement())
+  name String     @unique
+  user UserRole[]
 }
 
-model UserRoles {
-  user_id Int
-  role_id Int
+model UserRole {
+  user   User @relation(fields: [userId], references: [id])
+  userId Int
 
-  user User @relation(fields: [user_id], references: [id])
-  role Role @relation(fields: [role_id], references: [id])
+  role   Role @relation(fields: [roleId], references: [id])
+  roleId Int
 
-  @@id([user_id, role_id])
+  @@id([userId, roleId])
+}
+
+model Appointment {
+  id          Int               @id @default(autoincrement())
+  startTime   DateTime
+  endTime     DateTime
+  description String?
+  status      String
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  cancelledAt DateTime?
+  user        UserAppointment[]
+}
+
+model UserAppointment {
+  appointment   Appointment @relation(fields: [appointmentId], references: [id])
+  appointmentId Int
+
+  user   User @relation(fields: [userId], references: [id])
+  userId Int
+
+  @@id([userId, appointmentId])
 }

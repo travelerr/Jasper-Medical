@@ -11,7 +11,11 @@ async function getUser(email: string): Promise<User | undefined> {
     const user = await prisma.user.findFirst({
       where: { email: email },
       include: {
-        roles: true,
+        roles: {
+          include: {
+            role: true, // Include the Role model to get the role names
+          },
+        },
       },
     });
     return user as User;
@@ -32,6 +36,7 @@ export const { auth, signIn, signOut } = NextAuth({
         if (parsedCredentials.success) {
           const { email, password } = parsedCredentials.data;
           const user = await getUser(email);
+          console.log(user);
           if (!user) return null;
           const passwordsMatch = await bcrypt.compare(
             password,

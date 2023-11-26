@@ -13,10 +13,11 @@ import { Role } from "next-auth";
 
 export default async function Page() {
   const session = await auth();
+  console.log(session?.user.roles[0]);
   return (
     <main>
       <h1 className={`${lusitana.className} mb-4 text-xl md:text-2xl`}>
-        {session?.user?.role.some((x: Role) => x.name === "doctor") ? (
+        {session?.user?.roles?.some((x: any) => x.role.name === "doctor") ? (
           <>Doctor Dashboard</>
         ) : (
           <>Patient Dshboard</>

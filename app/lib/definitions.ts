@@ -21,7 +21,12 @@ export type User = {
   Image: any;
   Accouts: any;
   Sessions: any;
-  Roles: any;
+  Roles: Array<Role>;
+};
+
+export type Role = {
+  id: number;
+  name: string;
 };
 
 export type Customer = {
