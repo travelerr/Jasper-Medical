@@ -1,4 +1,5 @@
 import type { NextAuthConfig } from "next-auth";
+import { checkUserForRole } from "./app/lib/utils";
 
 export const authConfig = {
   pages: {
@@ -7,12 +8,34 @@ export const authConfig = {
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
-      const isOnDashboard = nextUrl.pathname.startsWith("/dashboard");
+      const roles = auth?.user.roles;
+      const isOnDashboard =
+        nextUrl.pathname.startsWith("/patient") ||
+        nextUrl.pathname.startsWith("/doctor") ||
+        nextUrl.pathname.startsWith("/admin");
       if (isOnDashboard) {
-        if (isLoggedIn) return true;
+        if (
+          roles &&
+          checkUserForRole(roles, "doctor") &&
+          !nextUrl.pathname.startsWith("/doctor")
+        ) {
+          return Response.redirect(new URL("/doctor", nextUrl));
+        } else if (
+          roles &&
+          checkUserForRole(roles, "admin") &&
+          !nextUrl.pathname.startsWith("/admin")
+        ) {
+          return Response.redirect(new URL("/admin", nextUrl));
+        } else if (isLoggedIn) return true;
         return false; // Redirect unauthenticated users to login page
       } else if (isLoggedIn) {
-        return Response.redirect(new URL("/dashboard", nextUrl));
+        if (roles && checkUserForRole(roles, "doctor")) {
+          return Response.redirect(new URL("/doctor", nextUrl));
+        } else if (roles && checkUserForRole(roles, "admin")) {
+          return Response.redirect(new URL("/admin", nextUrl));
+        } else {
+          return Response.redirect(new URL("/patient", nextUrl));
+        }
       }
       return true;
     },
