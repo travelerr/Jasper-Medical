@@ -72,3 +72,18 @@ export const checkUserForRole = (roles: Array<Role>, role: string) => {
   if (roles.some((x: any) => x.role.name === role)) return true;
   return false;
 };
+
+export const formatAppointmentsForCalendar = (appointments: Array<any>) => {
+  const formattedAppointments = appointments?.map((item) => ({
+    id: item.appointment.id,
+    userId: item.userId,
+    start: new Date(item.appointment.startTime), // Rename startTime to start
+    end: new Date(item.appointment.endTime), // Rename endTime to end
+    title: item.appointment.description,
+    status: item.appointment.status,
+    createdAt: item.appointment.createdAt,
+    updatedAt: item.appointment.updatedAt,
+    cancelledAt: item.appointment.cancelledAt,
+  }));
+  return formattedAppointments;
+};

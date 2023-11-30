@@ -8,7 +8,7 @@ import {
   CardsSkeleton,
 } from "@/app/ui/skeletons";
 import { auth } from "../../../auth";
-import Calendar from "@/app/ui/doctor/calendar";
+import Calendar from "@/app/ui/doctor/calendar-component";
 
 export default async function Page() {
   const session = await auth();

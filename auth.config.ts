@@ -40,13 +40,17 @@ export const authConfig = {
       return true;
     },
     jwt({ user, token }) {
-      // @ts-ignore
-      if (user) token.roles = user.roles;
+      if (user) {
+        // @ts-ignore
+        token.roles = user.roles;
+        token.userId = user.id;
+      }
       return token;
     },
     session({ session, token }) {
       // @ts-ignore
       session.user.roles = token.roles;
+      session.user.id = Number(token.userId);
       return session;
     },
   },

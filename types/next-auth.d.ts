@@ -13,6 +13,7 @@ declare module "next-auth" {
 
   interface Session {
     user: {
+      id: number;
       roles: Array<Role>;
     };
   }
@@ -27,5 +28,6 @@ declare module "next-auth/jwt" {
 
   interface JWT {
     role: Array<Role>;
+    userId: number;
   }
 }
