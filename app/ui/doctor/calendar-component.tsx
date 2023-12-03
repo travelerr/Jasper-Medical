@@ -12,18 +12,22 @@ import { CreateAppointmentModal } from "@/app/ui/create-appointment-modal";
 
 interface ICalendarComponent {
   appointments: any[];
+  patients: any[];
 }
 
 const localizer = momentLocalizer(moment);
 
 export default function CalendarComponent(props: ICalendarComponent) {
-  const { appointments } = props;
+  const { appointments, patients } = props;
   const [myEvents, setEvents] = useState(appointments);
-  const [slotInfo, setSlotInfo] = useState({ start: null, end: null });
+  const [slotInfo, setSlotInfo] = useState({
+    start: new Date(),
+    end: new Date(),
+  });
   const [openModal, setOpenModal] = useState(false);
 
   const handleSelectSlot = useCallback(
-    ({ start, end }: { start: any; end: any }) => {
+    ({ start, end }: { start: Date; end: Date }) => {
       setSlotInfo({ start, end }); // Save the slot info
       setOpenModal(true); // Open the modal
     },
@@ -50,7 +54,13 @@ export default function CalendarComponent(props: ICalendarComponent) {
   return (
     <div className="lg:h-screen">
       {/* @TODO - if theres one one apt this will error */}
-      <CreateAppointmentModal show={openModal}></CreateAppointmentModal>
+      <CreateAppointmentModal
+        setOpenModal={setOpenModal}
+        openModal={openModal}
+        slotInfo={slotInfo}
+        dismissible={true}
+        patients={patients}
+      ></CreateAppointmentModal>
       <BigCalendar
         selectable
         localizer={localizer}

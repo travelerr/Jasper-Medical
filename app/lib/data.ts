@@ -7,10 +7,11 @@ import {
   InvoicesTable,
   LatestInvoiceRaw,
   Revenue,
+  UserAppointmentWithAppointment,
 } from "./definitions";
 import { formatCurrency } from "./utils";
 import prisma from "../../app/lib/prisma";
-import type { Appointment, User } from "@prisma/client";
+import type { User, UserAppointment } from "@prisma/client";
 
 export async function fetchRevenue() {
   // Add noStore() here prevent the response from being cached.
@@ -222,7 +223,7 @@ export async function fetchFilteredCustomers(query: string) {
   }
 }
 
-export async function getUserByEmail(email: string): Promise<User | undefined> {
+export async function getUserByEmail(email: string): Promise<User> {
   try {
     const user = await prisma.user.findFirst({
       where: { email: email },
@@ -236,12 +237,14 @@ export async function getUserByEmail(email: string): Promise<User | undefined> {
     });
     return user as User;
   } catch (error) {
-    console.error("Failed to fetach user:", error);
+    console.error("Failed to fetch user:", error);
     throw new Error("Failed to fetch user.");
   }
 }
 
-export async function getAppointmentsByUserID(userId: number): Promise<any[]> {
+export async function getAppointmentsByUserID(
+  userId: number
+): Promise<UserAppointmentWithAppointment[]> {
   try {
     const appointmentArray = await prisma.userAppointment.findMany({
       where: {
@@ -251,9 +254,29 @@ export async function getAppointmentsByUserID(userId: number): Promise<any[]> {
         appointment: true,
       },
     });
-    return appointmentArray as any;
+    return appointmentArray;
   } catch (error) {
-    console.error("Failed to fetach user:", error);
-    throw new Error("Failed to fetch user.");
+    console.error("Failed to fetch appointments:", error);
+    throw new Error("Failed to fetch appointments.");
+  }
+}
+
+export async function getPatients(): Promise<User[]> {
+  try {
+    const patients = await prisma.user.findMany({
+      where: {
+        roles: {
+          some: {
+            role: {
+              name: "patient",
+            },
+          },
+        },
+      },
+    });
+    return patients;
+  } catch (error) {
+    console.error("Failed to fetch patients:", error);
+    throw new Error("Failed to fetch patients.");
   }
 }

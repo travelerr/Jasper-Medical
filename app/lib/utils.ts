@@ -1,4 +1,9 @@
-import { Revenue, Role } from "./definitions";
+import { User } from "@prisma/client";
+import {
+  Revenue,
+  UserAppointmentWithAppointment,
+  UserWithRole,
+} from "./definitions";
 
 export const formatCurrency = (amount: number) => {
   return (amount / 100).toLocaleString("en-US", {
@@ -68,22 +73,37 @@ export const generatePagination = (currentPage: number, totalPages: number) => {
   ];
 };
 
-export const checkUserForRole = (roles: Array<Role>, role: string) => {
-  if (roles.some((x: any) => x.role.name === role)) return true;
+export const checkUserForRole = (roles: Array<UserWithRole>, role: string) => {
+  if (roles.some((x: UserWithRole) => x.role.name === role)) return true;
   return false;
 };
 
-export const formatAppointmentsForCalendar = (appointments: Array<any>) => {
+// Formater for Big Calendar
+export const formatAppointmentsForCalendar = (
+  appointments: Array<UserAppointmentWithAppointment>
+): Array<UserAppointmentWithAppointment> => {
   const formattedAppointments = appointments?.map((item) => ({
     id: item.appointment.id,
     userId: item.userId,
-    start: new Date(item.appointment.startTime), // Rename startTime to start
-    end: new Date(item.appointment.endTime), // Rename endTime to end
+    start: new Date(item.appointment.startTime),
+    end: new Date(item.appointment.endTime),
     title: item.appointment.description,
     status: item.appointment.status,
     createdAt: item.appointment.createdAt,
     updatedAt: item.appointment.updatedAt,
     cancelledAt: item.appointment.cancelledAt,
   }));
-  return formattedAppointments;
+  return formattedAppointments as any;
+};
+
+// Formater for Big Calendar
+export const formatPatientsForCalendar = (
+  patients: Array<User>
+): Array<any> => {
+  const formattedPatients = patients?.map((item) => ({
+    ...item,
+    weight: JSON.parse(JSON.stringify(item.weight)),
+    height: JSON.parse(JSON.stringify(item.height)),
+  }));
+  return formattedPatients;
 };

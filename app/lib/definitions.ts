@@ -1,32 +1,27 @@
 // This file contains type definitions for your data.
 // It describes the shape of the data, and what data type each property should accept.
 // For simplicity of teaching, we're manually defining these types.
-// However, these types are generated automatically if you're using an ORM such as Prisma.
-export type User = {
-  id: string;
-  firstName: string;
-  lastName: string;
-  dateOfBirth: Date;
-  gender: string;
-  phoneNumber: string;
-  email: string;
-  emailVerified: string;
-  password: string;
-  street: string;
-  city: string;
-  state: string;
-  zipCode: string;
-  height: number;
-  weight: number;
-  Image: any;
-  Accouts: any;
-  Sessions: any;
-  Roles: Array<Role>;
-};
+
+import { Appointment } from "@prisma/client";
 
 export type Role = {
   id: number;
   name: string;
+};
+
+export type UserWithRole = {
+  userId: number;
+  roleId: number;
+  role: {
+    id: number;
+    name: string;
+  };
+};
+
+export type UserAppointmentWithAppointment = {
+  appointmentId: number;
+  userId: number;
+  appointment: Appointment;
 };
 
 export type Customer = {
