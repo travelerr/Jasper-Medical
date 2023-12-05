@@ -14,15 +14,12 @@ export default async function Page() {
   appointments = formatAppointmentsForCalendar(appointments);
   let patients = await getPatients();
   patients = formatPatientsForCalendar(patients);
+
   return (
     <main>
       <div className="h-full">
         <Suspense fallback={<DashboardSkeleton />}>
-          <CalendarComponent
-            appointments={appointments}
-            patients={patients}
-            data-superjson
-          />
+          <CalendarComponent appointments={appointments} patients={patients} />
         </Suspense>
       </div>
     </main>

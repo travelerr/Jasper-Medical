@@ -24,6 +24,16 @@ export type UserAppointmentWithAppointment = {
   appointment: Appointment;
 };
 
+export type CreateAppointmentInputs = {
+  title: string;
+  patient: string;
+  startDate: string;
+  endDate: string;
+  startTime: string;
+  endTime: string;
+  details: string;
+};
+
 export type Customer = {
   id: string;
   name: string;

@@ -5,8 +5,9 @@ import { sql } from "@vercel/postgres";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { signIn } from "@/auth";
-import prisma from "./prisma";
 import { auth } from "../../auth";
+import { CreateAppointmentInputs } from "./definitions";
+import prisma from "./prisma";
 
 function isStartBeforeEnd(
   startDateStr: string,
@@ -15,12 +16,12 @@ function isStartBeforeEnd(
   endTimeStr: string
 ) {
   // Combine date and time strings
-  const startDateTimeStr = `${startDateStr}T${startTimeStr}`;
-  const endDateTimeStr = `${endDateStr}T${endTimeStr}`;
+  const combinedStartDateTime = `${startDateStr} ${startTimeStr}`;
+  const combinedEndDateTime = `${endDateStr} ${endTimeStr}`;
 
   // Create Date objects
-  const startDateTime = new Date(startDateTimeStr);
-  const endDateTime = new Date(endDateTimeStr);
+  const startDateTime = new Date(combinedStartDateTime);
+  const endDateTime = new Date(combinedEndDateTime);
 
   // Check if the start date-time is before the end date-time
   return startDateTime < endDateTime;
@@ -59,25 +60,19 @@ const CreateAppointmentSchema = z
     endTime: z.string({
       required_error: "End time is required.",
     }),
-    notes: z.string().optional(),
     details: z.string().optional(),
   })
-  .superRefine((data, ctx) => {
-    // Ensure end date is after start date
-    if (
-      isStartBeforeEnd(
-        data.startDate,
-        data.startTime,
-        data.endDate,
-        data.endTime
-      )
-    ) {
-      ctx.addIssue({
+  .refine((data) => {
+    isStartBeforeEnd(
+      data.startDate,
+      data.startTime,
+      data.endDate,
+      data.endTime
+    ),
+      {
+        message: "End date cannot be earlier than start date.",
         path: ["endDate"],
-        message: "End date must be after start date.",
-        code: z.ZodIssueCode.custom,
-      });
-    }
+      };
   });
 
 const CreateInvoice = FormSchema.omit({ id: true, date: true });
@@ -101,7 +96,6 @@ export type CreateAppointmentState = {
     patient?: string[] | undefined;
     startDate?: string[] | undefined;
     endDate?: string[] | undefined;
-    notes?: string[] | undefined;
   };
   message?: string | null;
 };
@@ -205,38 +199,10 @@ export async function authenticate(
   }
 }
 
-export async function createAppointment(prevState: any, formData: FormData) {
-  const validatedFields = CreateAppointmentSchema.safeParse({
-    title: formData.get("title"),
-    patient: formData.get("patient"),
-    startDate: formData.get("startDate"),
-    endDate: formData.get("endDate"),
-    startTime: formData.get("startTime"),
-    endTime: formData.get("endTime"),
-    notes: formData.get("notes"),
-    details: formData.get("details"),
-  });
-  // Handle form validation errors or proceed with form data
-  if (!validatedFields.success) {
-    // Return validation errors
-    return {
-      errors: validatedFields.error.flatten().fieldErrors,
-      message: "Validation failed. Failed to create appointment.",
-    };
-  }
-
-  // @TODO: add title and notes to db schema
+export async function createAppointment(formData: CreateAppointmentInputs) {
   // Prepare data for insertion into the database
-  const {
-    title,
-    patient,
-    startDate,
-    endDate,
-    startTime,
-    endTime,
-    notes,
-    details,
-  } = validatedFields.data;
+  const { title, patient, startDate, endDate, startTime, endTime, details } =
+    formData;
   const session = await auth();
 
   // Insert data into the database
@@ -246,7 +212,8 @@ export async function createAppointment(prevState: any, formData: FormData) {
       data: {
         startTime: new Date(startDate + " " + startTime),
         endTime: new Date(endDate + " " + endTime),
-        description: title,
+        title: title,
+        details: details,
         status: "Scheduled",
       },
     });

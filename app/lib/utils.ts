@@ -87,7 +87,8 @@ export const formatAppointmentsForCalendar = (
     userId: item.userId,
     start: new Date(item.appointment.startTime),
     end: new Date(item.appointment.endTime),
-    title: item.appointment.description,
+    title: item.appointment.title,
+    details: item.appointment.details,
     status: item.appointment.status,
     createdAt: item.appointment.createdAt,
     updatedAt: item.appointment.updatedAt,
@@ -106,4 +107,22 @@ export const formatPatientsForCalendar = (
     height: JSON.parse(JSON.stringify(item.height)),
   }));
   return formattedPatients;
+};
+
+export const isStartBeforeEnd = (
+  startDateStr: string,
+  startTimeStr: string,
+  endDateStr: string,
+  endTimeStr: string
+) => {
+  // Combine date and time strings
+  const combinedStartDateTime = `${startDateStr} ${startTimeStr}`;
+  const combinedEndDateTime = `${endDateStr} ${endTimeStr}`;
+
+  // Create Date objects
+  const startDateTime = new Date(combinedStartDateTime);
+  const endDateTime = new Date(combinedEndDateTime);
+
+  // Check if the start date-time is before the end date-time
+  return startDateTime < endDateTime;
 };
