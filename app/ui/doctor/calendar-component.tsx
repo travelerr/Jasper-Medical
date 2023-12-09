@@ -49,7 +49,6 @@ export default function CalendarComponent(props: ICalendarComponent) {
   }, []);
 
   const onSelectEvent = useCallback((calEvent: EditAppointment) => {
-    console.log(calEvent);
     setAptToEdit(calEvent);
     setOpenEditModal(true);
   }, []);
