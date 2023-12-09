@@ -9,36 +9,69 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import { useCallback, useState } from "react";
 import { CreateAppointmentModal } from "@/app/ui/create-appointment-modal";
+import { EditAppointmentModal } from "@/app/ui/edit-appointment-modal";
+import { EditAppointment } from "@/app/lib/definitions";
 
 interface ICalendarComponent {
   appointments: any[];
   patients: any[];
+  currentUserId: number;
+}
+
+interface ISlot {
+  slots: string[];
+  start: string;
+  end: string;
+  resourceId: null | number | string; // Assuming resourceId can be either null, number, or string.
+  action: string;
+  bounds: {
+    top: number;
+    left: number;
+    x: number;
+    y: number;
+    right: number;
+    bottom: number;
+  };
 }
 
 const localizer = momentLocalizer(moment);
 
 export default function CalendarComponent(props: ICalendarComponent) {
-  const { appointments, patients } = props;
-  const [openModal, setOpenModal] = useState(false);
+  const { appointments, patients, currentUserId } = props;
+  const [openCreateModal, setOpenCreateModal] = useState<boolean>(false);
+  const [openEditModal, setOpenEditModal] = useState<boolean>(false);
+  const [selectedSlot, setSelectedSlot] = useState<ISlot>();
+  const [aptToEdit, setAptToEdit] = useState<EditAppointment>();
 
-  const handleSelectSlot = useCallback(() => {
-    setOpenModal(true);
+  const handleSelectSlot = useCallback((slotInfo: any) => {
+    setSelectedSlot(slotInfo);
+    setOpenCreateModal(true);
   }, []);
 
-  const onSelectEvent = useCallback((calEvent: any) => {
+  const onSelectEvent = useCallback((calEvent: EditAppointment) => {
     console.log(calEvent);
-    window.alert("onSelectEvent");
+    setAptToEdit(calEvent);
+    setOpenEditModal(true);
   }, []);
 
   return (
     <div className="lg:h-screen">
       {/* @TODO - if theres one one apt this will error */}
       <CreateAppointmentModal
-        setOpenModal={setOpenModal}
-        openModal={openModal}
+        setOpenCreateModal={setOpenCreateModal}
+        openCreateModal={openCreateModal}
         dismissible={true}
         patients={patients}
+        slotInfo={selectedSlot}
       ></CreateAppointmentModal>
+      <EditAppointmentModal
+        setOpenEditModal={setOpenEditModal}
+        openEditModal={openEditModal}
+        dismissible={true}
+        patients={patients}
+        aptToEdit={aptToEdit}
+        currentUserId={currentUserId}
+      ></EditAppointmentModal>
       <BigCalendar
         selectable
         localizer={localizer}

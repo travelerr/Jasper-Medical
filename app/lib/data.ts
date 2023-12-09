@@ -3,6 +3,7 @@ import { unstable_noStore as noStore } from "next/cache";
 import {
   CustomerField,
   CustomersTable,
+  GetAppointmentsByUserID,
   InvoiceForm,
   InvoicesTable,
   LatestInvoiceRaw,
@@ -242,7 +243,7 @@ export async function getUserByEmail(email: string): Promise<User> {
   }
 }
 
-export async function getAppointmentsByUserID(
+export async function getUserAppointmentsByUserID(
   userId: number
 ): Promise<UserAppointmentWithAppointment[]> {
   try {
@@ -252,6 +253,34 @@ export async function getAppointmentsByUserID(
       },
       include: {
         appointment: true,
+        user: true,
+      },
+    });
+    return appointmentArray;
+  } catch (error) {
+    console.error("Failed to fetch appointments:", error);
+    throw new Error("Failed to fetch appointments.");
+  }
+}
+
+export async function getAppointmentsByUserID(
+  userId: number
+): Promise<GetAppointmentsByUserID[]> {
+  try {
+    const appointmentArray = await prisma.appointment.findMany({
+      where: {
+        users: {
+          some: {
+            userId: userId,
+          },
+        },
+      },
+      include: {
+        users: {
+          include: {
+            user: true,
+          },
+        },
       },
     });
     return appointmentArray;
@@ -279,4 +308,25 @@ export async function getPatients(): Promise<User[]> {
     console.error("Failed to fetch patients:", error);
     throw new Error("Failed to fetch patients.");
   }
+}
+
+export async function deleteAppointmentByID(appointmentId: number) {
+  // Start a transaction
+  const result = await prisma.$transaction(async (prisma) => {
+    // Delete entries from UserAppointment where the appointmentId matches
+    await prisma.userAppointment.deleteMany({
+      where: {
+        appointmentId: appointmentId,
+      },
+    });
+
+    // Delete the appointment
+    return prisma.appointment.delete({
+      where: {
+        id: appointmentId,
+      },
+    });
+  });
+
+  return result;
 }

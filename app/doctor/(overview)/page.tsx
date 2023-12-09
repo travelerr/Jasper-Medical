@@ -2,7 +2,11 @@ import { Suspense } from "react";
 import DashboardSkeleton from "@/app/ui/skeletons";
 import { auth } from "../../../auth";
 import CalendarComponent from "@/app/ui/doctor/calendar-component";
-import { getAppointmentsByUserID, getPatients } from "@/app/lib/data";
+import {
+  getUserAppointmentsByUserID,
+  getPatients,
+  getAppointmentsByUserID,
+} from "@/app/lib/data";
 import {
   formatAppointmentsForCalendar,
   formatPatientsForCalendar,
@@ -19,7 +23,11 @@ export default async function Page() {
     <main>
       <div className="h-full">
         <Suspense fallback={<DashboardSkeleton />}>
-          <CalendarComponent appointments={appointments} patients={patients} />
+          <CalendarComponent
+            appointments={appointments}
+            patients={patients}
+            currentUserId={session?.user.id}
+          />
         </Suspense>
       </div>
     </main>

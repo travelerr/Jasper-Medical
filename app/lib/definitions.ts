@@ -2,7 +2,7 @@
 // It describes the shape of the data, and what data type each property should accept.
 // For simplicity of teaching, we're manually defining these types.
 
-import { Appointment } from "@prisma/client";
+import { Appointment, Prisma } from "@prisma/client";
 
 export type Role = {
   id: number;
@@ -34,6 +34,60 @@ export type CreateAppointmentInputs = {
   details: string;
 };
 
+export type EditAppointment = {
+  id: number;
+  userId: number;
+  start: string;
+  end: string;
+  title: string;
+  details: string;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+  cancelledAt: null | string;
+  sourceResource: any;
+  users: UserAppointment[];
+};
+
+export type UserAppointment = {
+  appointmentId: number;
+  userId: number;
+  user: User;
+};
+
+export type GetAppointmentsByUserID = {
+  id: number;
+  startTime: Date;
+  endTime: Date;
+  title: string;
+  status: string;
+  details: string;
+  createdAt: Date;
+  updatedAt: Date;
+  cancelledAt: Date | null;
+  users: UserAppointment[];
+};
+
+export type User = {
+  id: number;
+  firstName: string;
+  lastName: string;
+  dateOfBirth: Date;
+  gender: string;
+  phoneNumber: string;
+  email: string;
+  emailVerified: Date | null;
+  password: string;
+  street: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  height: Prisma.Decimal;
+  weight: Prisma.Decimal;
+  image: string | null;
+};
+
+/*****************/
 export type Customer = {
   id: string;
   name: string;

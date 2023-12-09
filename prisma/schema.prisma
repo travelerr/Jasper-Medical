@@ -99,7 +99,7 @@ model Appointment {
   createdAt   DateTime          @default(now())
   updatedAt   DateTime          @updatedAt
   cancelledAt DateTime?
-  user        UserAppointment[]
+  users       UserAppointment[]
 }
 
 model UserAppointment {

@@ -11,41 +11,28 @@ import { useRouter } from "next/navigation";
 import { createAppointment } from "@/app/lib/actions";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { isStartBeforeEnd } from "../lib/utils";
-import { CreateAppointmentInputs } from "../lib/definitions";
+import { CreateAppointmentInputs, EditAppointment } from "../lib/definitions";
 import { useEffect, useState } from "react";
 import useViewState from "../lib/customHooks/useViewState";
 import LoadingOverlay from "./loadingWidget";
-
-interface ICreateAppointmentModalProps {
-  openCreateModal: boolean;
+import { deleteAppointmentByID } from "@/app/lib/data";
+interface IEditAppointmentModalProps {
+  openEditModal: boolean;
   dismissible?: boolean;
-  setOpenCreateModal: Function;
+  setOpenEditModal: Function;
   patients: any[];
-  slotInfo: ISlot;
-}
-interface ISlot {
-  slots: string[];
-  start: string;
-  end: string;
-  resourceId: null | number | string; // Assuming resourceId can be either null, number, or string.
-  action: string;
-  bounds: {
-    top: number;
-    left: number;
-    x: number;
-    y: number;
-    right: number;
-    bottom: number;
-  };
+  aptToEdit: EditAppointment;
+  currentUserId: number;
 }
 
-export function CreateAppointmentModal(props: ICreateAppointmentModalProps) {
+export function EditAppointmentModal(props: IEditAppointmentModalProps) {
   const {
-    openCreateModal,
+    openEditModal,
     dismissible,
-    setOpenCreateModal,
+    setOpenEditModal,
     patients,
-    slotInfo,
+    aptToEdit,
+    currentUserId,
   } = props;
   const { viewState, setLoading } = useViewState();
   const [formMessage, setFormMessage] = useState<string>("");
@@ -70,7 +57,7 @@ export function CreateAppointmentModal(props: ICreateAppointmentModalProps) {
       setFormMessage("Success, your appointment has been created");
       reset();
       setTimeout(() => {
-        setOpenCreateModal(false);
+        setOpenEditModal(false);
         setFormMessage("");
         router.refresh();
       }, 3000);
@@ -80,33 +67,30 @@ export function CreateAppointmentModal(props: ICreateAppointmentModalProps) {
     }
   };
 
-  useEffect(() => {
-    if (slotInfo) {
-      const startDateTime = new Date(slotInfo.start);
-      const endDateTime = new Date(slotInfo.end);
-
-      const formatDate = (date: any) => {
-        const year = date.getFullYear();
-        const month = (date.getMonth() + 1).toString().padStart(2, "0"); // months are zero-indexed
-        const day = date.getDate().toString().padStart(2, "0");
-        return `${year}-${month}-${day}`;
-      };
-
-      const formatTime = (date: any) => {
-        const hours = date.getHours().toString().padStart(2, "0");
-        const minutes = date.getMinutes().toString().padStart(2, "0");
-        return `${hours}:${minutes}`;
-      };
-
-      console.log(startDateTime); // For debugging
-      console.log(formatDate(startDateTime) + " " + formatTime(startDateTime)); // For debugging
-
-      setValue("startDate", formatDate(startDateTime));
-      setValue("startTime", formatTime(startDateTime));
-      setValue("endDate", formatDate(endDateTime));
-      setValue("endTime", formatTime(endDateTime));
+  async function deleteAppointment() {
+    try {
+      await deleteAppointmentByID(aptToEdit.id);
+    } catch (error) {
+      console.error(error);
     }
-  }, [slotInfo, setValue]);
+  }
+
+  useEffect(() => {
+    if (aptToEdit) {
+      const patient: any = aptToEdit.users.find(
+        (x: any) => x.userId !== currentUserId
+      );
+      const startDateTime = new Date(aptToEdit.start);
+      const endDateTime = new Date(aptToEdit.end);
+      setValue("startDate", startDateTime.toISOString().substring(0, 10));
+      setValue("startTime", startDateTime.toISOString().substring(11, 16));
+      setValue("endDate", endDateTime.toISOString().substring(0, 10));
+      setValue("endTime", endDateTime.toISOString().substring(11, 16));
+      setValue("title", aptToEdit.title);
+      setValue("patient", patient.userId.toString());
+      setValue("details", aptToEdit.details);
+    }
+  }, [aptToEdit, setValue]);
 
   const startDate = watch("startDate");
   const startTime = watch("startTime");
@@ -124,11 +108,11 @@ export function CreateAppointmentModal(props: ICreateAppointmentModalProps) {
     <FlowBiteModal
       size={"7xl"}
       dismissible={dismissible}
-      show={openCreateModal}
+      show={openEditModal}
       className="relative"
-      onClose={() => setOpenCreateModal(false)}
+      onClose={() => setOpenEditModal(false)}
     >
-      <FlowBiteModal.Header>Add an appointment</FlowBiteModal.Header>
+      <FlowBiteModal.Header>Edit appointment</FlowBiteModal.Header>
       <form onSubmit={handleSubmit(onSubmit)}>
         <FlowBiteModal.Body>
           <LoadingOverlay isLoading={viewState.loading} />
@@ -243,9 +227,12 @@ export function CreateAppointmentModal(props: ICreateAppointmentModalProps) {
           </div>
         </FlowBiteModal.Body>
         <FlowBiteModal.Footer>
-          <Button type="submit">Submit</Button>
-          <Button color="gray" onClick={() => setOpenCreateModal(false)}>
+          <Button type="submit">Update</Button>
+          <Button color="gray" onClick={() => setOpenEditModal(false)}>
             Cancel
+          </Button>
+          <Button color="red" onClick={() => deleteAppointment()}>
+            Delete Appointment
           </Button>
         </FlowBiteModal.Footer>
       </form>

@@ -1,5 +1,6 @@
 import { User } from "@prisma/client";
 import {
+  GetAppointmentsByUserID,
   Revenue,
   UserAppointmentWithAppointment,
   UserWithRole,
@@ -80,19 +81,26 @@ export const checkUserForRole = (roles: Array<UserWithRole>, role: string) => {
 
 // Formater for Big Calendar
 export const formatAppointmentsForCalendar = (
-  appointments: Array<UserAppointmentWithAppointment>
-): Array<UserAppointmentWithAppointment> => {
+  appointments: Array<GetAppointmentsByUserID>
+): Array<any> => {
   const formattedAppointments = appointments?.map((item) => ({
-    id: item.appointment.id,
-    userId: item.userId,
-    start: new Date(item.appointment.startTime),
-    end: new Date(item.appointment.endTime),
-    title: item.appointment.title,
-    details: item.appointment.details,
-    status: item.appointment.status,
-    createdAt: item.appointment.createdAt,
-    updatedAt: item.appointment.updatedAt,
-    cancelledAt: item.appointment.cancelledAt,
+    id: item.id,
+    users: item.users.map((userAppointment) => ({
+      ...userAppointment,
+      user: {
+        ...userAppointment.user,
+        height: Number(userAppointment.user.height), // Convert height to number
+        weight: Number(userAppointment.user.weight),
+      },
+    })),
+    start: new Date(item.startTime),
+    end: new Date(item.endTime),
+    title: item.title,
+    details: item.details,
+    status: item.status,
+    createdAt: item.createdAt,
+    updatedAt: item.updatedAt,
+    cancelledAt: item.cancelledAt,
   }));
   return formattedAppointments as any;
 };
