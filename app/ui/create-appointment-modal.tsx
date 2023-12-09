@@ -67,13 +67,10 @@ export function CreateAppointmentModal(props: ICreateAppointmentModalProps) {
       setLoading(true);
       await createAppointment(data);
       setLoading(false);
-      setFormMessage("Success, your appointment has been created");
       reset();
-      setTimeout(() => {
-        setOpenCreateModal(false);
-        setFormMessage("");
-        router.refresh();
-      }, 3000);
+      setOpenCreateModal(false);
+      setFormMessage("");
+      router.refresh();
     } catch (error) {
       setFormMessage("There was an error creating the appointment");
       setLoading(false);
