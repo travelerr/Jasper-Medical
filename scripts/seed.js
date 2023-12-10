@@ -6,7 +6,7 @@ const {
   users,
   roles,
   user_roles,
-} = require("./placeholder-data.js");
+} = require("../sql/placeholder-data.js");
 const bcrypt = require("bcrypt");
 
 async function seedUsers(client) {

@@ -1,5 +1,5 @@
 import type { NextAuthConfig } from "next-auth";
-import { checkUserForRole } from "./app/lib/utils";
+import { checkUserForRole } from "./app/_lib/utils";
 
 export const authConfig = {
   pages: {

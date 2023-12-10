@@ -8,12 +8,12 @@ import {
   Modal as FlowBiteModal,
 } from "flowbite-react";
 import { useRouter } from "next/navigation";
-import { createAppointment } from "@/app/lib/actions";
+import { createAppointment } from "@/app/_lib/actions";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { isStartBeforeEnd } from "../lib/utils";
-import { CreateAppointmentInputs } from "../lib/definitions";
+import { isStartBeforeEnd } from "../_lib/utils";
+import { CreateAppointmentInputs } from "../_lib/definitions";
 import { useEffect, useState } from "react";
-import useViewState from "../lib/customHooks/useViewState";
+import useViewState from "../_lib/customHooks/useViewState";
 import LoadingOverlay from "./loadingWidget";
 
 interface ICreateAppointmentModalProps {

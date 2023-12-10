@@ -1,14 +1,14 @@
-import LatestInvoices from "@/app/ui/dashboard/latest-invoices";
-import { lusitana } from "@/app/ui/fonts";
+import LatestInvoices from "@/app/_ui/dashboard/latest-invoices";
+import { lusitana } from "@/app/_ui/fonts";
 import { Suspense } from "react";
-import CardWrapper from "@/app/ui/dashboard/cards";
+import CardWrapper from "@/app/_ui/dashboard/cards";
 import {
   RevenueChartSkeleton,
   InvoiceSkeleton,
   CardsSkeleton,
-} from "@/app/ui/skeletons";
+} from "@/app/_ui/skeletons";
 import { auth } from "../../../auth";
-import Calendar from "@/app/ui/doctor/calendar-component";
+import Calendar from "@/app/_ui/doctor/calendar-component";
 
 export default async function Page() {
   const session = await auth();

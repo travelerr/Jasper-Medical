@@ -11,7 +11,7 @@ import {
   UserAppointmentWithAppointment,
 } from "./definitions";
 import { formatCurrency } from "./utils";
-import prisma from "../../app/lib/prisma";
+import prisma from "./prisma";
 import type { User, UserAppointment } from "@prisma/client";
 
 export async function fetchRevenue() {

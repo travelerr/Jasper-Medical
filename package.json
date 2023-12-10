@@ -4,7 +4,7 @@
     "build": "next build",
     "dev": "NODE_OPTIONS='--inspect' next dev",
     "start": "next start",
-    "seed": "node -r dotenv/config ./sql/seed.js",
+    "seed": "node -r dotenv/config ./scripts/seed.js",
     "lint": "next lint"
   },
   "dependencies": {

@@ -1,16 +1,16 @@
 import { Suspense } from "react";
-import DashboardSkeleton from "@/app/ui/skeletons";
+import DashboardSkeleton from "@/app/_ui/skeletons";
 import { auth } from "../../../auth";
-import CalendarComponent from "@/app/ui/doctor/calendar-component";
+import CalendarComponent from "@/app/_ui/doctor/calendar-component";
 import {
   getUserAppointmentsByUserID,
   getPatients,
   getAppointmentsByUserID,
-} from "@/app/lib/data";
+} from "@/app/_lib/data";
 import {
   formatAppointmentsForCalendar,
   formatPatientsForCalendar,
-} from "@/app/lib/utils";
+} from "@/app/_lib/utils";
 
 export default async function Page() {
   const session = await auth();

@@ -8,9 +8,9 @@ import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import { useCallback, useState } from "react";
-import { CreateAppointmentModal } from "@/app/ui/create-appointment-modal";
-import { EditAppointmentModal } from "@/app/ui/edit-appointment-modal";
-import { EditAppointment } from "@/app/lib/definitions";
+import { CreateAppointmentModal } from "@/app/_ui/create-appointment-modal";
+import { EditAppointmentModal } from "@/app/_ui/edit-appointment-modal";
+import { EditAppointment } from "@/app/_lib/definitions";
 
 interface ICalendarComponent {
   appointments: any[];
