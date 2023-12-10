@@ -18,6 +18,28 @@ export type UserWithRole = {
   };
 };
 
+export type State = {
+  errors?: {
+    customerId?: string[];
+    amount?: string[];
+    status?: string[];
+  };
+  message?: string | null;
+};
+
+export type CreateAppointmentState = {
+  errors: {
+    details?: string[] | undefined;
+    title?: string[] | undefined;
+    startTime?: string[] | undefined;
+    endTime?: string[] | undefined;
+    patient?: string[] | undefined;
+    startDate?: string[] | undefined;
+    endDate?: string[] | undefined;
+  };
+  message?: string | null;
+};
+
 export type UserAppointmentWithAppointment = {
   appointmentId: number;
   userId: number;

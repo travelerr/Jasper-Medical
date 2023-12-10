@@ -6,7 +6,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { signIn } from "@/auth";
 import { auth } from "../../auth";
-import { CreateAppointmentInputs } from "./definitions";
+import { CreateAppointmentInputs, State } from "./definitions";
 import prisma from "./prisma";
 
 function isStartBeforeEnd(
@@ -78,28 +78,6 @@ const CreateAppointmentSchema = z
 const CreateInvoice = FormSchema.omit({ id: true, date: true });
 const UpdateInvoice = FormSchema.omit({ id: true, date: true });
 
-export type State = {
-  errors?: {
-    customerId?: string[];
-    amount?: string[];
-    status?: string[];
-  };
-  message?: string | null;
-};
-
-export type CreateAppointmentState = {
-  errors: {
-    details?: string[] | undefined;
-    title?: string[] | undefined;
-    startTime?: string[] | undefined;
-    endTime?: string[] | undefined;
-    patient?: string[] | undefined;
-    startDate?: string[] | undefined;
-    endDate?: string[] | undefined;
-  };
-  message?: string | null;
-};
-
 export async function createInvoice(prevState: State, formData: FormData) {
   // Validate form using Zod
   const validatedFields = CreateInvoice.safeParse({
@@ -111,6 +89,7 @@ export async function createInvoice(prevState: State, formData: FormData) {
   // If form validation fails, return errors early. Otherwise, continue.
   if (!validatedFields.success) {
     return {
+      // @ts-ignore
       errors: validatedFields.error.flatten().fieldErrors,
       message: "Missing Fields. Failed to Create Invoice.",
     };
@@ -153,7 +132,8 @@ export async function updateInvoice(
   // If form validation fails, return errors early. Otherwise, continue.
   if (!validatedFields.success) {
     return {
-      errors: validatedFields.error.flatten().fieldErrors,
+      // @ts-ignore
+      errors: validatedFields?.error.flatten().fieldErrors,
       message: "Missing Fields. Failed to Update Invoice.",
     };
   }
@@ -233,4 +213,71 @@ export async function createAppointment(formData: CreateAppointmentInputs) {
       message: "Database Error: Failed to create appointment.",
     };
   }
+}
+
+export async function updateAppointment(
+  appointmentId: number,
+  formData: CreateAppointmentInputs
+) {
+  // Prepare data for updating the database
+  const { title, patient, startDate, endDate, startTime, endTime, details } =
+    formData;
+  const session = await auth();
+
+  // Update the appointment in the database
+  try {
+    // Update the existing appointment
+    await prisma.appointment.update({
+      where: {
+        id: appointmentId,
+      },
+      data: {
+        startTime: new Date(startDate + " " + startTime),
+        endTime: new Date(endDate + " " + endTime),
+        title: title,
+        details: details,
+        status: "Scheduled",
+      },
+    });
+
+    // Update the patient associated with the appointment
+    // Assuming only one patient is associated with each appointment
+    await prisma.userAppointment.updateMany({
+      where: {
+        appointmentId: appointmentId,
+        userId: { not: Number(session?.user.id) }, // Excludes the current user
+      },
+      data: {
+        userId: parseInt(patient),
+      },
+    });
+
+    return { message: "Appointment updated successfully." };
+  } catch (error) {
+    console.error(error);
+    return {
+      message: "Database Error: Failed to update appointment.",
+    };
+  }
+}
+
+export async function deleteAppointmentByID(appointmentId: number) {
+  // Start a transaction
+  const result = await prisma.$transaction(async (prisma) => {
+    // Delete entries from UserAppointment where the appointmentId matches
+    await prisma.userAppointment.deleteMany({
+      where: {
+        appointmentId: appointmentId,
+      },
+    });
+
+    // Delete the appointment
+    return prisma.appointment.delete({
+      where: {
+        id: appointmentId,
+      },
+    });
+  });
+
+  return result;
 }

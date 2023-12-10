@@ -309,24 +309,3 @@ export async function getPatients(): Promise<User[]> {
     throw new Error("Failed to fetch patients.");
   }
 }
-
-export async function deleteAppointmentByID(appointmentId: number) {
-  // Start a transaction
-  const result = await prisma.$transaction(async (prisma) => {
-    // Delete entries from UserAppointment where the appointmentId matches
-    await prisma.userAppointment.deleteMany({
-      where: {
-        appointmentId: appointmentId,
-      },
-    });
-
-    // Delete the appointment
-    return prisma.appointment.delete({
-      where: {
-        id: appointmentId,
-      },
-    });
-  });
-
-  return result;
-}

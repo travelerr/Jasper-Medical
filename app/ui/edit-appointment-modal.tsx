@@ -8,14 +8,13 @@ import {
   Modal as FlowBiteModal,
 } from "flowbite-react";
 import { useRouter } from "next/navigation";
-import { createAppointment } from "@/app/lib/actions";
+import { updateAppointment, deleteAppointmentByID } from "@/app/lib/actions";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { isStartBeforeEnd } from "../lib/utils";
 import { CreateAppointmentInputs, EditAppointment } from "../lib/definitions";
 import { useEffect, useState } from "react";
 import useViewState from "../lib/customHooks/useViewState";
 import LoadingOverlay from "./loadingWidget";
-import { deleteAppointmentByID } from "@/app/lib/data";
 interface IEditAppointmentModalProps {
   openEditModal: boolean;
   dismissible?: boolean;
@@ -52,15 +51,12 @@ export function EditAppointmentModal(props: IEditAppointmentModalProps) {
     }
     try {
       setLoading(true);
-      await createAppointment(data);
+      await updateAppointment(aptToEdit.id, data);
       setLoading(false);
-      setFormMessage("Success, your appointment has been created");
       reset();
-      setTimeout(() => {
-        setOpenEditModal(false);
-        setFormMessage("");
-        router.refresh();
-      }, 3000);
+      setOpenEditModal(false);
+      setFormMessage("");
+      router.refresh();
     } catch (error) {
       setFormMessage("There was an error creating the appointment");
       setLoading(false);
@@ -69,9 +65,15 @@ export function EditAppointmentModal(props: IEditAppointmentModalProps) {
 
   async function deleteAppointment() {
     try {
+      setLoading(true);
       await deleteAppointmentByID(aptToEdit.id);
+      setLoading(false);
+      setOpenEditModal(false);
+      setFormMessage("");
+      router.refresh();
     } catch (error) {
-      console.error(error);
+      setFormMessage("There was an error deleting the appointment");
+      setLoading(false);
     }
   }
 
@@ -82,10 +84,24 @@ export function EditAppointmentModal(props: IEditAppointmentModalProps) {
       );
       const startDateTime = new Date(aptToEdit.start);
       const endDateTime = new Date(aptToEdit.end);
-      setValue("startDate", startDateTime.toISOString().substring(0, 10));
-      setValue("startTime", startDateTime.toISOString().substring(11, 16));
-      setValue("endDate", endDateTime.toISOString().substring(0, 10));
-      setValue("endTime", endDateTime.toISOString().substring(11, 16));
+
+      const formatDate = (date: any) => {
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, "0"); // months are zero-indexed
+        const day = date.getDate().toString().padStart(2, "0");
+        return `${year}-${month}-${day}`;
+      };
+
+      const formatTime = (date: any) => {
+        const hours = date.getHours().toString().padStart(2, "0");
+        const minutes = date.getMinutes().toString().padStart(2, "0");
+        return `${hours}:${minutes}`;
+      };
+
+      setValue("startDate", formatDate(startDateTime));
+      setValue("startTime", formatTime(startDateTime));
+      setValue("endDate", formatDate(endDateTime));
+      setValue("endTime", formatTime(endDateTime));
       setValue("title", aptToEdit.title);
       setValue("patient", patient.userId.toString());
       setValue("details", aptToEdit.details);

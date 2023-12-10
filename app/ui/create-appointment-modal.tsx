@@ -95,9 +95,6 @@ export function CreateAppointmentModal(props: ICreateAppointmentModalProps) {
         return `${hours}:${minutes}`;
       };
 
-      console.log(startDateTime); // For debugging
-      console.log(formatDate(startDateTime) + " " + formatTime(startDateTime)); // For debugging
-
       setValue("startDate", formatDate(startDateTime));
       setValue("startTime", formatTime(startDateTime));
       setValue("endDate", formatDate(endDateTime));
