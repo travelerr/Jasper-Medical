@@ -153,9 +153,9 @@ export function CreateAppointmentModal(props: ICreateAppointmentModalProps) {
             <div>
               <Label htmlFor="patient" value="Patients" />
               <Select id="patient" {...register("patient", { required: true })}>
-                {patients.map((user, index) => (
-                  <option key={index} value={`${user.id}`}>
-                    {`${user.firstName} ${user.lastName}`}
+                {patients.map((patient, index) => (
+                  <option key={index} value={`${patient.id}`}>
+                    {`${patient.firstName} ${patient.lastName}`}
                   </option>
                 ))}
               </Select>

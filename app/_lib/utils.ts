@@ -74,47 +74,16 @@ export const generatePagination = (currentPage: number, totalPages: number) => {
   ];
 };
 
-export const checkUserForRole = (roles: Array<UserWithRole>, role: string) => {
-  if (roles.some((x: UserWithRole) => x.role.name === role)) return true;
-  return false;
-};
-
 // Formater for Big Calendar
 export const formatAppointmentsForCalendar = (
   appointments: Array<GetAppointmentsByUserID>
 ): Array<any> => {
   const formattedAppointments = appointments?.map((item) => ({
-    id: item.id,
-    users: item.users.map((userAppointment) => ({
-      ...userAppointment,
-      user: {
-        ...userAppointment.user,
-        height: Number(userAppointment.user.height), // Convert height to number
-        weight: Number(userAppointment.user.weight),
-      },
-    })),
+    ...item,
     start: new Date(item.startTime),
     end: new Date(item.endTime),
-    title: item.title,
-    details: item.details,
-    status: item.status,
-    createdAt: item.createdAt,
-    updatedAt: item.updatedAt,
-    cancelledAt: item.cancelledAt,
   }));
   return formattedAppointments as any;
-};
-
-// Formater for Big Calendar
-export const formatPatientsForCalendar = (
-  patients: Array<User>
-): Array<any> => {
-  const formattedPatients = patients?.map((item) => ({
-    ...item,
-    weight: JSON.parse(JSON.stringify(item.weight)),
-    height: JSON.parse(JSON.stringify(item.height)),
-  }));
-  return formattedPatients;
 };
 
 export const isStartBeforeEnd = (

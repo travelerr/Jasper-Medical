@@ -2,7 +2,7 @@
 // It describes the shape of the data, and what data type each property should accept.
 // For simplicity of teaching, we're manually defining these types.
 
-import { Appointment, Prisma } from "@prisma/client";
+import { Appointment, AppointmentStatus, Prisma } from "@prisma/client";
 
 export type Role = {
   id: number;
@@ -58,17 +58,24 @@ export type CreateAppointmentInputs = {
 
 export type EditAppointment = {
   id: number;
-  userId: number;
-  start: string;
-  end: string;
+  createdDate: Date;
+  updatedDate: Date;
+  name: string | null;
   title: string;
+  startTime: Date;
+  endTime: Date;
   details: string;
-  status: string;
-  createdAt: string;
-  updatedAt: string;
-  cancelledAt: null | string;
-  sourceResource: any;
-  users: UserAppointment[];
+  status: AppointmentStatus;
+  doctorId: number;
+  patientId: number;
+  doctor: {
+    firstName: string;
+    lastName: string;
+  };
+  patient: {
+    firstName: string;
+    lastName: string;
+  };
 };
 
 export type UserAppointment = {
@@ -187,3 +194,11 @@ export type InvoiceForm = {
   amount: number;
   status: "pending" | "paid";
 };
+
+// NEW
+
+export enum UserRole {
+  DOCTOR = "DOCTOR",
+  PATIENT = "PATIENT",
+  ADMIN = "ADMIN",
+}

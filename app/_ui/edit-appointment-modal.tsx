@@ -79,11 +79,9 @@ export function EditAppointmentModal(props: IEditAppointmentModalProps) {
 
   useEffect(() => {
     if (aptToEdit) {
-      const patient: any = aptToEdit.users.find(
-        (x: any) => x.userId !== currentUserId
-      );
-      const startDateTime = new Date(aptToEdit.start);
-      const endDateTime = new Date(aptToEdit.end);
+      console.log(aptToEdit);
+      const startDateTime = new Date(aptToEdit.startTime);
+      const endDateTime = new Date(aptToEdit.endTime);
 
       const formatDate = (date: any) => {
         const year = date.getFullYear();
@@ -103,7 +101,7 @@ export function EditAppointmentModal(props: IEditAppointmentModalProps) {
       setValue("endDate", formatDate(endDateTime));
       setValue("endTime", formatTime(endDateTime));
       setValue("title", aptToEdit.title);
-      setValue("patient", patient.userId.toString());
+      setValue("patient", aptToEdit.patientId.toString());
       setValue("details", aptToEdit.details);
     }
   }, [aptToEdit, setValue]);

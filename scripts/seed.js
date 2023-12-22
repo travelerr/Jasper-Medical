@@ -275,11 +275,12 @@ async function seedRevenue(client) {
 
 async function main() {
   const client = await db.connect();
-
+  const hashedTestPassword = await bcrypt.hash("password123", 10);
+  console.log(hashedTestPassword);
   // await seedUsers(client);
-  await seedCustomers(client);
-  await seedInvoices(client);
-  await seedRevenue(client);
+  // await seedCustomers(client);
+  // await seedInvoices(client);
+  // await seedRevenue(client);
   // await seedUsers(client);
   // await seedRoles(client);
   // await seedUserRoles(client);

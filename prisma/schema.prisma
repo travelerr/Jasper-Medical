@@ -20,145 +20,116 @@ model Session {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-model VerificationToken {
-  id         Int      @id @default(autoincrement())
-  identifier String
-  token      String   @unique
-  expires    DateTime
-
-  @@unique([identifier, token])
-}
-
-// User and Accounts
-
-model Account {
-  id                 Int     @id @default(autoincrement())
-  userId             Int     @map("user_id")
-  type               String
-  provider           String
-  providerAccountId  String  @map("provider_account_id")
-  refresh_token      String?
-  access_token       String?
-  expires_at         Int?
-  token_type         String?
-  scope              String?
-  id_token           String?
-  session_state      String?
-  oauth_token_secret String?
-  oauth_token        String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([provider, providerAccountId])
-}
-
 model User {
-  id            Int               @id @default(autoincrement())
-  firstName     String?
-  lastName      String?
-  dateOfBirth   DateTime?
-  gender        String?
-  phoneNumber   String?
-  email         String?           @unique
-  emailVerified DateTime?
-  password      String?
-  street        String?
-  city          String?
-  state         String?
-  zipCode       String?
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
-  roles         UserRole[]
-  appointments  UserAppointment[]
-  Invoice       Invoice[]
-
-  @@map("users")
+  id          Int       @id @default(autoincrement())
+  createdDate DateTime? @default(now())
+  updatedDate DateTime? @updatedAt
+  name        String?
+  username    String
+  email       String    @unique
+  password    String
+  image       String?
+  sessions    Session[]
+  role        UserRole  @default(PATIENT)
+  doctor      Doctor?
+  patient     Patient?
+  admin       Admin?
+  doctorId    Int?
+  patientId   Int?
+  adminId     Int?
 }
 
-// Roles
-
-model Role {
-  id   Int        @id @default(autoincrement())
-  name String     @unique
-  user UserRole[]
+enum UserRole {
+  DOCTOR
+  PATIENT
+  ADMIN
 }
 
-model UserRole {
-  user   User @relation(fields: [userId], references: [id])
-  userId Int
+// Doctor
 
-  role   Role @relation(fields: [roleId], references: [id])
-  roleId Int
-
-  @@id([userId, roleId])
+model Doctor {
+  id           Int           @id @default(autoincrement())
+  createdDate  DateTime?     @default(now())
+  updatedDate  DateTime?     @updatedAt
+  name         String?
+  firstName    String?
+  lastName     String?
+  appointments Appointment[]
+  user         User          @relation(fields: [userId], references: [id])
+  userId       Int           @unique
+  specialty    String
 }
 
-// Appointments
+// Patient 
 
+model Patient {
+  id           Int           @id @default(autoincrement())
+  createdDate  DateTime?     @default(now())
+  updatedDate  DateTime?     @updatedAt
+  name         String?
+  firstName    String?
+  lastName     String?
+  appointments Appointment[]
+  user         User          @relation(fields: [userId], references: [id])
+  userId       Int           @unique
+  consults     Consult[] // Establish a one-to-many relationship with Consult
+  testResults  TestResult[]
+}
+
+model Consult {
+  id          Int       @id @default(autoincrement())
+  createdDate DateTime? @default(now())
+  updatedDate DateTime? @updatedAt
+  name        String?
+  date        DateTime
+  notes       String
+  patientId   Int // Foreign key reference to the Patient model
+  patient     Patient   @relation(fields: [patientId], references: [id])
+}
+
+model TestResult {
+  id          Int       @id @default(autoincrement())
+  createdDate DateTime? @default(now())
+  updatedDate DateTime? @updatedAt
+  name        String?
+  date        DateTime
+  notes       String
+  patientId   Int // Foreign key reference to the Patient model
+  patient     Patient   @relation(fields: [patientId], references: [id])
+}
+
+// Admin
+
+model Admin {
+  id          Int      @id @default(autoincrement())
+  createdDate DateTime @default(now())
+  updatedDate DateTime @updatedAt
+  name        String?
+  firstName   String?
+  lastName    String?
+  user        User     @relation(fields: [userId], references: [id])
+  userId      Int      @unique
+}
+
+// Shared
 model Appointment {
   id          Int               @id @default(autoincrement())
+  createdDate DateTime?         @default(now())
+  updatedDate DateTime?         @updatedAt
+  name        String?
+  title       String?
   startTime   DateTime
   endTime     DateTime
-  title       String?
-  status      String
-  details     String?
-  createdAt   DateTime          @default(now())
-  updatedAt   DateTime          @updatedAt
-  cancelledAt DateTime?
-  users       UserAppointment[]
+  details     String
+  status      AppointmentStatus
+  doctorId    Int
+  patientId   Int
+  doctor      Doctor            @relation(fields: [doctorId], references: [id])
+  patient     Patient           @relation(fields: [patientId], references: [id])
 }
 
-model UserAppointment {
-  appointment   Appointment @relation(fields: [appointmentId], references: [id])
-  appointmentId Int
-
-  user   User @relation(fields: [userId], references: [id])
-  userId Int
-
-  @@id([userId, appointmentId])
-}
-
-// Invoices
-
-model Service {
-  id          Int             @id @default(autoincrement())
-  description String
-  price       Decimal
-  invoices    InvoiceDetail[]
-}
-
-model Invoice {
-  id          Int             @id @default(autoincrement())
-  patientId   Int             @map("patient_id")
-  dateIssued  DateTime
-  dueDate     DateTime
-  totalAmount Decimal
-  status      String
-  details     InvoiceDetail[]
-  payments    Payment[]
-
-  patient User @relation(fields: [patientId], references: [id])
-}
-
-model InvoiceDetail {
-  invoiceId Int     @map("invoice_id")
-  serviceId Int     @map("service_id")
-  quantity  Int
-  amount    Decimal
-
-  invoice Invoice @relation(fields: [invoiceId], references: [id])
-  service Service @relation(fields: [serviceId], references: [id])
-
-  @@id([invoiceId, serviceId])
-}
-
-model Payment {
-  id         Int      @id @default(autoincrement())
-  invoiceId  Int      @map("invoice_id")
-  datePaid   DateTime
-  amountPaid Decimal
-  method     String // E.g., "Credit Card", "Cash", "Check"
-
-  invoice Invoice @relation(fields: [invoiceId], references: [id])
+enum AppointmentStatus {
+  SCHEDULED
+  CANCELLED
+  COMPLETED
 }

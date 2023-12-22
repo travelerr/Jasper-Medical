@@ -8,24 +8,7 @@ import { signIn } from "@/auth";
 import { auth } from "../../auth";
 import { CreateAppointmentInputs, State } from "./definitions";
 import prisma from "./prisma";
-
-function isStartBeforeEnd(
-  startDateStr: string,
-  startTimeStr: string,
-  endDateStr: string,
-  endTimeStr: string
-) {
-  // Combine date and time strings
-  const combinedStartDateTime = `${startDateStr} ${startTimeStr}`;
-  const combinedEndDateTime = `${endDateStr} ${endTimeStr}`;
-
-  // Create Date objects
-  const startDateTime = new Date(combinedStartDateTime);
-  const endDateTime = new Date(combinedEndDateTime);
-
-  // Check if the start date-time is before the end date-time
-  return startDateTime < endDateTime;
-}
+import { AppointmentStatus } from "@prisma/client";
 
 const FormSchema = z.object({
   id: z.string(),
@@ -40,40 +23,6 @@ const FormSchema = z.object({
   }),
   date: z.string(),
 });
-const CreateAppointmentSchema = z
-  .object({
-    title: z.string({
-      required_error: "Appointment title is required.",
-    }),
-    patient: z.string({
-      required_error: "Please select a patient.",
-    }),
-    startDate: z.string({
-      required_error: "Start date is required.",
-    }),
-    endDate: z.string({
-      required_error: "End date is required.",
-    }),
-    startTime: z.string({
-      required_error: "Start time is required.",
-    }),
-    endTime: z.string({
-      required_error: "End time is required.",
-    }),
-    details: z.string().optional(),
-  })
-  .refine((data) => {
-    isStartBeforeEnd(
-      data.startDate,
-      data.startTime,
-      data.endDate,
-      data.endTime
-    ),
-      {
-        message: "End date cannot be earlier than start date.",
-        path: ["endDate"],
-      };
-  });
 
 const CreateInvoice = FormSchema.omit({ id: true, date: true });
 const UpdateInvoice = FormSchema.omit({ id: true, date: true });
@@ -180,30 +129,20 @@ export async function authenticate(
 }
 
 export async function createAppointment(formData: CreateAppointmentInputs) {
-  // Prepare data for insertion into the database
   const { title, patient, startDate, endDate, startTime, endTime, details } =
     formData;
   const session = await auth();
-
-  // Insert data into the database
   try {
-    // Create a new appointment
-    const newAppointment = await prisma.appointment.create({
+    await prisma.appointment.create({
       data: {
         startTime: new Date(startDate + " " + startTime),
         endTime: new Date(endDate + " " + endTime),
         title: title,
         details: details,
-        status: "Scheduled",
+        doctorId: Number(session?.user.id),
+        patientId: parseInt(patient),
+        status: AppointmentStatus.SCHEDULED,
       },
-    });
-
-    // Link the appointment to the current user and the patient
-    await prisma.userAppointment.createMany({
-      data: [
-        { userId: Number(session?.user.id), appointmentId: newAppointment.id },
-        { userId: parseInt(patient), appointmentId: newAppointment.id },
-      ],
     });
 
     return { message: "Appointment created successfully." };
@@ -219,14 +158,10 @@ export async function updateAppointment(
   appointmentId: number,
   formData: CreateAppointmentInputs
 ) {
-  // Prepare data for updating the database
   const { title, patient, startDate, endDate, startTime, endTime, details } =
     formData;
   const session = await auth();
-
-  // Update the appointment in the database
   try {
-    // Update the existing appointment
     await prisma.appointment.update({
       where: {
         id: appointmentId,
@@ -236,22 +171,11 @@ export async function updateAppointment(
         endTime: new Date(endDate + " " + endTime),
         title: title,
         details: details,
-        status: "Scheduled",
+        doctorId: Number(session?.user.id),
+        patientId: parseInt(patient),
+        status: AppointmentStatus.SCHEDULED,
       },
     });
-
-    // Update the patient associated with the appointment
-    // Assuming only one patient is associated with each appointment
-    await prisma.userAppointment.updateMany({
-      where: {
-        appointmentId: appointmentId,
-        userId: { not: Number(session?.user.id) }, // Excludes the current user
-      },
-      data: {
-        userId: parseInt(patient),
-      },
-    });
-
     return { message: "Appointment updated successfully." };
   } catch (error) {
     console.error(error);
@@ -262,22 +186,12 @@ export async function updateAppointment(
 }
 
 export async function deleteAppointmentByID(appointmentId: number) {
-  // Start a transaction
   const result = await prisma.$transaction(async (prisma) => {
-    // Delete entries from UserAppointment where the appointmentId matches
-    await prisma.userAppointment.deleteMany({
-      where: {
-        appointmentId: appointmentId,
-      },
-    });
-
-    // Delete the appointment
     return prisma.appointment.delete({
       where: {
         id: appointmentId,
       },
     });
   });
-
   return result;
 }

@@ -3,16 +3,15 @@ import { unstable_noStore as noStore } from "next/cache";
 import {
   CustomerField,
   CustomersTable,
-  GetAppointmentsByUserID,
   InvoiceForm,
   InvoicesTable,
   LatestInvoiceRaw,
   Revenue,
-  UserAppointmentWithAppointment,
 } from "./definitions";
 import { formatCurrency } from "./utils";
 import prisma from "./prisma";
-import type { User, UserAppointment } from "@prisma/client";
+import { DoctorWithAppointment } from "./prisma";
+import type { Patient, User } from "@prisma/client";
 
 export async function fetchRevenue() {
   // Add noStore() here prevent the response from being cached.
@@ -228,13 +227,6 @@ export async function getUserByEmail(email: string): Promise<User> {
   try {
     const user = await prisma.user.findFirst({
       where: { email: email },
-      include: {
-        roles: {
-          include: {
-            role: true, // Include the Role model to get the role names
-          },
-        },
-      },
     });
     return user as User;
   } catch (error) {
@@ -243,42 +235,25 @@ export async function getUserByEmail(email: string): Promise<User> {
   }
 }
 
-export async function getUserAppointmentsByUserID(
-  userId: number
-): Promise<UserAppointmentWithAppointment[]> {
-  try {
-    const appointmentArray = await prisma.userAppointment.findMany({
-      where: {
-        userId: userId,
-      },
-      include: {
-        appointment: true,
-        user: true,
-      },
-    });
-    return appointmentArray;
-  } catch (error) {
-    console.error("Failed to fetch appointments:", error);
-    throw new Error("Failed to fetch appointments.");
-  }
-}
-
 export async function getAppointmentsByUserID(
   userId: number
-): Promise<GetAppointmentsByUserID[]> {
+): Promise<DoctorWithAppointment> {
   try {
     const appointmentArray = await prisma.appointment.findMany({
       where: {
-        users: {
-          some: {
-            userId: userId,
-          },
-        },
+        doctorId: userId,
       },
       include: {
-        users: {
-          include: {
-            user: true,
+        doctor: {
+          select: {
+            firstName: true,
+            lastName: true,
+          },
+        },
+        patient: {
+          select: {
+            firstName: true,
+            lastName: true,
           },
         },
       },
@@ -290,19 +265,9 @@ export async function getAppointmentsByUserID(
   }
 }
 
-export async function getPatients(): Promise<User[]> {
+export async function getPatients(): Promise<Patient[]> {
   try {
-    const patients = await prisma.user.findMany({
-      where: {
-        roles: {
-          some: {
-            role: {
-              name: "patient",
-            },
-          },
-        },
-      },
-    });
+    const patients = await prisma.patient.findMany({});
     return patients;
   } catch (error) {
     console.error("Failed to fetch patients:", error);
