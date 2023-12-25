@@ -25,3 +25,13 @@ input[type="number"]::-webkit-outer-spin-button {
     transform: rotate(360deg);
   }
 }
+
+.dashboard-tab-sticky button[role="tab"] {
+  text-indent: -9999px; /* Pushes the text far off the screen */
+  overflow: hidden;
+  border-radius: 0px !important;
+}
+
+.dashboard-tab-sticky svg {
+  margin: 0px !important;
+}

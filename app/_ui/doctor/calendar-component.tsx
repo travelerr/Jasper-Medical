@@ -54,8 +54,7 @@ export default function CalendarComponent(props: ICalendarComponent) {
   }, []);
 
   return (
-    <div className="lg:h-screen">
-      {/* @TODO - if theres one one apt this will error */}
+    <div>
       <CreateAppointmentModal
         setOpenCreateModal={setOpenCreateModal}
         openCreateModal={openCreateModal}
@@ -75,7 +74,7 @@ export default function CalendarComponent(props: ICalendarComponent) {
         selectable
         localizer={localizer}
         events={appointments}
-        defaultView={Views.WEEK}
+        defaultView={Views.MONTH}
         views={[Views.DAY, Views.WEEK, Views.MONTH]}
         defaultDate={new Date()}
         onSelectSlot={handleSelectSlot}

@@ -1,3 +1,4 @@
+"use server";
 import { sql } from "@vercel/postgres";
 import { unstable_noStore as noStore } from "next/cache";
 import {
@@ -268,6 +269,42 @@ export async function getAppointmentsByUserID(
 export async function getPatients(): Promise<Patient[]> {
   try {
     const patients = await prisma.patient.findMany({});
+    return patients;
+  } catch (error) {
+    console.error("Failed to fetch patients:", error);
+    throw new Error("Failed to fetch patients.");
+  }
+}
+
+export async function getPatientsTypeAhead(
+  searchValue?: string
+): Promise<Patient[]> {
+  try {
+    let query = {};
+
+    if (searchValue) {
+      const searchValueLower = searchValue.toLowerCase();
+      query = {
+        where: {
+          OR: [
+            {
+              firstName: {
+                contains: searchValueLower,
+                mode: "insensitive", // for case-insensitive search
+              },
+            },
+            {
+              lastName: {
+                contains: searchValueLower,
+                mode: "insensitive", // for case-insensitive search
+              },
+            },
+          ],
+        },
+      };
+    }
+
+    const patients = await prisma.patient.findMany(query);
     return patients;
   } catch (error) {
     console.error("Failed to fetch patients:", error);
