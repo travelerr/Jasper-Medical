@@ -1,21 +1,24 @@
 "use client";
 
 import { getPatientsTypeAhead } from "@/app/_lib/data";
+import { Patient } from "@prisma/client";
 import { Label } from "flowbite-react";
 import { useState } from "react";
 
-interface IPatientLookup {}
+interface IPatientLookup {
+  openPatientTab: Function;
+}
 
 export default function PatientLookup(props: IPatientLookup) {
+  const { openPatientTab } = props;
   const [searchTerm, setSearchTerm] = useState("");
-  const [results, setResults] = useState([]);
+  const [results, setResults] = useState<Patient[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSearch = async (event: any) => {
     setSearchTerm(event.target.value);
     setIsLoading(true);
     const response = await getPatientsTypeAhead(`${event.target.value}`);
-    console.log(response);
     setResults(response);
     setIsLoading(false);
   };
@@ -32,9 +35,18 @@ export default function PatientLookup(props: IPatientLookup) {
       />
       {isLoading && <div>Loading...</div>}
       <ul>
-        {results.map((patient) => (
-          <li key={patient.id}>{patient.name}</li>
-        ))}
+        {searchTerm &&
+          results.map((patient) => (
+            <li className="border w-full" key={patient.id}>
+              <button
+                className="flex flex-col w-full p-1"
+                onClick={() => openPatientTab(patient)}
+              >
+                {`${patient.firstName} ${patient.lastName}`}
+                <small>DOB:</small>
+              </button>
+            </li>
+          ))}
       </ul>
     </div>
   );

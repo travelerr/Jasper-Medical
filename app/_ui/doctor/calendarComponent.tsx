@@ -8,8 +8,8 @@ import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import { useCallback, useState } from "react";
-import { CreateAppointmentModal } from "@/app/_ui/create-appointment-modal";
-import { EditAppointmentModal } from "@/app/_ui/edit-appointment-modal";
+import { CreateAppointmentModal } from "@/app/_ui/createAppointmentModal";
+import { EditAppointmentModal } from "@/app/_ui/editAppointmentModal";
 import { EditAppointment } from "@/app/_lib/definitions";
 
 interface ICalendarComponent {
@@ -74,7 +74,7 @@ export default function CalendarComponent(props: ICalendarComponent) {
         selectable
         localizer={localizer}
         events={appointments}
-        defaultView={Views.MONTH}
+        defaultView={Views.WEEK}
         views={[Views.DAY, Views.WEEK, Views.MONTH]}
         defaultDate={new Date()}
         onSelectSlot={handleSelectSlot}

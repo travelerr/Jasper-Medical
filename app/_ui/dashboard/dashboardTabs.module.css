@@ -1,0 +1,12 @@
+.dashboardTabs button[role="tab"] {
+  border-radius: 0px !important;
+}
+
+.dashboardTabs > button[role="tab"]:nth-child(-n + 4) {
+  text-indent: -9999px; /* Pushes the text far off the screen */
+  overflow: hidden;
+}
+
+.dashboardTabs > button[role="tab"]:nth-child(-n + 4) > svg {
+  margin: 0px !important;
+}
