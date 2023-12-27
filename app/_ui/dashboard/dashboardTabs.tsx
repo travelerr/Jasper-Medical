@@ -1,13 +1,12 @@
 "use client";
 
-import { Tabs, TabsRef } from "flowbite-react";
-import { useRef, useState } from "react";
-import { HiAdjustments, HiClipboardList, HiHome, HiX } from "react-icons/hi";
-import { MdDashboard } from "react-icons/md";
+import { useState } from "react";
+import { HiAdjustments, HiHome, HiUser } from "react-icons/hi";
 import CalendarComponent from "../doctor/calendarComponent";
 import PatientLookup from "../doctor/patientLookup";
 import { Patient } from "@prisma/client";
-import styles from "./DashboardTabs.module.css";
+import { Tab, Tabs } from "../components/tabs";
+import PatientDataProvider from "@/app/_lib/contexts/PatientDataProvider";
 
 interface IDashboardTabsComponent {
   appointments: any[];
@@ -17,30 +16,37 @@ interface IDashboardTabsComponent {
 
 export default function DashboardTabs(props: IDashboardTabsComponent) {
   const { appointments, patients, currentUserId } = props;
-  const tabsRef = useRef<TabsRef>(null);
-  const [activeTab, setActiveTab] = useState<number>(0);
   const [patientTabs, setPatientTabs] = useState<Patient[]>([]);
+  const [activeTab, setActiveTab] = useState(-1);
 
   function openPatientTab(patient: Patient) {
-    setPatientTabs([...patientTabs, patient]);
-    console.log(patientTabs);
+    console.log(patient);
+    if (!patientTabs.find((tab) => tab.id === patient.id)) {
+      setPatientTabs([...patientTabs, patient]);
+    }
+  }
+
+  function closePatientTab(id: number) {
+    const index = patientTabs.findIndex((tab) => tab.id === id);
+    const updatedTabs = patientTabs.filter((tab) => tab.id !== id);
+    setPatientTabs(updatedTabs);
+
+    if (index > 0) {
+      // Set active tab to the one before the closed tab
+      setActiveTab(updatedTabs[index - 1].id);
+    } else if (updatedTabs.length > 0) {
+      // If the first tab is closed and there are other tabs, set active to the new first tab
+      setActiveTab(updatedTabs[0].id);
+    } else {
+      // If there are no more tabs, set active tab to -1
+      setActiveTab(-1);
+    }
   }
 
   return (
     <div className="flex flex-col gap-3">
-      <Tabs
-        aria-label="Default tabs"
-        style="default"
-        className={styles.dashboardTabs}
-        ref={tabsRef}
-        onActiveTabChange={(tab) => setActiveTab(tab)}
-      >
-        <Tabs.Item
-          active
-          title="Home"
-          style={{ backgroundColor: "red" }}
-          icon={HiHome}
-        >
+      <Tabs activeTab={activeTab} setActiveTab={setActiveTab}>
+        <Tab icon={HiHome} key="home" label="home" hideLabel={true} tabId={-1}>
           <div className="grid grid-cols-2 gap-4">
             <div>
               <CalendarComponent
@@ -58,27 +64,37 @@ export default function DashboardTabs(props: IDashboardTabsComponent) {
               </div>
             </div>
           </div>
-        </Tabs.Item>
-        <Tabs.Item title="Dashboard" icon={MdDashboard}>
-          Tab 1
-        </Tabs.Item>
-        <Tabs.Item title="Settings" icon={HiAdjustments}>
-          TTab 2
-        </Tabs.Item>
-        <Tabs.Item title="Contacts" icon={HiClipboardList}>
-          Tab 3
-        </Tabs.Item>
-        {patientTabs.map((patient) => {
-          return (
-            <Tabs.Item
-              key={patient.id}
-              title={`${patient.firstName} ${patient.lastName}`}
-              icon={HiX}
-            >
-              Tab 3
-            </Tabs.Item>
-          );
-        })}
+        </Tab>
+        <Tab
+          icon={HiUser}
+          key="profile"
+          label="profile"
+          hideLabel={true}
+          tabId={-2}
+        >
+          Content for Tab 2
+        </Tab>
+        <Tab
+          icon={HiAdjustments}
+          key="settings"
+          label="settings"
+          hideLabel={true}
+          tabId={-3}
+        >
+          Content for Tab 3
+        </Tab>
+        {patientTabs.map((patient) => (
+          <Tab
+            key={patient.id}
+            label={`${patient.firstName} ${patient.lastName}`}
+            tabId={patient.id}
+            canCloseTabFunction={closePatientTab}
+          >
+            <PatientDataProvider patient={patient}>
+              {`${patient.firstName} ${patient.lastName}`}
+            </PatientDataProvider>
+          </Tab>
+        ))}
       </Tabs>
     </div>
   );
