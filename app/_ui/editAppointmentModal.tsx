@@ -79,7 +79,6 @@ export function EditAppointmentModal(props: IEditAppointmentModalProps) {
 
   useEffect(() => {
     if (aptToEdit) {
-      console.log(aptToEdit);
       const startDateTime = new Date(aptToEdit.startTime);
       const endDateTime = new Date(aptToEdit.endTime);
 

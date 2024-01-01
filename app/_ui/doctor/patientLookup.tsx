@@ -1,6 +1,7 @@
 "use client";
 
 import { getPatientsTypeAhead } from "@/app/_lib/data";
+import { formatDateToLocal } from "@/app/_lib/utils";
 import { Patient } from "@prisma/client";
 import { Label } from "flowbite-react";
 import { useState } from "react";
@@ -31,7 +32,7 @@ export default function PatientLookup(props: IPatientLookup) {
         value={searchTerm}
         onChange={handleSearch}
         placeholder="Search patients..."
-        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
       />
       {isLoading && <div>Loading...</div>}
       <ul>
@@ -43,7 +44,12 @@ export default function PatientLookup(props: IPatientLookup) {
                 onClick={() => openPatientTab(patient)}
               >
                 {`${patient.firstName} ${patient.lastName}`}
-                <small>DOB:</small>
+                <small>
+                  <span>DOB: </span>
+                  <span className="font-bold">{`${formatDateToLocal(
+                    patient.dob.toDateString()
+                  )}`}</span>
+                </small>
               </button>
             </li>
           ))}

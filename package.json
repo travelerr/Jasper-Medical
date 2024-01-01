@@ -5,6 +5,7 @@
     "dev": "NODE_OPTIONS='--inspect' next dev",
     "start": "next start",
     "seed": "node -r dotenv/config ./scripts/seed.js",
+    "seed-excel": "node -r dotenv/config ./scripts/seed-excel.js",
     "lint": "next lint"
   },
   "dependencies": {
@@ -30,6 +31,7 @@
     "tailwindcss": "3.3.3",
     "typescript": "5.2.2",
     "use-debounce": "^10.0.0",
+    "xlsx": "^0.18.5",
     "zod": "^3.22.2"
   },
   "devDependencies": {

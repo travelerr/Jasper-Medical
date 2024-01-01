@@ -7,6 +7,7 @@ import PatientLookup from "../doctor/patientLookup";
 import { Patient } from "@prisma/client";
 import { Tab, Tabs } from "../components/tabs";
 import PatientDataProvider from "@/app/_lib/contexts/PatientDataProvider";
+import { getFullPatientProfileById } from "@/app/_lib/data";
 
 interface IDashboardTabsComponent {
   appointments: any[];
@@ -19,8 +20,9 @@ export default function DashboardTabs(props: IDashboardTabsComponent) {
   const [patientTabs, setPatientTabs] = useState<Patient[]>([]);
   const [activeTab, setActiveTab] = useState(-1);
 
-  function openPatientTab(patient: Patient) {
-    console.log(patient);
+  async function openPatientTab(patient: Patient) {
+    let x = await getFullPatientProfileById(patient.id);
+    console.log(x);
     if (!patientTabs.find((tab) => tab.id === patient.id)) {
       setPatientTabs([...patientTabs, patient]);
     }
@@ -42,6 +44,8 @@ export default function DashboardTabs(props: IDashboardTabsComponent) {
       setActiveTab(-1);
     }
   }
+
+  function getFullPatientProfile(id: number) {}
 
   return (
     <div className="flex flex-col gap-3">
@@ -90,7 +94,7 @@ export default function DashboardTabs(props: IDashboardTabsComponent) {
             tabId={patient.id}
             canCloseTabFunction={closePatientTab}
           >
-            <PatientDataProvider patient={patient}>
+            <PatientDataProvider patient={getFullPatientProfile(patient.id)}>
               {`${patient.firstName} ${patient.lastName}`}
             </PatientDataProvider>
           </Tab>

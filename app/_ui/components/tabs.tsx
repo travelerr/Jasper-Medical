@@ -31,12 +31,12 @@ const Tabs: React.FC<TabsProps> = ({ children, activeTab, setActiveTab }) => {
         {validChildren.map((child, index) => (
           <div
             key={child.props.tabId}
-            className={`border-1 border-r cursor-pointer min-h-5 flex align-middle px-4 py-1 text-sm font-medium text-gray-700 hover:bg-gray-200 ${
+            className={`border-1 border-r cursor-pointer min-h-5 flex align-middle text-sm font-medium text-gray-700 hover:bg-gray-200 ${
               activeTab === child.props.tabId ? "bg-gray-200 shadow" : ""
             }`}
           >
             <span
-              className="flex items-center"
+              className="flex items-center px-4 py-1"
               onClick={() => setActiveTab(child.props.tabId)}
             >
               {child.props.icon && React.createElement(child.props.icon)}
@@ -47,9 +47,9 @@ const Tabs: React.FC<TabsProps> = ({ children, activeTab, setActiveTab }) => {
                 onClick={() =>
                   child.props.canCloseTabFunction(child.props.tabId)
                 }
-                className="hover:bg-gray-400 rounded-sm ml-2"
+                className="pr-2"
               >
-                <HiX />
+                <HiX className="hover:bg-gray-400 rounded-sm " />
               </button>
             )}
           </div>

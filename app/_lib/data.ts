@@ -1,15 +1,7 @@
 "use server";
 import { sql } from "@vercel/postgres";
 import { unstable_noStore as noStore } from "next/cache";
-import {
-  CustomerField,
-  CustomersTable,
-  InvoiceForm,
-  InvoicesTable,
-  LatestInvoiceRaw,
-  Revenue,
-} from "./definitions";
-import { formatCurrency } from "./utils";
+import { CustomerField, InvoiceForm, InvoicesTable } from "./definitions";
 import prisma from "./prisma";
 import { DoctorWithAppointment } from "./prisma";
 import type { Patient, User } from "@prisma/client";
@@ -166,6 +158,28 @@ export async function getPatients(): Promise<Patient[]> {
   } catch (error) {
     console.error("Failed to fetch patients:", error);
     throw new Error("Failed to fetch patients.");
+  }
+}
+
+export async function getFullPatientProfileById(id: number): Promise<Patient> {
+  try {
+    const patientProfile = await prisma.patient.findUnique({
+      where: { id: id },
+      include: {
+        contact: true,
+        insurance: true,
+        provider: true,
+        allergy: true,
+        problemList: true,
+        appointments: true,
+        consults: true,
+        testResults: true,
+      },
+    });
+    return patientProfile as Patient;
+  } catch (error) {
+    console.error("Failed to fetch user:", error);
+    throw new Error("Failed to fetch user.");
   }
 }
 
