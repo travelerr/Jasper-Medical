@@ -18,7 +18,7 @@ export default function ProblemList(props: IProblemListProps) {
         <Accordion className="rounded-none" collapseAll>
           <AccordionPanel className="py-1 focus:outline-none">
             <AccordionTitle className="text-black">Problem List</AccordionTitle>
-            <AccordionContent className="p-1">
+            <AccordionContent className="p-1 bg-white">
               {problemList.map((problem, index) => (
                 <div
                   key={problem.id}

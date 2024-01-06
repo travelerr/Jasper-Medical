@@ -18,7 +18,7 @@ export default function PatientAllery(props: IPatientAlleryProps) {
         <Accordion className="rounded-none" collapseAll>
           <AccordionPanel className="py-1 focus:outline-none">
             <AccordionTitle className="text-red-600">Allergies</AccordionTitle>
-            <AccordionContent className="p-1">
+            <AccordionContent className="p-1 bg-white">
               {allergies.map((allergy, index) => (
                 <div
                   key={allergy.id}

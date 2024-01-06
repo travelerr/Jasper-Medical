@@ -33,7 +33,10 @@ export default function PatientChartSideBar() {
   }
 
   return (
-    <Sidebar aria-label="Patient sidebar">
+    <Sidebar
+      aria-label="Patient sidebar"
+      className="h-screen border-r rounded-none"
+    >
       <div
         id="patient-sidebard-pesonal-info"
         className="flex items-center pb-2 border-b border-black"
