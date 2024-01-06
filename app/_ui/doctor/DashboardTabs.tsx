@@ -57,6 +57,10 @@ export default function DashboardTabs(props: IDashboardTabsComponent) {
     if (savedTabs) {
       setPatientTabs(JSON.parse(savedTabs));
     }
+    const savedActiveTab = localStorage.getItem("activePatientTab");
+    if (savedActiveTab) {
+      setActiveTab(JSON.parse(savedActiveTab));
+    }
   }, []);
 
   useEffect(() => {
@@ -67,6 +71,10 @@ export default function DashboardTabs(props: IDashboardTabsComponent) {
     });
     localStorage.setItem("patientTabs", JSON.stringify(patientTabs));
   }, [patientTabs]);
+
+  useEffect(() => {
+    localStorage.setItem("activePatientTab", JSON.stringify(activeTab));
+  }, [activeTab]);
 
   async function fetchAndSetPatientProfile(patientId: number) {
     try {
