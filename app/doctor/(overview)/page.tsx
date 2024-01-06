@@ -3,7 +3,7 @@ import DashboardSkeleton from "@/app/_ui/skeletons";
 import { auth } from "../../../auth";
 import { getPatients, getAppointmentsByUserID } from "@/app/_lib/data";
 import { formatAppointmentsForCalendar } from "@/app/_lib/utils";
-import DashboardTabs from "@/app/_ui/dashboard/dashboardTabs";
+import DashboardTabs from "@/app/_ui/doctor/DashboardTabs";
 
 export default async function Page() {
   const session = await auth();

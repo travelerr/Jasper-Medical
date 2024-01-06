@@ -57,7 +57,7 @@ const Tabs: React.FC<TabsProps> = ({ children, activeTab, setActiveTab }) => {
       </div>
 
       {/* Tab Content */}
-      <div className="p-4">
+      <div className="">
         {validChildren.map((child) => {
           if (child.props.tabId !== activeTab) return null;
           return React.cloneElement(child, { ...child.props });

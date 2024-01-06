@@ -1,18 +1,16 @@
-import React, { createContext } from "react";
+import React from "react";
 import PatientDataContext from "./PatientDataContext";
+import { FullPatientProfile } from "../definitions";
 
 const PatientDataProvider = ({
   patient,
   children,
 }: {
-  patient: any;
+  patient: FullPatientProfile;
   children: any;
 }) => {
-  // You can include more patient-related state and logic here as needed
-  const patientData = { ...patient };
-
   return (
-    <PatientDataContext.Provider value={patientData}>
+    <PatientDataContext.Provider value={patient}>
       {children}
     </PatientDataContext.Provider>
   );

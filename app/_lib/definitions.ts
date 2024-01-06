@@ -2,7 +2,22 @@
 // It describes the shape of the data, and what data type each property should accept.
 // For simplicity of teaching, we're manually defining these types.
 
-import { Appointment, AppointmentStatus, Prisma } from "@prisma/client";
+import {
+  Allergy,
+  Appointment,
+  AppointmentStatus,
+  Consult,
+  Contact,
+  Ethnicity,
+  Insurance,
+  Patient,
+  Prisma,
+  ProblemList,
+  Provider,
+  Race,
+  Sex,
+  TestResult,
+} from "@prisma/client";
 
 export type Role = {
   id: number;
@@ -114,6 +129,25 @@ export type User = {
   height: Prisma.Decimal;
   weight: Prisma.Decimal;
   image: string | null;
+};
+
+export type FullPatientProfile = Patient & {
+  race: Race;
+  sexAtBirth: Sex;
+  ethnicity: Ethnicity;
+  contact: Contact;
+  insurance: Insurance;
+  provider: Provider;
+  allergy: Allergy[];
+  problemList: ProblemList[];
+  appointments: Appointment[];
+  consults: Consult[];
+  testResults: TestResult[];
+};
+
+export type PatientNextAndLastApt = {
+  lastApt: Appointment;
+  nextApt: Appointment;
 };
 
 /*****************/

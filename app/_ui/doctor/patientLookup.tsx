@@ -1,7 +1,7 @@
 "use client";
 
 import { getPatientsTypeAhead } from "@/app/_lib/data";
-import { formatDateToLocal } from "@/app/_lib/utils";
+import { formatDateString } from "@/app/_lib/utils";
 import { Patient } from "@prisma/client";
 import { Label } from "flowbite-react";
 import { useState } from "react";
@@ -46,7 +46,7 @@ export default function PatientLookup(props: IPatientLookup) {
                 {`${patient.firstName} ${patient.lastName}`}
                 <small>
                   <span>DOB: </span>
-                  <span className="font-bold">{`${formatDateToLocal(
+                  <span className="font-bold">{`${formatDateString(
                     patient.dob.toDateString()
                   )}`}</span>
                 </small>

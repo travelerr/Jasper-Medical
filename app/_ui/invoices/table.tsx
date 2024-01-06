@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { UpdateInvoice, DeleteInvoice } from "@/app/_ui/invoices/buttons";
 import InvoiceStatus from "@/app/_ui/invoices/status";
-import { formatDateToLocal, formatCurrency } from "@/app/_lib/utils";
+import { formatDateString, formatCurrency } from "@/app/_lib/utils";
 import { fetchFilteredInvoices } from "@/app/_lib/data";
 
 export default async function InvoicesTable({
@@ -44,7 +44,7 @@ export default async function InvoicesTable({
                     <p className="text-xl font-medium">
                       {formatCurrency(invoice.amount)}
                     </p>
-                    <p>{formatDateToLocal(invoice.date)}</p>
+                    <p>{formatDateString(invoice.date)}</p>
                   </div>
                   <div className="flex justify-end gap-2">
                     <UpdateInvoice id={invoice.id} />
@@ -102,7 +102,7 @@ export default async function InvoicesTable({
                     {formatCurrency(invoice.amount)}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    {formatDateToLocal(invoice.date)}
+                    {formatDateString(invoice.date)}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
                     <InvoiceStatus status={invoice.status} />

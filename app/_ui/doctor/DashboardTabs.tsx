@@ -1,13 +1,15 @@
 "use client";
 
-import { useState } from "react";
-import { HiAdjustments, HiHome, HiUser } from "react-icons/hi";
-import CalendarComponent from "../doctor/calendarComponent";
-import PatientLookup from "../doctor/patientLookup";
+import { useEffect, useState } from "react";
+import { HiPlus, HiHome, HiUser } from "react-icons/hi";
 import { Patient } from "@prisma/client";
-import { Tab, Tabs } from "../components/tabs";
 import PatientDataProvider from "@/app/_lib/contexts/PatientDataProvider";
 import { getFullPatientProfileById } from "@/app/_lib/data";
+import CalendarComponent from "./CalendarComponent";
+import PatientLookup from "./PatientLookup";
+import { Tab, Tabs } from "./Tabs";
+import PatientChart from "./PatientChart";
+import { FullPatientProfile } from "@/app/_lib/definitions";
 
 interface IDashboardTabsComponent {
   appointments: any[];
@@ -15,16 +17,20 @@ interface IDashboardTabsComponent {
   currentUserId: number;
 }
 
+interface PatientProfile {
+  [key: number]: FullPatientProfile;
+}
+
 export default function DashboardTabs(props: IDashboardTabsComponent) {
   const { appointments, patients, currentUserId } = props;
   const [patientTabs, setPatientTabs] = useState<Patient[]>([]);
   const [activeTab, setActiveTab] = useState(-1);
+  const [patientProfiles, setPatientProfiles] = useState<PatientProfile>({});
 
-  async function openPatientTab(patient: Patient) {
-    let x = await getFullPatientProfileById(patient.id);
-    console.log(x);
+  function openPatientTab(patient: Patient) {
     if (!patientTabs.find((tab) => tab.id === patient.id)) {
       setPatientTabs([...patientTabs, patient]);
+      setActiveTab(patient.id);
     }
   }
 
@@ -45,7 +51,25 @@ export default function DashboardTabs(props: IDashboardTabsComponent) {
     }
   }
 
-  function getFullPatientProfile(id: number) {}
+  useEffect(() => {
+    patientTabs.forEach((patient) => {
+      if (!patientProfiles[patient.id]) {
+        fetchAndSetPatientProfile(patient.id);
+      }
+    });
+  }, [patientTabs]);
+
+  async function fetchAndSetPatientProfile(patientId: number) {
+    try {
+      const patientProfile = await getFullPatientProfileById(patientId);
+      setPatientProfiles((prevProfiles: any) => ({
+        ...prevProfiles,
+        [patientId]: patientProfile,
+      }));
+    } catch (error) {
+      console.error("Error fetching patient profile", error);
+    }
+  }
 
   return (
     <div className="flex flex-col gap-3">
@@ -79,7 +103,7 @@ export default function DashboardTabs(props: IDashboardTabsComponent) {
           Content for Tab 2
         </Tab>
         <Tab
-          icon={HiAdjustments}
+          icon={HiPlus}
           key="settings"
           label="settings"
           hideLabel={true}
@@ -94,9 +118,11 @@ export default function DashboardTabs(props: IDashboardTabsComponent) {
             tabId={patient.id}
             canCloseTabFunction={closePatientTab}
           >
-            <PatientDataProvider patient={getFullPatientProfile(patient.id)}>
-              {`${patient.firstName} ${patient.lastName}`}
-            </PatientDataProvider>
+            {patientProfiles[patient.id] && (
+              <PatientDataProvider patient={patientProfiles[patient.id]}>
+                <PatientChart />
+              </PatientDataProvider>
+            )}
           </Tab>
         ))}
       </Tabs>

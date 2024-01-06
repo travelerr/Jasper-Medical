@@ -1,10 +1,5 @@
-import { User } from "@prisma/client";
-import {
-  GetAppointmentsByUserID,
-  Revenue,
-  UserAppointmentWithAppointment,
-  UserWithRole,
-} from "./definitions";
+import { Patient } from "@prisma/client";
+import { GetAppointmentsByUserID, Revenue } from "./definitions";
 
 export const formatCurrency = (amount: number) => {
   return (amount / 100).toLocaleString("en-US", {
@@ -13,10 +8,7 @@ export const formatCurrency = (amount: number) => {
   });
 };
 
-export const formatDateToLocal = (
-  dateStr: string,
-  locale: string = "en-US"
-) => {
+export const formatDateString = (dateStr: string, locale: string = "en-US") => {
   const date = new Date(dateStr);
   const options: Intl.DateTimeFormatOptions = {
     day: "numeric",
@@ -25,6 +17,35 @@ export const formatDateToLocal = (
   };
   const formatter = new Intl.DateTimeFormat(locale, options);
   return formatter.format(date);
+};
+
+export const formatPatientName = (patient: Patient): string => {
+  return `${patient.firstName ?? ""}  ${patient.lastName ?? ""} `;
+};
+
+export const formatPatientDob = (dob: Date): string => {
+  // Parse the date string
+  const parsedDate = new Date(dob);
+
+  // Format the date as M/D/YYYY
+  const formattedDate = `${
+    parsedDate.getMonth() + 1
+  }/${parsedDate.getDate()}/${parsedDate.getFullYear()}`;
+
+  // Calculate age
+  const now = new Date();
+  let years = now.getFullYear() - parsedDate.getFullYear();
+  let months = now.getMonth() - parsedDate.getMonth();
+  if (now.getDate() < parsedDate.getDate()) {
+    months--;
+  }
+  if (months < 0) {
+    years--;
+    months += 12;
+  }
+
+  // Return the formatted date string with age
+  return `${formattedDate} (${years} yrs ${months} mos)`;
 };
 
 export const generateYAxis = (revenue: Revenue[]) => {
@@ -102,4 +123,17 @@ export const isStartBeforeEnd = (
 
   // Check if the start date-time is before the end date-time
   return startDateTime < endDateTime;
+};
+
+export const formatTimeString = (timestamp: number) => {
+  const date = new Date(timestamp);
+
+  let hours = date.getHours();
+  const minutes = String(date.getMinutes()).padStart(2, "0"); // Ensure two-digit minutes
+  const ampm = hours >= 12 ? "pm" : "am";
+
+  hours = hours % 12;
+  hours = hours || 12; // Convert '0' hour to '12'
+
+  return `${hours}:${minutes} ${ampm}`;
 };

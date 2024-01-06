@@ -29,3 +29,12 @@ input[type="number"]::-webkit-outer-spin-button {
 .rbc-calendar {
   height: 100vh !important;
 }
+
+.rbc-label.rbc-time-header-gutter {
+  min-width: 9.7%;
+}
+
+[data-testid="flowbite-accordion"] button:first-of-type {
+  padding: 0.25rem !important;
+  --tw-ring-opacity: 0px;
+}
