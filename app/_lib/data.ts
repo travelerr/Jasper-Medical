@@ -109,12 +109,12 @@ export async function fetchCustomers() {
   }
 }
 
-export async function getUserByEmail(email: string): Promise<User> {
+export async function getUserByEmail(email: string): Promise<any> {
   try {
     const user = await prisma.user.findFirst({
       where: { email: email },
     });
-    return user as User;
+    return user;
   } catch (error) {
     console.error("Failed to fetch user:", error);
     throw new Error("Failed to fetch user.");
