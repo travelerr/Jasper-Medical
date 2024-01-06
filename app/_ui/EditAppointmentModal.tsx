@@ -25,14 +25,8 @@ interface IEditAppointmentModalProps {
 }
 
 export function EditAppointmentModal(props: IEditAppointmentModalProps) {
-  const {
-    openEditModal,
-    dismissible,
-    setOpenEditModal,
-    patients,
-    aptToEdit,
-    currentUserId,
-  } = props;
+  const { openEditModal, dismissible, setOpenEditModal, patients, aptToEdit } =
+    props;
   const { viewState, setLoading } = useViewState();
   const [formMessage, setFormMessage] = useState<string>("");
   const router = useRouter();

@@ -12,6 +12,11 @@ import { Button } from "@/app/_ui/button";
 import { updateInvoice } from "@/app/_lib/actions";
 import { useFormState } from "react-dom";
 
+interface IInitialState {
+  message: any;
+  errors: any;
+}
+
 export default function EditInvoiceForm({
   invoice,
   customers,
@@ -20,7 +25,7 @@ export default function EditInvoiceForm({
   customers: CustomerField[];
 }) {
   const updateInvoiceWithId = updateInvoice.bind(null, invoice.id);
-  const initialState = { message: null, errors: {} };
+  const initialState: IInitialState = { message: null, errors: {} };
   const [state, dispatch] = useFormState(updateInvoiceWithId, initialState);
 
   return (
