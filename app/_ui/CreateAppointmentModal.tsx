@@ -59,6 +59,7 @@ export function CreateAppointmentModal(props: ICreateAppointmentModalProps) {
     setValue,
     formState: { errors },
   } = useForm<CreateAppointmentInputs>();
+
   const onSubmit: SubmitHandler<CreateAppointmentInputs> = async (data) => {
     if (!validateDates()) {
       setFormMessage("Start date must come before end date.");

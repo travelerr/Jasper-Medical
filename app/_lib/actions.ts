@@ -6,9 +6,13 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { signIn } from "@/auth";
 import { auth } from "../../auth";
-import { CreateAppointmentInputs, State } from "./definitions";
+import {
+  CreateAllergenInputs,
+  CreateAppointmentInputs,
+  State,
+} from "./definitions";
 import prisma from "./prisma";
-import { AppointmentStatus } from "@prisma/client";
+import { AllergyStatus, AppointmentStatus } from "@prisma/client";
 
 const FormSchema = z.object({
   id: z.string(),
@@ -194,4 +198,27 @@ export async function deleteAppointmentByID(appointmentId: number) {
     });
   });
   return result;
+}
+
+export async function createAllergy(formData: CreateAllergenInputs) {
+  const { name, reaction, severity, status, onsetDate, patientId } = formData;
+  try {
+    await prisma.allergy.create({
+      data: {
+        name: name,
+        reaction: reaction,
+        severity: severity,
+        status: status,
+        onsetDate: new Date(onsetDate),
+        patientId: patientId,
+      },
+    });
+
+    return { message: "Appointment created successfully." };
+  } catch (error) {
+    console.error(error);
+    return {
+      message: "Database Error: Failed to create appointment.",
+    };
+  }
 }

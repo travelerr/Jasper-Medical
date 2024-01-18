@@ -137,3 +137,14 @@ export const formatTimeString = (timestamp: number) => {
 
   return `${hours}:${minutes} ${ampm}`;
 };
+
+export const covertPascalCase = (string: string) => {
+  if (!string) return "";
+  return (
+    string
+      // Insert a space before all caps
+      .replace(/([A-Z])/g, " $1")
+      // Remove the first space
+      .trim()
+  );
+};

@@ -4,7 +4,7 @@ import { unstable_noStore as noStore } from "next/cache";
 import { CustomerField, InvoiceForm, InvoicesTable } from "./definitions";
 import prisma from "./prisma";
 import { DoctorWithAppointment } from "./prisma";
-import type { Patient, User } from "@prisma/client";
+import type { Allergen, Patient, User } from "@prisma/client";
 
 const ITEMS_PER_PAGE = 6;
 export async function fetchFilteredInvoices(
@@ -171,6 +171,12 @@ export async function getFullPatientProfileById(id: number): Promise<Patient> {
         provider: true,
         allergy: true,
         problemList: true,
+        drugIntolerance: {
+          include: {
+            drug: true,
+          },
+        },
+        patientHistory: true,
         appointments: true,
         consults: true,
         testResults: true,
@@ -216,5 +222,32 @@ export async function getPatientsTypeAhead(
   } catch (error) {
     console.error("Failed to fetch patients:", error);
     throw new Error("Failed to fetch patients.");
+  }
+}
+
+export async function getAllergensTypeAhead(
+  searchValue?: string
+): Promise<Allergen[]> {
+  try {
+    let query: {
+      where?: { name?: { contains: string; mode: "insensitive" } };
+    } = {};
+
+    if (searchValue) {
+      query = {
+        where: {
+          name: {
+            contains: searchValue,
+            mode: "insensitive", // for case-insensitive search
+          },
+        },
+      };
+    }
+
+    const allergens = await prisma.allergen.findMany(query);
+    return allergens;
+  } catch (error) {
+    console.error("Failed to fetch allergens:", error);
+    throw new Error("Failed to fetch allergens.");
   }
 }

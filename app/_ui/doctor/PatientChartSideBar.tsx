@@ -1,5 +1,9 @@
 import PatientDataContext from "@/app/_lib/contexts/PatientDataContext";
-import { formatPatientDob, formatPatientName } from "@/app/_lib/utils";
+import {
+  covertPascalCase,
+  formatPatientDob,
+  formatPatientName,
+} from "@/app/_lib/utils";
 import { Sidebar } from "flowbite-react";
 import { useContext, useEffect } from "react";
 import ImageWithFallback from "./ImageWithFallback";
@@ -10,6 +14,7 @@ import { IoMale, IoFemale, IoMaleFemale, IoMedical } from "react-icons/io5";
 import PatientNextAndLastAppointentComponent from "./PatientNextAndLastAppointentComponent";
 import PatientAllergy from "./PatientAllergy";
 import ProblemList from "./ProblemList";
+import PatientDrugIntolerances from "./PatientDrugIntolerances";
 
 export default function PatientChartSideBar() {
   const patient: FullPatientProfile = useContext(PatientDataContext);
@@ -17,7 +22,7 @@ export default function PatientChartSideBar() {
   useEffect(() => {}, [patient]);
 
   function renderSexSymbol() {
-    if (!patient.sexAtBirth) return "";
+    if (!patient.sexAtBirth) return <IoMaleFemale />;
     switch (patient.sexAtBirth) {
       case Sex.Female:
         return <IoFemale />;
@@ -56,30 +61,62 @@ export default function PatientChartSideBar() {
       </div>
       <div
         id="patient-sidebard-medical-info"
-        className="pt-2 border-b border-black"
+        className="py-2 border-b border-black"
       >
         <div className="grid grid-cols-2 gap-2">
           <div className="flex gap-2">
             <div>
               <FaUserDoctor />
             </div>
-            <small>{patient.provider?.pcp}</small>
+            <small>
+              {patient.provider?.pcp ? (
+                patient.provider?.pcp
+              ) : (
+                <button className="bg-green-500 border-2 border-green-500 p-1 rounded text-white">
+                  Add PCP{" "}
+                </button>
+              )}
+            </small>
           </div>
           <div className="flex gap-2">
             <div>{renderSexSymbol()}</div>
-            <small>{patient.sexAtBirth}</small>
+            <small>
+              {patient.sexAtBirth ? (
+                patient.sexAtBirth
+              ) : (
+                <button className="bg-green-500 border-2 border-green-500 p-1 rounded text-white">
+                  Add Sex
+                </button>
+              )}
+            </small>
           </div>
           <div className="flex gap-2">
             <div>
               <FaAddressCard />
             </div>
-            <small>{patient.insurance?.insuanceName}</small>
+            <small>
+              {patient.insurance?.insuanceName ? (
+                patient.insurance?.insuanceName
+              ) : (
+                <button className="bg-green-500 border-2 border-green-500 p-1 rounded text-white">
+                  Add Ins
+                </button>
+              )}
+            </small>
           </div>
           <div className="flex gap-2">
             <div>
               <IoMedical />
             </div>
-            <small>{patient.gender}</small>
+            <small>
+              {patient.pronouns ? (
+                covertPascalCase(patient.pronouns)
+              ) : (
+                <button className="bg-green-500 border-2 border-green-500 p-1 rounded text-white">
+                  Add Pro
+                </button>
+              )}
+            </small>
           </div>
         </div>
       </div>
@@ -94,6 +131,12 @@ export default function PatientChartSideBar() {
       <div id="patient-sidebard-allergy" className="pt-2">
         <div className="grid grid-cols-2 gap-2"></div>
         {patient && <PatientAllergy allergies={patient.allergy} />}
+      </div>
+      <div id="patient-sidebard-allergy" className="pt-2">
+        <div className="grid grid-cols-2 gap-2"></div>
+        {patient && (
+          <PatientDrugIntolerances intolerances={patient.drugIntolerance} />
+        )}
       </div>
       <div id="patient-sidebard-problem-list" className="pt-2">
         <div className="grid grid-cols-2 gap-2"></div>

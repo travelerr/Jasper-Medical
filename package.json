@@ -5,7 +5,8 @@
     "dev": "NODE_OPTIONS='--inspect' next dev",
     "start": "next start",
     "seed": "node -r dotenv/config ./scripts/seed.js",
-    "seed-excel": "node -r dotenv/config ./scripts/seed-excel.js",
+    "seed-excel-icd10": "node -r dotenv/config ./scripts/seed-excel-icd10.js",
+    "seed-excel-drugs": "node -r dotenv/config ./scripts/seed-excel-drugs.js",
     "lint": "next lint",
     "postinstall": "prisma generate"
   },

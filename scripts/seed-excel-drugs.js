@@ -11,10 +11,19 @@ async function importExcelData(filePath) {
 
   // Process data as needed to fit your Prisma model structure
   const processedData = data.map((item) => ({
-    code: item.CODE,
-    shortDescription: item.SHORTDESCRIPTION,
-    longDescription: item.LONGDESCRIPTION,
-    // Add other fields and processing as necessary
+    ndc: item.ndc,
+    type: item.type,
+    proprietaryName: item.proprietaryName,
+    proprietaryNameSuffix: item.proprietaryNameSuffix,
+    nonProprietaryName: item.nonProprietaryName,
+    dosageFormName: item.dosageFormName,
+    routeName: item.routeName,
+    manufacturerName: item.manufacturerName,
+    substanceName: item.substanceName,
+    activeNumeratorStrength: item.activeNumeratorStrength,
+    activeIngredientUnit: item.activeIngredientUnit,
+    pharmClasses: item.pharmClasses,
+    deaSchedule: item.deaSchedule,
   }));
 
   return processedData;
@@ -22,7 +31,7 @@ async function importExcelData(filePath) {
 
 async function seedDatabase(data) {
   for (const item of data) {
-    await prisma.iCD10Code.create({
+    await prisma.drug.create({
       data: item,
     });
   }
@@ -30,7 +39,7 @@ async function seedDatabase(data) {
 
 async function main() {
   const filePath =
-    "/Users/justinsacco/Desktop/Monterosso Project/Section111ValidICD10-Jan2024.numbers";
+    "/Users/justinsacco/Developer Projects/NextJSDemo/medical data/Drugs/drugs-table-formatted.numbers";
   const data = await importExcelData(filePath);
   await seedDatabase(data);
   await prisma.$disconnect();

@@ -5,6 +5,7 @@ import {
   AccordionPanel,
   AccordionTitle,
 } from "flowbite-react";
+import { HiPlus } from "react-icons/hi";
 
 interface IProblemListProps {
   problemList: ProblemList[];
@@ -39,8 +40,12 @@ export default function ProblemList(props: IProblemListProps) {
           </AccordionPanel>
         </Accordion>
       ) : (
-        <span className="text-black italic">No problem list</span>
+        <span className="text-black italic">No Problem List</span>
       )}
+      <button className="border divide-gray-200 flex hover:bg-transparent justify-between p-1 w-full">
+        <span className="font-medium">Add Problem</span>
+        <HiPlus className="h-5 w-5" />
+      </button>
     </>
   );
 }

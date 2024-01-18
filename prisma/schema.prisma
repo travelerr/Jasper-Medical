@@ -57,34 +57,37 @@ model Doctor {
 // Patient 
 
 model Patient {
-  id           Int            @id @default(autoincrement())
-  createdDate  DateTime?      @default(now())
-  updatedDate  DateTime?      @updatedAt
-  name         String?
-  firstName    String?
-  middleName   String?
-  lastName     String?
-  status       PatientStatus? @default(Active)
-  suffix       NameSuffix?
-  altName      String?
-  dob          DateTime?
-  sexAtBirth   Sex?
-  gender       Gender?
-  ssn          String?
-  maidenName   String?
-  genderMarker GenderMarker?
-  race         Race?
-  ethnicity    Ethnicity?
-  contact      Contact?
-  insurance    Insurance?
-  provider     Provider?
-  allergy      Allergy[]
-  problemList  ProblemList[]
-  appointments Appointment[] // Establish a one-to-many relationship w Consult
-  consults     Consult[]
-  testResults  TestResult[]
-  user         User           @relation(fields: [userId], references: [id])
-  userId       Int            @unique
+  id              Int               @id @default(autoincrement())
+  createdDate     DateTime?         @default(now())
+  updatedDate     DateTime?         @updatedAt
+  name            String?
+  firstName       String?
+  middleName      String?
+  lastName        String?
+  status          PatientStatus?    @default(Active)
+  suffix          NameSuffix?
+  altName         String?
+  dob             DateTime?
+  sexAtBirth      Sex?
+  gender          Gender?
+  ssn             String?
+  maidenName      String?
+  genderMarker    GenderMarker?
+  pronouns        Pronouns?
+  race            Race?
+  ethnicity       Ethnicity?
+  contact         Contact?
+  insurance       Insurance?
+  provider        Provider?
+  patientHistory  PatientHistory?
+  allergy         Allergy[]
+  problemList     ProblemList[]
+  appointments    Appointment[] // Establish a one-to-many relationship w Consult
+  consults        Consult[]
+  testResults     TestResult[]
+  drugIntolerance DrugIntolerance[]
+  user            User              @relation(fields: [userId], references: [id])
+  userId          Int               @unique
 }
 
 model Consult {
@@ -204,7 +207,7 @@ model Allergy {
   name        String?
   reaction    String?
   severity    AllergySeverity
-  status      AlleryStatus
+  status      AllergyStatus
   onsetDate   DateTime
   allergen    Allergen[]
   patientId   Int // Foreign key reference to the Patient model
@@ -252,6 +255,230 @@ model ProblemListICD10Code {
   icd10Code   ICD10Code   @relation(fields: [icd10CodeId], references: [id])
 
   @@id([problemListId, icd10CodeId])
+}
+
+model DrugIntolerance {
+  id          Int                     @id @default(autoincrement())
+  createdDate DateTime?               @default(now())
+  updatedDate DateTime?               @updatedAt
+  name        String?
+  reaction    String?
+  severity    DrugIntoleranceSeverity
+  status      DrugIntoleranceStatus
+  onsetDate   DateTime?
+  drugId      Int // Foreign key reference to the Drug model
+  drug        Drug                    @relation(fields: [drugId], references: [id])
+  patientId   Int // Foreign key reference to the Patient model
+  patient     Patient                 @relation(fields: [patientId], references: [id])
+}
+
+model Drug {
+  id                      Int               @id @default(autoincrement())
+  createdDate             DateTime?         @default(now())
+  updatedDate             DateTime?         @updatedAt
+  name                    String?
+  ndc                     String
+  type                    DrugType
+  proprietaryName         String?
+  proprietaryNameSuffix   String?
+  nonProprietaryName      String?
+  dosageFormName          String?
+  routeName               String?
+  manufacturerName        String?
+  substanceName           String?
+  activeNumeratorStrength String?
+  activeIngredientUnit    String?
+  pharmClasses            String?
+  deaSchedule             String?
+  drugIntolerances        DrugIntolerance[] // Relation to DrugIntolerance
+}
+
+model PatientHistory {
+  id                           Int                    @id @default(autoincrement())
+  patientId                    Int                    @unique // Foreign key reference to the Patient model
+  patient                      Patient                @relation(fields: [patientId], references: [id])
+  pastMedicalHistory           PastMedicalHistory[]
+  pastSurgicalHistory          PastSurgicalHistory[]
+  familyHistory                FamilyHistory[]
+  socialHistory                SocialHistory[]
+  cognitiveStatus              CognitiveStatus[]
+  functionalStatus             FunctionalStatus[]
+  psychologicalStatus          PsychologicalStatus[]
+  habits                       Habits[]
+  diet                         Diet[]
+  exercise                     Excercise[]
+  familyHistoryMother          String?
+  familyHistoryFather          String?
+  familyHistoryBrother         String?
+  familyHistorySister          String?
+  familyHistorySon             String?
+  familyHistoryDaughter        String?
+  familyHistoryGrandmother     String?
+  familyHistoryGrandfather     String?
+  familyHistoyAunt             String?
+  familyHistoryUncle           String?
+  familyHistoryOther           String?
+  socialHistoryEducation       PatientEducationLevel
+  socialHistoryFinancialStrain PatientFinancialStrain
+  psychologicalStatusStress    PatientStressLevel
+  habitsSmokingStatus          PatientSmokingStatus
+  surveyScores                 SurveyScore[]
+}
+
+model PastMedicalHistory {
+  id               Int            @id @default(autoincrement())
+  createdDate      DateTime?      @default(now())
+  updatedDate      DateTime?      @updatedAt
+  name             String?
+  sortOrder        Int?
+  note             String?
+  patientHistoryId Int // Foreign key reference to the Patient History model
+  patientHistory   PatientHistory @relation(fields: [patientHistoryId], references: [id])
+}
+
+model PastSurgicalHistory {
+  id               Int            @id @default(autoincrement())
+  createdDate      DateTime?      @default(now())
+  updatedDate      DateTime?      @updatedAt
+  name             String?
+  sortOrder        Int?
+  note             String?
+  patientHistoryId Int // Foreign key reference to the Patient History model
+  patientHistory   PatientHistory @relation(fields: [patientHistoryId], references: [id])
+}
+
+model FamilyHistory {
+  id               Int            @id @default(autoincrement())
+  createdDate      DateTime?      @default(now())
+  updatedDate      DateTime?      @updatedAt
+  name             String?
+  sortOrder        Int?
+  note             String?
+  patientHistoryId Int // Foreign key reference to the Patient History model
+  patientHistory   PatientHistory @relation(fields: [patientHistoryId], references: [id])
+}
+
+model SocialHistory {
+  id               Int            @id @default(autoincrement())
+  createdDate      DateTime?      @default(now())
+  updatedDate      DateTime?      @updatedAt
+  name             String?
+  sortOrder        Int?
+  note             String?
+  patientHistoryId Int // Foreign key reference to the Patient History model
+  patientHistory   PatientHistory @relation(fields: [patientHistoryId], references: [id])
+}
+
+model CognitiveStatus {
+  id               Int            @id @default(autoincrement())
+  createdDate      DateTime?      @default(now())
+  updatedDate      DateTime?      @updatedAt
+  name             String?
+  sortOrder        Int?
+  note             String?
+  patientHistoryId Int // Foreign key reference to the Patient History model
+  patientHistory   PatientHistory @relation(fields: [patientHistoryId], references: [id])
+}
+
+model FunctionalStatus {
+  id               Int            @id @default(autoincrement())
+  createdDate      DateTime?      @default(now())
+  updatedDate      DateTime?      @updatedAt
+  name             String?
+  sortOrder        Int?
+  note             String?
+  patientHistoryId Int // Foreign key reference to the Patient History model
+  patientHistory   PatientHistory @relation(fields: [patientHistoryId], references: [id])
+}
+
+model PsychologicalStatus {
+  id               Int            @id @default(autoincrement())
+  createdDate      DateTime?      @default(now())
+  updatedDate      DateTime?      @updatedAt
+  name             String?
+  sortOrder        Int?
+  note             String?
+  patientHistoryId Int // Foreign key reference to the Patient History model
+  patientHistory   PatientHistory @relation(fields: [patientHistoryId], references: [id])
+}
+
+model Habits {
+  id               Int            @id @default(autoincrement())
+  createdDate      DateTime?      @default(now())
+  updatedDate      DateTime?      @updatedAt
+  name             String?
+  sortOrder        Int?
+  note             String?
+  patientHistoryId Int // Foreign key reference to the Patient History model
+  patientHistory   PatientHistory @relation(fields: [patientHistoryId], references: [id])
+}
+
+model Diet {
+  id               Int            @id @default(autoincrement())
+  createdDate      DateTime?      @default(now())
+  updatedDate      DateTime?      @updatedAt
+  name             String?
+  sortOrder        Int?
+  note             String?
+  patientHistoryId Int // Foreign key reference to the Patient History model
+  patientHistory   PatientHistory @relation(fields: [patientHistoryId], references: [id])
+}
+
+model Excercise {
+  id               Int            @id @default(autoincrement())
+  createdDate      DateTime?      @default(now())
+  updatedDate      DateTime?      @updatedAt
+  name             String?
+  sortOrder        Int?
+  note             String?
+  patientHistoryId Int // Foreign key reference to the Patient History model
+  patientHistory   PatientHistory @relation(fields: [patientHistoryId], references: [id])
+}
+
+model Survey {
+  id          Int              @id @default(autoincrement())
+  createdDate DateTime?        @default(now())
+  updatedDate DateTime?        @updatedAt
+  name        String?
+  surveyName  SurveyName
+  questions   SurveyQuestion[]
+  responses   SurveyResponse[]
+  SurveyScore SurveyScore[]
+}
+
+model SurveyQuestion {
+  id             Int              @id @default(autoincrement())
+  createdDate    DateTime?        @default(now())
+  updatedDate    DateTime?        @updatedAt
+  name           String?
+  text           String // The question text
+  surveyId       Int
+  survey         Survey           @relation(fields: [surveyId], references: [id])
+  SurveyResponse SurveyResponse[]
+}
+
+model SurveyResponse {
+  id          Int            @id @default(autoincrement())
+  createdDate DateTime?      @default(now())
+  updatedDate DateTime?      @updatedAt
+  name        String?
+  response    String // The response to the survey question
+  questionId  Int
+  question    SurveyQuestion @relation(fields: [questionId], references: [id])
+  surveyId    Int
+  survey      Survey         @relation(fields: [surveyId], references: [id])
+}
+
+model SurveyScore {
+  id               Int            @id @default(autoincrement())
+  createdDate      DateTime?      @default(now())
+  updatedDate      DateTime?      @updatedAt
+  name             String?
+  score            Int // The score from the survey
+  surveyId         Int
+  survey           Survey         @relation(fields: [surveyId], references: [id])
+  patientHistoryId Int // Foreign key reference to the Patient History model
+  patientHistory   PatientHistory @relation(fields: [patientHistoryId], references: [id])
 }
 
 // Admin
@@ -414,6 +641,13 @@ enum GenderMarker {
   X
 }
 
+enum Pronouns {
+  HeHimHis       @map("He/Him/His")
+  SheHerHers     @map("She/Her/Hers")
+  TheyThemTheirs @map("They/Them/Theirs")
+  ZeHirHirs      @map("Ze/Hir/Hirs")
+}
+
 enum Languages {
   English
   Spanish
@@ -454,7 +688,7 @@ enum PatientStatus {
   Deceased
 }
 
-enum AlleryStatus {
+enum AllergyStatus {
   Active
   Prior
 }
@@ -469,4 +703,71 @@ enum ProblemListStatus {
   Active
   Controlled
   Resolved
+}
+
+enum DrugIntoleranceSeverity {
+  Mild
+  Moderate
+  Severe
+}
+
+enum DrugIntoleranceStatus {
+  Active
+  Prior
+}
+
+enum DrugType {
+  CellularTherapy           @map("Cellular Therapy")
+  HumanOtcDrug              @map("Human OTC Drug ")
+  HumanPrescriptionDrug     @map("Human Prescription Drug")
+  NonStandardizedAllergenic @map("Non Standardzied Allergenic")
+  PlasmaDerivative          @map("Plasma Derivative")
+  StandardizedAllergenic    @map("Standardized Allergenic")
+  Vaccine                   @map("Vaccine")
+}
+
+enum PatientEducationLevel {
+  NoFormalEducation    @map("No formal education")
+  SomePrimaryEducation @map("Some primary education")
+  CompletedPrimary     @map("Completed primary")
+  SomeSecondary        @map("Some secondary")
+  CompletedSecondary   @map("Completed secondary")
+  SomeCollege          @map("Some college")
+  AssociatesDegree     @map("Associates degree")
+  BachelorsDegree      @map("Bachelors degree")
+  MastersDegree        @map("Masters degree")
+  ProfessionalDegree   @map("Professional degree")
+  Doctorate            @map("Doctorate")
+}
+
+enum PatientFinancialStrain {
+  NoStrain          @map("No strain")
+  MinorStrain       @map("Minor strain")
+  ModerateStrain    @map("Moderate strain")
+  SignificantStrain @map("Significant strain")
+}
+
+enum SurveyName {
+  HARK   @map("Exposure to Violence - HARK Questionnaire")
+  SNI    @map("Social Connection - Social Network Index Questionnaire")
+  PHQ2   @map("Depression - PHQ-2 Questionnaire")
+  PHQ4   @map("Depression - PHQ-4 Questionnaire")
+  PHQ9   @map("Depression - PHQ-9 Questionnaire")
+  GAD7   @map("Anxiety - GAD-7 Questionnaire")
+  AUDITC @map("Alchol Use - Audit-C")
+}
+
+enum PatientStressLevel {
+  NoStress          @map("No stress")
+  MinorStress       @map("Minor stress")
+  ModerateStress    @map("Moderate stress")
+  SignificantStress @map("Significant stress")
+}
+
+enum PatientSmokingStatus {
+  NeverSmoked      @map("Never smoked")
+  FormerSmoker     @map("Former smoker")
+  OccasionalSmoker @map("Occasional smoker")
+  RegularSmoker    @map("Regular smoker")
+  HeavySmoker      @map("Heavy smoker")
 }

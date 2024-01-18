@@ -4,10 +4,14 @@
 
 import {
   Allergy,
+  AllergySeverity,
+  AllergyStatus,
   Appointment,
   AppointmentStatus,
   Consult,
   Contact,
+  Drug,
+  DrugIntolerance,
   Ethnicity,
   Insurance,
   Patient,
@@ -71,6 +75,15 @@ export type CreateAppointmentInputs = {
   details: string;
 };
 
+export type CreateAllergenInputs = {
+  name: string;
+  reaction: string;
+  severity: AllergySeverity;
+  status: AllergyStatus;
+  onsetDate: string;
+  patientId: number;
+};
+
 export type EditAppointment = {
   id: number;
   createdDate: Date;
@@ -131,6 +144,8 @@ export type User = {
   image: string | null;
 };
 
+export type DrugIntolerancesWithDrug = {};
+
 export type FullPatientProfile = Patient & {
   race: Race;
   sexAtBirth: Sex;
@@ -139,6 +154,7 @@ export type FullPatientProfile = Patient & {
   insurance: Insurance;
   provider: Provider;
   allergy: Allergy[];
+  drugIntolerance: (DrugIntolerance & { drug: Drug })[];
   problemList: ProblemList[];
   appointments: Appointment[];
   consults: Consult[];
