@@ -71,12 +71,10 @@ export default function PatientAllery(props: IPatientAlleryProps) {
       <AddNewAllergyModal
         setOpenCreateModal={setOpenCreateModal}
         openCreateModal={openCreateModal}
-        dismissible={true}
       />
       <EditAllergyModal
         setOpenEditModal={setOpenEditModal}
         openEditModal={openEditModal}
-        dismissible={true}
         allergyToEdit={allergyToEdit}
       />
     </>

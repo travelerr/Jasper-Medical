@@ -20,7 +20,6 @@ import useViewState from "../../../_lib/customHooks/useViewState";
 import LoadingOverlay from "../../loadingWidget";
 interface IEditAppointmentModalProps {
   openEditModal: boolean;
-  dismissible?: boolean;
   setOpenEditModal: Function;
   patients: any[];
   aptToEdit: EditAppointment;
@@ -28,8 +27,7 @@ interface IEditAppointmentModalProps {
 }
 
 export function EditAppointmentModal(props: IEditAppointmentModalProps) {
-  const { openEditModal, dismissible, setOpenEditModal, patients, aptToEdit } =
-    props;
+  const { openEditModal, setOpenEditModal, patients, aptToEdit } = props;
   const { viewState, setLoading } = useViewState();
   const [formMessage, setFormMessage] = useState<string>("");
   const router = useRouter();
@@ -117,7 +115,6 @@ export function EditAppointmentModal(props: IEditAppointmentModalProps) {
   return (
     <FlowBiteModal
       size={"7xl"}
-      dismissible={dismissible}
       show={openEditModal}
       className="relative"
       onClose={() => setOpenEditModal(false)}

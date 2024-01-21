@@ -10,8 +10,10 @@ import {
   CreateAllergenInputs,
   CreateAppointmentInputs,
   CreateDrugIntoleranceInputs,
+  CreateProblemInputs,
   EditAllergenInputs,
   EditDrugIntoleranceInputs,
+  EditProblemInputs,
   State,
 } from "./definitions";
 import prisma from "./prisma";
@@ -301,6 +303,57 @@ export async function updateDrugIntolerance(
     console.error(error);
     return {
       message: "Database Error: Failed to update Drug Intolerance.",
+    };
+  }
+}
+
+export async function createProblem(formData: CreateProblemInputs) {
+  const { synopsis, dxDate, status, patientId, name, icd10Codes } = formData;
+  try {
+    await prisma.problemList.create({
+      data: {
+        name: name,
+        synopsis: synopsis,
+        status: status,
+        dxDate: new Date(dxDate),
+        patientId: patientId,
+        icd10Codes: {
+          create: icd10Codes.map((code) => ({
+            icd10CodeId: code.icd10CodeId,
+          })),
+        },
+      },
+    });
+
+    return { message: "Patient problem created successfully." };
+  } catch (error) {
+    console.error(error);
+    return {
+      message: "Database Error: Failed to create patient problem",
+    };
+  }
+}
+
+export async function updateProblem(formData: EditProblemInputs) {
+  const { id, dxDate, status, synopsis, icd10Codes, name } = formData;
+  try {
+    await prisma.problemList.update({
+      where: {
+        id: id,
+      },
+      data: {
+        name: name,
+        synopsis: synopsis,
+        status: status,
+        dxDate: new Date(dxDate),
+      },
+    });
+
+    return { message: "Patient problem updated successfully." };
+  } catch (error) {
+    console.error(error);
+    return {
+      message: "Database Error: Failed to update patient problem.",
     };
   }
 }

@@ -19,10 +19,11 @@ export default function PatientDrugIntolerances(
   const { intolerances } = props;
   const [openCreateModal, setOpenCreateModal] = useState<boolean>(false);
   const [openEditModal, setOpenEditModal] = useState<boolean>(false);
-  const [drugIntoleranceToEdit, setDrugIntoleranceToEdit] =
-    useState<DrugIntolerance | null>(null);
+  const [drugIntoleranceToEdit, setDrugIntoleranceToEdit] = useState<
+    (DrugIntolerance & { drug: Drug }) | null
+  >(null);
 
-  const handleEditClick = (intolerance: DrugIntolerance) => {
+  const handleEditClick = (intolerance: DrugIntolerance & { drug: Drug }) => {
     setDrugIntoleranceToEdit(intolerance);
     setOpenEditModal(true);
   };
@@ -76,12 +77,10 @@ export default function PatientDrugIntolerances(
       <AddNewDrugIntoleranceModal
         setOpenCreateModal={setOpenCreateModal}
         openCreateModal={openCreateModal}
-        dismissible={true}
       />
       <EditDrugIntoleranceModal
         setOpenEditModal={setOpenEditModal}
         openEditModal={openEditModal}
-        dismissible={true}
         drugIntoleranceToEdit={drugIntoleranceToEdit}
       />
     </>

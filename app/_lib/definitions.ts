@@ -15,10 +15,13 @@ import {
   DrugIntoleranceSeverity,
   DrugIntoleranceStatus,
   Ethnicity,
+  ICD10Code,
   Insurance,
   Patient,
   Prisma,
   ProblemList,
+  ProblemListICD10Code,
+  ProblemListStatus,
   Provider,
   Race,
   Sex,
@@ -77,15 +80,6 @@ export type CreateAppointmentInputs = {
   details: string;
 };
 
-export type CreateAllergenInputs = {
-  name: string;
-  reaction: string;
-  severity: AllergySeverity;
-  status: AllergyStatus;
-  onsetDate: string;
-  patientId: number;
-};
-
 export type EditAppointment = {
   id: number;
   createdDate: Date;
@@ -106,6 +100,15 @@ export type EditAppointment = {
     firstName: string;
     lastName: string;
   };
+};
+
+export type CreateAllergenInputs = {
+  name: string;
+  reaction: string;
+  severity: AllergySeverity;
+  status: AllergyStatus;
+  onsetDate: string;
+  patientId: number;
 };
 
 export type EditAllergenInputs = {
@@ -134,6 +137,25 @@ export type EditDrugIntoleranceInputs = {
   status: DrugIntoleranceStatus;
   onsetDate: string;
   drugIntoleranceId: number;
+};
+
+export type CreateProblemInputs = {
+  name?: string;
+  dxDate: string;
+  status: ProblemListStatus;
+  synopsis: string;
+  patientId: number;
+  icd10Codes: ProblemListICD10Code[];
+};
+
+export type EditProblemInputs = {
+  id: number;
+  name?: string;
+  dxDate: string;
+  status: ProblemListStatus;
+  synopsis: string;
+  patientId: number;
+  icd10Codes: ProblemListICD10Code[];
 };
 
 export type UserAppointment = {
@@ -185,7 +207,9 @@ export type FullPatientProfile = Patient & {
   provider: Provider;
   allergy: Allergy[];
   drugIntolerance: (DrugIntolerance & { drug: Drug })[];
-  problemList: ProblemList[];
+  problemList: (ProblemList & {
+    icd10Codes: (ProblemListICD10Code & { icd10Code: ICD10Code })[];
+  })[];
   appointments: Appointment[];
   consults: Consult[];
   testResults: TestResult[];

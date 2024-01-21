@@ -10,37 +10,44 @@ import {
 } from "flowbite-react";
 import { useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { CreateAllergenInputs } from "@/app/_lib/definitions";
-import { AllergySeverity, AllergyStatus } from "@prisma/client";
-import { createAllergy } from "@/app/_lib/actions";
+import { CreateProblemInputs } from "@/app/_lib/definitions";
+import { ICD10Code, ProblemListStatus } from "@prisma/client";
+import { createProblem } from "@/app/_lib/actions";
 import PatientDataContext from "@/app/_lib/contexts/PatientDataContext";
+import ICD10CodeLookup from "./ICD10CodeLookup";
 
-interface INewAllergyModal {
+interface IAddNewProblemModal {
   openCreateModal: boolean;
   setOpenCreateModal: Function;
 }
 
-export default function NewAllergyModal(props: INewAllergyModal) {
+export default function AddNewProblemModal(props: IAddNewProblemModal) {
   const { openCreateModal, setOpenCreateModal } = props;
   const { viewState, setLoading } = useViewState();
   const [formMessage, setFormMessage] = useState<string>("");
+  const [selectedICD10Codes, setSelectedICD10Codes] = useState<ICD10Code[]>([]);
   const router = useRouter();
   const { refetchPatientData, patient } = useContext(PatientDataContext);
 
   const {
     register,
     handleSubmit,
-    watch,
     reset,
-    setValue,
     formState: { errors },
-  } = useForm<CreateAllergenInputs>();
+  } = useForm<CreateProblemInputs>();
 
-  const onSubmit: SubmitHandler<CreateAllergenInputs> = async (data) => {
-    data.patientId = patient.id;
+  const onSubmit: SubmitHandler<CreateProblemInputs> = async (data) => {
+    if (patient && patient.id) {
+      data.patientId = patient.id;
+    }
+    if (selectedICD10Codes.length) {
+      data.icd10Codes = selectedICD10Codes.map((code) => {
+        return { icd10CodeId: code.id, problemListId: null };
+      });
+    }
     try {
       setLoading(true);
-      await createAllergy(data);
+      await createProblem(data);
       await refetchPatientData();
       setLoading(false);
       reset();
@@ -53,6 +60,11 @@ export default function NewAllergyModal(props: INewAllergyModal) {
     }
   };
 
+  const handleSelectedICD10Code = (code: ICD10Code) => {
+    console.log(code);
+    setSelectedICD10Codes((prevCodes) => [...prevCodes, code]);
+  };
+
   return (
     <FlowBiteModal
       size={"7xl"}
@@ -60,32 +72,50 @@ export default function NewAllergyModal(props: INewAllergyModal) {
       className="relative"
       onClose={() => setOpenCreateModal(false)}
     >
-      <FlowBiteModal.Header>Add Patient Allergy</FlowBiteModal.Header>
+      <FlowBiteModal.Header>Add Patient Problem</FlowBiteModal.Header>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <FlowBiteModal.Body>
+        <FlowBiteModal.Body className="overflow-visible">
           <LoadingOverlay isLoading={viewState.loading} />
+          <div className="mb-6">
+            <Label value="Title" />
+            <TextInput id="name" {...register("name", { required: true })} />
+          </div>
           <div className="grid gap-6 mb-6 md:grid-cols-2">
             <div>
-              <Label htmlFor="name" value="Allergy" />
-              <TextInput id="name" {...register("name", { required: true })} />
-              <div id="title-error" aria-live="polite" aria-atomic="true">
-                {errors.name && <p>{errors.name.message}</p>}
-              </div>
+              <ICD10CodeLookup
+                handleSelectedICD10Code={handleSelectedICD10Code}
+              />
             </div>
             <div>
-              <Label htmlFor="reaction" value="Reaction" />
+              <ul>
+                {selectedICD10Codes.length > 0 ? (
+                  <li className="flex w-full border-b">
+                    <div className="w-11/12 font-bold">Diagnosis</div>
+                    <div className="w-1/12 font-bold">ICD10</div>
+                  </li>
+                ) : null}
+                {selectedICD10Codes.map((code, index) => (
+                  <li key={code.id} className="flex w-full text-left">
+                    <div className="w-11/12">{code.shortDescription}</div>
+                    <div className="w-1/12">{code.code}</div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <Label htmlFor="synopsis" value="Synopsis" />
               <TextInput
-                id="reaction"
-                {...register("reaction", { required: true })}
+                id="synopsis"
+                {...register("synopsis", { required: true })}
               />
               <div id="title-error" aria-live="polite" aria-atomic="true">
-                {errors.reaction && <p>{errors.reaction.message}</p>}
+                {errors.synopsis && <p>{errors.synopsis.message}</p>}
               </div>
             </div>
             <div>
               <Label htmlFor="status" value="Status" />
               <Select id="status" {...register("status", { required: true })}>
-                {Object.values(AllergyStatus).map((status, index) => (
+                {Object.values(ProblemListStatus).map((status, index) => (
                   <option key={index} value={status}>
                     {status}
                   </option>
@@ -96,34 +126,17 @@ export default function NewAllergyModal(props: INewAllergyModal) {
                 {errors.status && <p>{errors.status.message}</p>}
               </div>
             </div>
-            <div>
-              <Label htmlFor="severity" value="Severity" />
-              <Select
-                id="severity"
-                {...register("severity", { required: true })}
-              >
-                {Object.values(AllergySeverity).map((severity, index) => (
-                  <option key={index} value={severity}>
-                    {severity}
-                  </option>
-                ))}
-              </Select>
-              <div id="severity-error" aria-live="polite" aria-atomic="true">
-                {" "}
-                {errors.severity && <p>{errors.severity.message}</p>}
-              </div>
-            </div>
             <div style={{ display: "flex", flexDirection: "column" }}>
-              <Label htmlFor="onsetDate" value="Onset Date" />
+              <Label htmlFor="dxDate" value="Diagnosis Date" />
               <input
                 type="date"
                 id="onsetDate"
-                {...register("onsetDate")}
+                {...register("dxDate")}
                 className="block w-full border disabled:cursor-not-allowed disabled:opacity-50 bg-gray-50 border-gray-300 text-gray-900 focus:border-cyan-500 focus:ring-cyan-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500 p-2.5 text-sm rounded-lg"
               />
               <div id="onsetDate-error" aria-live="polite" aria-atomic="true">
                 {" "}
-                {errors.onsetDate && <p>{errors.onsetDate.message}</p>}
+                {errors.dxDate && <p>{errors.dxDate.message}</p>}
               </div>
             </div>
           </div>

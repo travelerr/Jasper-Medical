@@ -22,14 +22,13 @@ import DrugLookup from "./DrugLookup";
 
 interface IAddNewDrugIntoleranceModal {
   openCreateModal: boolean;
-  dismissible?: boolean;
   setOpenCreateModal: Function;
 }
 
 export default function AddNewDrugIntoleranceModal(
   props: IAddNewDrugIntoleranceModal
 ) {
-  const { openCreateModal, dismissible, setOpenCreateModal } = props;
+  const { openCreateModal, setOpenCreateModal } = props;
   const { viewState, setLoading } = useViewState();
   const [formMessage, setFormMessage] = useState<string>("");
   const router = useRouter();
@@ -68,7 +67,6 @@ export default function AddNewDrugIntoleranceModal(
   return (
     <FlowBiteModal
       size={"7xl"}
-      dismissible={dismissible}
       show={openCreateModal}
       className="relative"
       onClose={() => setOpenCreateModal(false)}

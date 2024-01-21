@@ -22,7 +22,6 @@ import PatientDataContext from "@/app/_lib/contexts/PatientDataContext";
 
 interface IEditDrugIntoleranceModal {
   openEditModal: boolean;
-  dismissible?: boolean;
   setOpenEditModal: Function;
   drugIntoleranceToEdit: DrugIntolerance & { drug: Drug };
 }
@@ -30,12 +29,7 @@ interface IEditDrugIntoleranceModal {
 export default function EditDrugIntoleranceModal(
   props: IEditDrugIntoleranceModal
 ) {
-  const {
-    openEditModal,
-    dismissible,
-    setOpenEditModal,
-    drugIntoleranceToEdit,
-  } = props;
+  const { openEditModal, setOpenEditModal, drugIntoleranceToEdit } = props;
   const { viewState, setLoading } = useViewState();
   const [formMessage, setFormMessage] = useState<string>("");
   const router = useRouter();
@@ -86,7 +80,6 @@ export default function EditDrugIntoleranceModal(
   return (
     <FlowBiteModal
       size={"7xl"}
-      dismissible={dismissible}
       show={openEditModal}
       className="relative"
       onClose={() => setOpenEditModal(false)}

@@ -9,7 +9,7 @@ import {
 } from "./definitions";
 import prisma from "./prisma";
 import { DoctorWithAppointment } from "./prisma";
-import type { Allergen, Drug, Patient, User } from "@prisma/client";
+import type { Allergen, Drug, ICD10Code, Patient, User } from "@prisma/client";
 
 const ITEMS_PER_PAGE = 6;
 export async function fetchFilteredInvoices(
@@ -177,7 +177,15 @@ export async function getFullPatientProfileById(
         insurance: true,
         provider: true,
         allergy: true,
-        problemList: true,
+        problemList: {
+          include: {
+            icd10Codes: {
+              include: {
+                icd10Code: true,
+              },
+            },
+          },
+        },
         drugIntolerance: {
           include: {
             drug: true,
@@ -285,5 +293,42 @@ export async function getDrugsTypeAhead(searchValue?: string): Promise<Drug[]> {
   } catch (error) {
     console.error("Failed to fetch drugs:", error);
     throw new Error("Failed to fetch drugs.");
+  }
+}
+
+export async function getICD10CodesTypeAhead(
+  searchValue?: string
+): Promise<ICD10Code[]> {
+  try {
+    const codes = await prisma.iCD10Code.findMany({
+      where: {
+        OR: [
+          {
+            longDescription: {
+              contains: searchValue,
+              mode: "insensitive",
+            },
+          },
+          {
+            shortDescription: {
+              contains: searchValue,
+              mode: "insensitive",
+            },
+          },
+          {
+            code: {
+              contains: searchValue,
+              mode: "insensitive",
+            },
+          },
+        ],
+      },
+      distinct: ["longDescription", "shortDescription", "code"],
+      take: 10,
+    });
+    return codes;
+  } catch (error) {
+    console.error("Failed to fetch ICD10 codes:", error);
+    throw new Error("Failed to fetch ICD10 codes.");
   }
 }

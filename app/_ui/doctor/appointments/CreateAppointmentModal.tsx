@@ -18,7 +18,6 @@ import LoadingOverlay from "../../loadingWidget";
 
 interface ICreateAppointmentModalProps {
   openCreateModal: boolean;
-  dismissible?: boolean;
   setOpenCreateModal: Function;
   patients: any[];
   slotInfo: ISlot;
@@ -40,13 +39,7 @@ interface ISlot {
 }
 
 export function CreateAppointmentModal(props: ICreateAppointmentModalProps) {
-  const {
-    openCreateModal,
-    dismissible,
-    setOpenCreateModal,
-    patients,
-    slotInfo,
-  } = props;
+  const { openCreateModal, setOpenCreateModal, patients, slotInfo } = props;
   const { viewState, setLoading } = useViewState();
   const [formMessage, setFormMessage] = useState<string>("");
   const router = useRouter();
@@ -118,7 +111,6 @@ export function CreateAppointmentModal(props: ICreateAppointmentModalProps) {
   return (
     <FlowBiteModal
       size={"7xl"}
-      dismissible={dismissible}
       show={openCreateModal}
       className="relative"
       onClose={() => setOpenCreateModal(false)}
