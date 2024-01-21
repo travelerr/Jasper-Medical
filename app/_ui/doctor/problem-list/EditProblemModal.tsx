@@ -17,7 +17,7 @@ import {
   ProblemListICD10Code,
   ProblemListStatus,
 } from "@prisma/client";
-import { updateProblem } from "@/app/_lib/actions";
+import { deleteProblemListByID, updateProblem } from "@/app/_lib/actions";
 import PatientDataContext from "@/app/_lib/contexts/PatientDataContext";
 
 interface IEditProblemListModal {
@@ -38,7 +38,6 @@ export default function EditDrugIntoleranceModal(props: IEditProblemListModal) {
   const {
     register,
     handleSubmit,
-    watch,
     reset,
     setValue,
     formState: { errors },
@@ -54,12 +53,26 @@ export default function EditDrugIntoleranceModal(props: IEditProblemListModal) {
       reset();
       setOpenEditModal(false);
       setFormMessage("");
-      router.refresh();
     } catch (error) {
-      setFormMessage("There was an error creating the appointment");
+      setFormMessage("There was an error creating the problem");
       setLoading(false);
     }
   };
+
+  async function deleteProblemList() {
+    try {
+      setLoading(true);
+      await deleteProblemListByID(problemToEdit.id);
+      await refetchPatientData();
+      setLoading(false);
+      setOpenEditModal(false);
+      setFormMessage("");
+      router.refresh();
+    } catch (error) {
+      setFormMessage("There was an error deleting the problem");
+      setLoading(false);
+    }
+  }
 
   useEffect(() => {
     if (problemToEdit) {
@@ -146,6 +159,9 @@ export default function EditDrugIntoleranceModal(props: IEditProblemListModal) {
           <Button type="submit">Update</Button>
           <Button color="gray" onClick={() => setOpenEditModal(false)}>
             Cancel
+          </Button>
+          <Button color="red" onClick={() => deleteProblemList()}>
+            Delete Problem
           </Button>
         </FlowBiteModal.Footer>
       </form>

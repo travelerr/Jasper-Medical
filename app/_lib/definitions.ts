@@ -28,18 +28,36 @@ import {
   TestResult,
 } from "@prisma/client";
 
+// #region Auth
+
+export enum UserRole {
+  DOCTOR = "DOCTOR",
+  PATIENT = "PATIENT",
+  ADMIN = "ADMIN",
+}
+
+export type User = {
+  id: number;
+  firstName: string;
+  lastName: string;
+  dateOfBirth: Date;
+  gender: string;
+  phoneNumber: string;
+  email: string;
+  emailVerified: Date | null;
+  password: string;
+  street: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  height: Prisma.Decimal;
+  weight: Prisma.Decimal;
+  image: string | null;
+};
+
 export type Role = {
   id: number;
   name: string;
-};
-
-export type UserWithRole = {
-  userId: number;
-  roleId: number;
-  role: {
-    id: number;
-    name: string;
-  };
 };
 
 export type State = {
@@ -51,24 +69,9 @@ export type State = {
   message?: string | null;
 };
 
-export type CreateAppointmentState = {
-  errors: {
-    details?: string[] | undefined;
-    title?: string[] | undefined;
-    startTime?: string[] | undefined;
-    endTime?: string[] | undefined;
-    patient?: string[] | undefined;
-    startDate?: string[] | undefined;
-    endDate?: string[] | undefined;
-  };
-  message?: string | null;
-};
+// #endregion
 
-export type UserAppointmentWithAppointment = {
-  appointmentId: number;
-  userId: number;
-  appointment: Appointment;
-};
+// #region Appointments
 
 export type CreateAppointmentInputs = {
   title: string;
@@ -102,6 +105,29 @@ export type EditAppointment = {
   };
 };
 
+export type UserAppointment = {
+  appointmentId: number;
+  userId: number;
+  user: User;
+};
+
+export type GetAppointmentsByUserID = {
+  id: number;
+  startTime: Date;
+  endTime: Date;
+  title: string;
+  status: string;
+  details: string;
+  createdAt: Date;
+  updatedAt: Date;
+  cancelledAt: Date | null;
+  users: UserAppointment[];
+};
+
+// #endregion
+
+// #region Allergy
+
 export type CreateAllergenInputs = {
   name: string;
   reaction: string;
@@ -119,6 +145,10 @@ export type EditAllergenInputs = {
   onsetDate: string;
   allergyId: number;
 };
+
+// #endregion
+
+// #region Drug Intolerances
 
 export type CreateDrugIntoleranceInputs = {
   name: string;
@@ -139,6 +169,10 @@ export type EditDrugIntoleranceInputs = {
   drugIntoleranceId: number;
 };
 
+// #endregion
+
+// #region Problem List
+
 export type CreateProblemInputs = {
   name?: string;
   dxDate: string;
@@ -158,45 +192,9 @@ export type EditProblemInputs = {
   icd10Codes: ProblemListICD10Code[];
 };
 
-export type UserAppointment = {
-  appointmentId: number;
-  userId: number;
-  user: User;
-};
+// #endregion
 
-export type GetAppointmentsByUserID = {
-  id: number;
-  startTime: Date;
-  endTime: Date;
-  title: string;
-  status: string;
-  details: string;
-  createdAt: Date;
-  updatedAt: Date;
-  cancelledAt: Date | null;
-  users: UserAppointment[];
-};
-
-export type User = {
-  id: number;
-  firstName: string;
-  lastName: string;
-  dateOfBirth: Date;
-  gender: string;
-  phoneNumber: string;
-  email: string;
-  emailVerified: Date | null;
-  password: string;
-  street: string;
-  city: string;
-  state: string;
-  zipCode: string;
-  height: Prisma.Decimal;
-  weight: Prisma.Decimal;
-  image: string | null;
-};
-
-export type DrugIntolerancesWithDrug = {};
+// #region Patient
 
 export type FullPatientProfile = Patient & {
   race: Race;
@@ -219,6 +217,8 @@ export type PatientNextAndLastApt = {
   lastApt: Appointment;
   nextApt: Appointment;
 };
+
+// #endregion
 
 /*****************/
 export type Customer = {
@@ -298,11 +298,3 @@ export type InvoiceForm = {
   amount: number;
   status: "pending" | "paid";
 };
-
-// NEW
-
-export enum UserRole {
-  DOCTOR = "DOCTOR",
-  PATIENT = "PATIENT",
-  ADMIN = "ADMIN",
-}

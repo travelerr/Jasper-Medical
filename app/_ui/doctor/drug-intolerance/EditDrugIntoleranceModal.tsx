@@ -17,7 +17,10 @@ import {
   DrugIntoleranceSeverity,
   DrugIntoleranceStatus,
 } from "@prisma/client";
-import { updateDrugIntolerance } from "@/app/_lib/actions";
+import {
+  deleteDrugIntoleranceByID,
+  updateDrugIntolerance,
+} from "@/app/_lib/actions";
 import PatientDataContext from "@/app/_lib/contexts/PatientDataContext";
 
 interface IEditDrugIntoleranceModal {
@@ -38,7 +41,6 @@ export default function EditDrugIntoleranceModal(
   const {
     register,
     handleSubmit,
-    watch,
     reset,
     setValue,
     formState: { errors },
@@ -54,12 +56,25 @@ export default function EditDrugIntoleranceModal(
       reset();
       setOpenEditModal(false);
       setFormMessage("");
-      router.refresh();
     } catch (error) {
-      setFormMessage("There was an error creating the appointment");
+      setFormMessage("There was an error creating the allergy");
       setLoading(false);
     }
   };
+
+  async function deleteDrugIntolerance() {
+    try {
+      setLoading(true);
+      await deleteDrugIntoleranceByID(drugIntoleranceToEdit.id);
+      await refetchPatientData();
+      setLoading(false);
+      setOpenEditModal(false);
+      setFormMessage("");
+    } catch (error) {
+      setFormMessage("There was an error deleting the allergy");
+      setLoading(false);
+    }
+  }
 
   useEffect(() => {
     if (drugIntoleranceToEdit) {
@@ -162,6 +177,9 @@ export default function EditDrugIntoleranceModal(
           <Button type="submit">Update</Button>
           <Button color="gray" onClick={() => setOpenEditModal(false)}>
             Cancel
+          </Button>
+          <Button color="red" onClick={() => deleteDrugIntolerance()}>
+            Delete Drug Intolerance
           </Button>
         </FlowBiteModal.Footer>
       </form>

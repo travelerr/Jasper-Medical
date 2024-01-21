@@ -15,7 +15,7 @@ interface IProblemListProps {
     icd10Codes: (ProblemListICD10Code & { icd10Code: ICD10Code })[];
   })[];
 }
-export default function ProblemList(props: IProblemListProps) {
+export default function PatientProblemList(props: IProblemListProps) {
   const { problemList } = props;
   const [openCreateModal, setOpenCreateModal] = useState<boolean>(false);
   const [openEditModal, setOpenEditModal] = useState<boolean>(false);
@@ -51,12 +51,12 @@ export default function ProblemList(props: IProblemListProps) {
                       : ""
                   }`}
                 >
-                  <small
+                  <p
                     className="text-blue-500 font-medium cursor-pointer"
                     onClick={() => handleEditClick(problem)}
                   >
                     {problem.name}
-                  </small>
+                  </p>
                   <small className="text-black">Status: {problem.status}</small>
                   <small className="text-black">
                     Dx Date: {problem.dxDate.toDateString()}

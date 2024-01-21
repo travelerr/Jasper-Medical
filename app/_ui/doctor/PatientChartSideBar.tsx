@@ -8,16 +8,15 @@ import { Sidebar } from "flowbite-react";
 import { useContext, useEffect } from "react";
 import ImageWithFallback from "./ImageWithFallback";
 import { FaUserDoctor, FaAddressCard } from "react-icons/fa6";
-import { FullPatientProfile } from "@/app/_lib/definitions";
 import { Sex } from "@prisma/client";
 import { IoMale, IoFemale, IoMaleFemale, IoMedical } from "react-icons/io5";
 import PatientNextAndLastAppointentComponent from "./PatientNextAndLastAppointentComponent";
 import PatientAllergy from "./allergy/PatientAllergy";
-import ProblemList from "./problem-list/ProblemList";
 import PatientDrugIntolerances from "./drug-intolerance/PatientDrugIntolerances";
+import PatientProblemList from "./problem-list/PatientProblemList";
 
 export default function PatientChartSideBar() {
-  const { refetchPatientData, patient } = useContext(PatientDataContext);
+  const { patient } = useContext(PatientDataContext);
 
   useEffect(() => {}, [patient]);
 
@@ -140,7 +139,7 @@ export default function PatientChartSideBar() {
       </div>
       <div id="patient-sidebard-problem-list" className="pt-2">
         <div className="grid grid-cols-2 gap-2"></div>
-        {patient && <ProblemList problemList={patient.problemList} />}
+        {patient && <PatientProblemList problemList={patient.problemList} />}
       </div>
     </Sidebar>
   );

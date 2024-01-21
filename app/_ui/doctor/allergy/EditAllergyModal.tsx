@@ -12,7 +12,7 @@ import { useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { EditAllergenInputs } from "@/app/_lib/definitions";
 import { Allergy, AllergySeverity, AllergyStatus } from "@prisma/client";
-import { updateAllergy } from "@/app/_lib/actions";
+import { deleteAllergyByID, updateAllergy } from "@/app/_lib/actions";
 import PatientDataContext from "@/app/_lib/contexts/PatientDataContext";
 
 interface IEditAllergyModal {
@@ -47,12 +47,25 @@ export default function EditAllergyModal(props: IEditAllergyModal) {
       reset();
       setOpenEditModal(false);
       setFormMessage("");
-      router.refresh();
     } catch (error) {
-      setFormMessage("There was an error creating the appointment");
+      setFormMessage("There was an error creating the allergy");
       setLoading(false);
     }
   };
+
+  async function deleteAllergy() {
+    try {
+      setLoading(true);
+      await deleteAllergyByID(allergyToEdit.id);
+      await refetchPatientData();
+      setLoading(false);
+      setOpenEditModal(false);
+      setFormMessage("");
+    } catch (error) {
+      setFormMessage("There was an error deleting the allergy");
+      setLoading(false);
+    }
+  }
 
   useEffect(() => {
     if (allergyToEdit) {
@@ -146,6 +159,9 @@ export default function EditAllergyModal(props: IEditAllergyModal) {
           <Button type="submit">Update</Button>
           <Button color="gray" onClick={() => setOpenEditModal(false)}>
             Cancel
+          </Button>
+          <Button color="red" onClick={() => deleteAllergy()}>
+            Delete Allergy
           </Button>
         </FlowBiteModal.Footer>
       </form>

@@ -126,6 +126,8 @@ export async function getUserByEmail(email: string): Promise<any> {
   }
 }
 
+// #region Appointments
+
 export async function getAppointmentsByUserID(
   userId: number
 ): Promise<DoctorWithAppointment> {
@@ -155,6 +157,115 @@ export async function getAppointmentsByUserID(
     throw new Error("Failed to fetch appointments.");
   }
 }
+
+// #endregion
+
+// #region Allergy
+
+export async function getAllergensTypeAhead(
+  searchValue?: string
+): Promise<Allergen[]> {
+  try {
+    let query: {
+      where?: { name?: { contains: string; mode: "insensitive" } };
+    } = {};
+
+    if (searchValue) {
+      query = {
+        where: {
+          name: {
+            contains: searchValue,
+            mode: "insensitive", // for case-insensitive search
+          },
+        },
+      };
+    }
+
+    const allergens = await prisma.allergen.findMany(query);
+    return allergens;
+  } catch (error) {
+    console.error("Failed to fetch allergens:", error);
+    throw new Error("Failed to fetch allergens.");
+  }
+}
+
+// #endregion
+
+// #region Drugs
+
+export async function getDrugsTypeAhead(searchValue?: string): Promise<Drug[]> {
+  try {
+    const drugs = await prisma.drug.findMany({
+      where: {
+        OR: [
+          {
+            proprietaryName: {
+              contains: searchValue,
+              mode: "insensitive",
+            },
+          },
+          {
+            nonProprietaryName: {
+              contains: searchValue,
+              mode: "insensitive",
+            },
+          },
+        ],
+      },
+      distinct: ["proprietaryName", "nonProprietaryName"],
+      take: 5,
+    });
+    return drugs;
+  } catch (error) {
+    console.error("Failed to fetch drugs:", error);
+    throw new Error("Failed to fetch drugs.");
+  }
+}
+
+// #endregion
+
+// #region ICD10Codes
+
+export async function getICD10CodesTypeAhead(
+  searchValue?: string
+): Promise<ICD10Code[]> {
+  try {
+    const codes = await prisma.iCD10Code.findMany({
+      where: {
+        OR: [
+          {
+            longDescription: {
+              contains: searchValue,
+              mode: "insensitive",
+            },
+          },
+          {
+            shortDescription: {
+              contains: searchValue,
+              mode: "insensitive",
+            },
+          },
+          {
+            code: {
+              contains: searchValue,
+              mode: "insensitive",
+            },
+          },
+        ],
+      },
+      distinct: ["longDescription", "shortDescription", "code"],
+      take: 10,
+    });
+    return codes;
+  } catch (error) {
+    console.error("Failed to fetch ICD10 codes:", error);
+    throw new Error("Failed to fetch ICD10 codes.");
+  }
+}
+
+// #endregion
+
+// #region Patients
 
 export async function getPatients(): Promise<Patient[]> {
   try {
@@ -199,8 +310,8 @@ export async function getFullPatientProfileById(
     });
     return patientProfile as FullPatientProfile;
   } catch (error) {
-    console.error("Failed to fetch user:", error);
-    throw new Error("Failed to fetch user.");
+    console.error("Failed to fetch full patient profile:", error);
+    throw new Error("Failed to fetch full patient profile.");
   }
 }
 
@@ -240,95 +351,4 @@ export async function getPatientsTypeAhead(
   }
 }
 
-export async function getAllergensTypeAhead(
-  searchValue?: string
-): Promise<Allergen[]> {
-  try {
-    let query: {
-      where?: { name?: { contains: string; mode: "insensitive" } };
-    } = {};
-
-    if (searchValue) {
-      query = {
-        where: {
-          name: {
-            contains: searchValue,
-            mode: "insensitive", // for case-insensitive search
-          },
-        },
-      };
-    }
-
-    const allergens = await prisma.allergen.findMany(query);
-    return allergens;
-  } catch (error) {
-    console.error("Failed to fetch allergens:", error);
-    throw new Error("Failed to fetch allergens.");
-  }
-}
-
-export async function getDrugsTypeAhead(searchValue?: string): Promise<Drug[]> {
-  try {
-    const drugs = await prisma.drug.findMany({
-      where: {
-        OR: [
-          {
-            proprietaryName: {
-              contains: searchValue,
-              mode: "insensitive",
-            },
-          },
-          {
-            nonProprietaryName: {
-              contains: searchValue,
-              mode: "insensitive",
-            },
-          },
-        ],
-      },
-      distinct: ["proprietaryName", "nonProprietaryName"],
-      take: 5,
-    });
-    return drugs;
-  } catch (error) {
-    console.error("Failed to fetch drugs:", error);
-    throw new Error("Failed to fetch drugs.");
-  }
-}
-
-export async function getICD10CodesTypeAhead(
-  searchValue?: string
-): Promise<ICD10Code[]> {
-  try {
-    const codes = await prisma.iCD10Code.findMany({
-      where: {
-        OR: [
-          {
-            longDescription: {
-              contains: searchValue,
-              mode: "insensitive",
-            },
-          },
-          {
-            shortDescription: {
-              contains: searchValue,
-              mode: "insensitive",
-            },
-          },
-          {
-            code: {
-              contains: searchValue,
-              mode: "insensitive",
-            },
-          },
-        ],
-      },
-      distinct: ["longDescription", "shortDescription", "code"],
-      take: 10,
-    });
-    return codes;
-  } catch (error) {
-    console.error("Failed to fetch ICD10 codes:", error);
-    throw new Error("Failed to fetch ICD10 codes.");
-  }
-}
+// #endregion

@@ -17,7 +17,7 @@ import {
   State,
 } from "./definitions";
 import prisma from "./prisma";
-import { AllergyStatus, AppointmentStatus } from "@prisma/client";
+import { AppointmentStatus } from "@prisma/client";
 
 const FormSchema = z.object({
   id: z.string(),
@@ -123,6 +123,8 @@ export async function deleteInvoice(id: string) {
   }
 }
 
+// #region Auth
+
 export async function authenticate(
   prevState: string | undefined,
   formData: FormData
@@ -136,6 +138,10 @@ export async function authenticate(
     throw error;
   }
 }
+
+// #endregion
+
+// #region Appointments
 
 export async function createAppointment(formData: CreateAppointmentInputs) {
   const { title, patient, startDate, endDate, startTime, endTime, details } =
@@ -194,16 +200,20 @@ export async function updateAppointment(
   }
 }
 
-export async function deleteAppointmentByID(appointmentId: number) {
+export async function deleteAppointmentByID(id: number) {
   const result = await prisma.$transaction(async (prisma) => {
     return prisma.appointment.delete({
       where: {
-        id: appointmentId,
+        id: id,
       },
     });
   });
   return result;
 }
+
+// #endregion
+
+// #region Allergy
 
 export async function createAllergy(formData: CreateAllergenInputs) {
   const { name, reaction, severity, status, onsetDate, patientId } = formData;
@@ -252,6 +262,21 @@ export async function updateAllergy(formData: EditAllergenInputs) {
     };
   }
 }
+
+export async function deleteAllergyByID(id: number) {
+  const result = await prisma.$transaction(async (prisma) => {
+    return prisma.allergy.delete({
+      where: {
+        id: id,
+      },
+    });
+  });
+  return result;
+}
+
+// #endregion
+
+// #region Drug Intolerances
 
 export async function createDrugIntolerance(
   formData: CreateDrugIntoleranceInputs
@@ -307,6 +332,21 @@ export async function updateDrugIntolerance(
   }
 }
 
+export async function deleteDrugIntoleranceByID(id: number) {
+  const result = await prisma.$transaction(async (prisma) => {
+    return prisma.drugIntolerance.delete({
+      where: {
+        id: id,
+      },
+    });
+  });
+  return result;
+}
+
+// #endregion
+
+// #region Problem List
+
 export async function createProblem(formData: CreateProblemInputs) {
   const { synopsis, dxDate, status, patientId, name, icd10Codes } = formData;
   try {
@@ -357,3 +397,22 @@ export async function updateProblem(formData: EditProblemInputs) {
     };
   }
 }
+
+export async function deleteProblemListByID(id: number) {
+  const result = await prisma.$transaction(async (prisma) => {
+    await prisma.problemListICD10Code.deleteMany({
+      where: {
+        problemListId: id,
+      },
+    });
+
+    return prisma.problemList.delete({
+      where: {
+        id: id,
+      },
+    });
+  });
+  return result;
+}
+
+// #endregion
