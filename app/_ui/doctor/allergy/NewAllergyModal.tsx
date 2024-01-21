@@ -1,36 +1,32 @@
 import useViewState from "@/app/_lib/customHooks/useViewState";
 import { useContext, useState } from "react";
-import LoadingOverlay from "../loadingWidget";
+import LoadingOverlay from "../../loadingWidget";
 import {
   Button,
   TextInput,
   Label,
   Select,
-  Textarea,
   Modal as FlowBiteModal,
 } from "flowbite-react";
 import { useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
-import {
-  CreateAllergenInputs,
-  FullPatientProfile,
-} from "@/app/_lib/definitions";
+import { CreateAllergenInputs } from "@/app/_lib/definitions";
 import { AllergySeverity, AllergyStatus } from "@prisma/client";
 import { createAllergy } from "@/app/_lib/actions";
 import PatientDataContext from "@/app/_lib/contexts/PatientDataContext";
 
-interface IAddNewAllergyModal {
+interface INewAllergyModal {
   openCreateModal: boolean;
   dismissible?: boolean;
   setOpenCreateModal: Function;
 }
 
-export default function AddNewAllergyModal(props: IAddNewAllergyModal) {
+export default function NewAllergyModal(props: INewAllergyModal) {
   const { openCreateModal, dismissible, setOpenCreateModal } = props;
   const { viewState, setLoading } = useViewState();
   const [formMessage, setFormMessage] = useState<string>("");
   const router = useRouter();
-  const patient: FullPatientProfile = useContext(PatientDataContext);
+  const { refetchPatientData, patient } = useContext(PatientDataContext);
 
   const {
     register,
@@ -46,6 +42,7 @@ export default function AddNewAllergyModal(props: IAddNewAllergyModal) {
     try {
       setLoading(true);
       await createAllergy(data);
+      await refetchPatientData();
       setLoading(false);
       reset();
       setOpenCreateModal(false);

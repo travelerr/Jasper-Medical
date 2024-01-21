@@ -42,7 +42,7 @@ export default function ProblemList(props: IProblemListProps) {
       ) : (
         <span className="text-black italic">No Problem List</span>
       )}
-      <button className="border divide-gray-200 flex hover:bg-transparent justify-between p-1 w-full">
+      <button className="border divide-gray-200 flex hover:bg-gray-100 justify-between p-1 w-full">
         <span className="font-medium">Add Problem</span>
         <HiPlus className="h-5 w-5" />
       </button>

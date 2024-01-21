@@ -9,6 +9,9 @@ import { auth } from "../../auth";
 import {
   CreateAllergenInputs,
   CreateAppointmentInputs,
+  CreateDrugIntoleranceInputs,
+  EditAllergenInputs,
+  EditDrugIntoleranceInputs,
   State,
 } from "./definitions";
 import prisma from "./prisma";
@@ -214,11 +217,90 @@ export async function createAllergy(formData: CreateAllergenInputs) {
       },
     });
 
-    return { message: "Appointment created successfully." };
+    return { message: "Allergy created successfully." };
   } catch (error) {
     console.error(error);
     return {
-      message: "Database Error: Failed to create appointment.",
+      message: "Database Error: Failed to create allergy.",
+    };
+  }
+}
+
+export async function updateAllergy(formData: EditAllergenInputs) {
+  const { name, reaction, severity, status, onsetDate, allergyId } = formData;
+  try {
+    await prisma.allergy.update({
+      where: {
+        id: allergyId,
+      },
+      data: {
+        name: name,
+        reaction: reaction,
+        severity: severity,
+        status: status,
+        onsetDate: new Date(onsetDate),
+      },
+    });
+
+    return { message: "Allergy updated successfully." };
+  } catch (error) {
+    console.error(error);
+    return {
+      message: "Database Error: Failed to update allergy.",
+    };
+  }
+}
+
+export async function createDrugIntolerance(
+  formData: CreateDrugIntoleranceInputs
+) {
+  const { name, reaction, severity, status, onsetDate, patientId, drugId } =
+    formData;
+  try {
+    await prisma.drugIntolerance.create({
+      data: {
+        name: name,
+        reaction: reaction,
+        severity: severity,
+        status: status,
+        onsetDate: new Date(onsetDate),
+        patientId: patientId,
+        drugId: drugId,
+      },
+    });
+
+    return { message: "Drug Intolerance created successfully." };
+  } catch (error) {
+    console.error(error);
+    return {
+      message: "Database Error: Failed to create Drug Intolerance.",
+    };
+  }
+}
+
+export async function updateDrugIntolerance(
+  formData: EditDrugIntoleranceInputs
+) {
+  const { reaction, severity, status, onsetDate, drugIntoleranceId } = formData;
+  try {
+    await prisma.drugIntolerance.update({
+      where: {
+        id: drugIntoleranceId,
+      },
+      data: {
+        reaction: reaction,
+        severity: severity,
+        status: status,
+        onsetDate: new Date(onsetDate),
+        id: drugIntoleranceId,
+      },
+    });
+
+    return { message: "Drug Intolerance updated successfully." };
+  } catch (error) {
+    console.error(error);
+    return {
+      message: "Database Error: Failed to update Drug Intolerance.",
     };
   }
 }

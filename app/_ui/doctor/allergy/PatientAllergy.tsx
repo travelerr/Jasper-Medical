@@ -6,8 +6,9 @@ import {
   AccordionTitle,
 } from "flowbite-react";
 import { HiPlus } from "react-icons/hi";
-import AddNewAllergyModal from "./AddNewAllergyModal";
+import AddNewAllergyModal from "./NewAllergyModal";
 import { useState } from "react";
+import EditAllergyModal from "./EditAllergyModal";
 
 interface IPatientAlleryProps {
   allergies: Allergy[];
@@ -16,16 +17,21 @@ export default function PatientAllery(props: IPatientAlleryProps) {
   const { allergies } = props;
   const [openCreateModal, setOpenCreateModal] = useState<boolean>(false);
   const [openEditModal, setOpenEditModal] = useState<boolean>(false);
+  const [allergyToEdit, setAllergyToEdit] = useState<Allergy | null>(null);
 
+  const handleEditClick = (allergy: Allergy) => {
+    setAllergyToEdit(allergy);
+    setOpenEditModal(true);
+  };
   return (
     <>
       {allergies.length ? (
         <Accordion className="rounded-none" collapseAll>
           <AccordionPanel className="py-1 focus:outline-none rounded-none">
-            <AccordionTitle className="text-red-600 r">
+            <AccordionTitle className="text-red-600 rounded-none">
               Allergies
             </AccordionTitle>
-            <AccordionContent className="p-1 bg-white">
+            <AccordionContent className="p-1 bg-white rounded-none">
               {allergies.map((allergy, index) => (
                 <div
                   key={allergy.id}
@@ -35,9 +41,18 @@ export default function PatientAllery(props: IPatientAlleryProps) {
                       : ""
                   }`}
                 >
-                  <small className="text-black">{allergy.name}</small>
-                  <small className="text-black">{allergy.reaction}</small>
-                  <small className="text-black">{allergy.severity}</small>
+                  <p
+                    className="text-blue-500 font-medium cursor-pointer"
+                    onClick={() => handleEditClick(allergy)}
+                  >
+                    {allergy.name}
+                  </p>
+                  <small className="text-black">
+                    Reaction: {allergy.reaction}
+                  </small>
+                  <small className="text-black">
+                    Severity: {allergy.severity}
+                  </small>
                 </div>
               ))}
             </AccordionContent>
@@ -47,7 +62,7 @@ export default function PatientAllery(props: IPatientAlleryProps) {
         <span className="text-black italic">No Allergies</span>
       )}
       <button
-        className="border divide-gray-200 flex hover:bg-transparent justify-between p-1 w-full"
+        className="border divide-gray-200 flex hover:bg-gray-100 justify-between p-1 w-full"
         onClick={() => setOpenCreateModal(true)}
       >
         <span className="font-medium">Add Allergy</span>
@@ -57,7 +72,13 @@ export default function PatientAllery(props: IPatientAlleryProps) {
         setOpenCreateModal={setOpenCreateModal}
         openCreateModal={openCreateModal}
         dismissible={true}
-      ></AddNewAllergyModal>
+      />
+      <EditAllergyModal
+        setOpenEditModal={setOpenEditModal}
+        openEditModal={openEditModal}
+        dismissible={true}
+        allergyToEdit={allergyToEdit}
+      />
     </>
   );
 }

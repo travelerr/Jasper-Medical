@@ -1,10 +1,15 @@
 "use server";
 import { sql } from "@vercel/postgres";
 import { unstable_noStore as noStore } from "next/cache";
-import { CustomerField, InvoiceForm, InvoicesTable } from "./definitions";
+import {
+  CustomerField,
+  FullPatientProfile,
+  InvoiceForm,
+  InvoicesTable,
+} from "./definitions";
 import prisma from "./prisma";
 import { DoctorWithAppointment } from "./prisma";
-import type { Allergen, Patient, User } from "@prisma/client";
+import type { Allergen, Drug, Patient, User } from "@prisma/client";
 
 const ITEMS_PER_PAGE = 6;
 export async function fetchFilteredInvoices(
@@ -161,7 +166,9 @@ export async function getPatients(): Promise<Patient[]> {
   }
 }
 
-export async function getFullPatientProfileById(id: number): Promise<Patient> {
+export async function getFullPatientProfileById(
+  id: number
+): Promise<FullPatientProfile> {
   try {
     const patientProfile = await prisma.patient.findUnique({
       where: { id: id },
@@ -182,7 +189,7 @@ export async function getFullPatientProfileById(id: number): Promise<Patient> {
         testResults: true,
       },
     });
-    return patientProfile as Patient;
+    return patientProfile as FullPatientProfile;
   } catch (error) {
     console.error("Failed to fetch user:", error);
     throw new Error("Failed to fetch user.");
@@ -249,5 +256,34 @@ export async function getAllergensTypeAhead(
   } catch (error) {
     console.error("Failed to fetch allergens:", error);
     throw new Error("Failed to fetch allergens.");
+  }
+}
+
+export async function getDrugsTypeAhead(searchValue?: string): Promise<Drug[]> {
+  try {
+    const drugs = await prisma.drug.findMany({
+      where: {
+        OR: [
+          {
+            proprietaryName: {
+              contains: searchValue,
+              mode: "insensitive",
+            },
+          },
+          {
+            nonProprietaryName: {
+              contains: searchValue,
+              mode: "insensitive",
+            },
+          },
+        ],
+      },
+      distinct: ["proprietaryName", "nonProprietaryName"],
+      take: 5,
+    });
+    return drugs;
+  } catch (error) {
+    console.error("Failed to fetch drugs:", error);
+    throw new Error("Failed to fetch drugs.");
   }
 }

@@ -10,11 +10,11 @@ import {
 import { useRouter } from "next/navigation";
 import { createAppointment } from "@/app/_lib/actions";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { isStartBeforeEnd } from "../_lib/utils";
-import { CreateAppointmentInputs } from "../_lib/definitions";
+import { isStartBeforeEnd } from "../../../_lib/utils";
+import { CreateAppointmentInputs } from "../../../_lib/definitions";
 import { useEffect, useState } from "react";
-import useViewState from "../_lib/customHooks/useViewState";
-import LoadingOverlay from "./loadingWidget";
+import useViewState from "../../../_lib/customHooks/useViewState";
+import LoadingOverlay from "../../loadingWidget";
 
 interface ICreateAppointmentModalProps {
   openCreateModal: boolean;

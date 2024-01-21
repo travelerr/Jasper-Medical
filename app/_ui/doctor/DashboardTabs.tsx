@@ -5,7 +5,7 @@ import { HiPlus, HiHome, HiUser } from "react-icons/hi";
 import { Patient } from "@prisma/client";
 import PatientDataProvider from "@/app/_lib/contexts/PatientDataProvider";
 import { getFullPatientProfileById } from "@/app/_lib/data";
-import CalendarComponent from "./CalendarComponent";
+import CalendarComponent from "./appointments/CalendarComponent";
 import PatientLookup from "./PatientLookup";
 import { Tab, Tabs } from "./Tabs";
 import PatientChart from "./PatientChart";
@@ -136,7 +136,7 @@ export default function DashboardTabs(props: IDashboardTabsComponent) {
             canCloseTabFunction={closePatientTab}
           >
             {patientProfiles[patient.id] && (
-              <PatientDataProvider patient={patientProfiles[patient.id]}>
+              <PatientDataProvider patientProp={patientProfiles[patient.id]}>
                 <PatientChart />
               </PatientDataProvider>
             )}

@@ -12,6 +12,8 @@ import {
   Contact,
   Drug,
   DrugIntolerance,
+  DrugIntoleranceSeverity,
+  DrugIntoleranceStatus,
   Ethnicity,
   Insurance,
   Patient,
@@ -104,6 +106,34 @@ export type EditAppointment = {
     firstName: string;
     lastName: string;
   };
+};
+
+export type EditAllergenInputs = {
+  name: string;
+  reaction: string;
+  severity: AllergySeverity;
+  status: AllergyStatus;
+  onsetDate: string;
+  allergyId: number;
+};
+
+export type CreateDrugIntoleranceInputs = {
+  name: string;
+  reaction: string;
+  severity: DrugIntoleranceSeverity;
+  status: DrugIntoleranceStatus;
+  onsetDate: string;
+  patientId: number;
+  drugId: number;
+};
+
+export type EditDrugIntoleranceInputs = {
+  drugName: string;
+  reaction: string;
+  severity: DrugIntoleranceSeverity;
+  status: DrugIntoleranceStatus;
+  onsetDate: string;
+  drugIntoleranceId: number;
 };
 
 export type UserAppointment = {

@@ -12,12 +12,12 @@ import { FullPatientProfile } from "@/app/_lib/definitions";
 import { Sex } from "@prisma/client";
 import { IoMale, IoFemale, IoMaleFemale, IoMedical } from "react-icons/io5";
 import PatientNextAndLastAppointentComponent from "./PatientNextAndLastAppointentComponent";
-import PatientAllergy from "./PatientAllergy";
-import ProblemList from "./ProblemList";
-import PatientDrugIntolerances from "./PatientDrugIntolerances";
+import PatientAllergy from "./allergy/PatientAllergy";
+import ProblemList from "./problem-list/ProblemList";
+import PatientDrugIntolerances from "./drug-intolerance/PatientDrugIntolerances";
 
 export default function PatientChartSideBar() {
-  const patient: FullPatientProfile = useContext(PatientDataContext);
+  const { refetchPatientData, patient } = useContext(PatientDataContext);
 
   useEffect(() => {}, [patient]);
 
