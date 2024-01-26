@@ -47,7 +47,7 @@ export default function PatientDrugIntolerances(
                   }`}
                 >
                   <p
-                    className="text-blue-500 font-medium cursor-pointer"
+                    className="link font-bold"
                     onClick={() => handleEditClick(intolerance)}
                   >
                     {intolerance.drug.proprietaryName ??

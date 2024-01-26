@@ -15,6 +15,7 @@ import { ICD10Code, ProblemListStatus } from "@prisma/client";
 import { createProblem } from "@/app/_lib/actions";
 import PatientDataContext from "@/app/_lib/contexts/PatientDataContext";
 import ICD10CodeLookup from "./ICD10CodeLookup";
+import { HiX } from "react-icons/hi";
 
 interface IAddNewProblemModal {
   openCreateModal: boolean;
@@ -42,7 +43,7 @@ export default function AddNewProblemModal(props: IAddNewProblemModal) {
     }
     if (selectedICD10Codes.length) {
       data.icd10Codes = selectedICD10Codes.map((code) => {
-        return { icd10CodeId: code.id, problemListId: null };
+        return { icd10CodeId: code.id, problemListId: null, id: null };
       });
     }
     try {
@@ -61,8 +62,13 @@ export default function AddNewProblemModal(props: IAddNewProblemModal) {
   };
 
   const handleSelectedICD10Code = (code: ICD10Code) => {
-    console.log(code);
     setSelectedICD10Codes((prevCodes) => [...prevCodes, code]);
+  };
+
+  const removeSelectedCode = (codeToRemove: ICD10Code) => {
+    setSelectedICD10Codes((currentCodes) =>
+      currentCodes.filter((code) => code.id !== codeToRemove.id)
+    );
   };
 
   return (
@@ -87,6 +93,7 @@ export default function AddNewProblemModal(props: IAddNewProblemModal) {
               />
             </div>
             <div>
+              <Label value="Assigned ICD10 Codes" />
               <ul>
                 {selectedICD10Codes.length > 0 ? (
                   <li className="flex w-full border-b">
@@ -98,6 +105,12 @@ export default function AddNewProblemModal(props: IAddNewProblemModal) {
                   <li key={code.id} className="flex w-full text-left">
                     <div className="w-11/12">{code.shortDescription}</div>
                     <div className="w-1/12">{code.code}</div>
+                    <button
+                      type="button"
+                      onClick={() => removeSelectedCode(code)}
+                    >
+                      <HiX className="text-red-500" />
+                    </button>
                   </li>
                 ))}
               </ul>

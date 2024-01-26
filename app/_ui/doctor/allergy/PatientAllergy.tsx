@@ -42,7 +42,7 @@ export default function PatientAllery(props: IPatientAlleryProps) {
                   }`}
                 >
                   <p
-                    className="text-blue-500 font-medium cursor-pointer"
+                    className="link font-bold"
                     onClick={() => handleEditClick(allergy)}
                   >
                     {allergy.name}

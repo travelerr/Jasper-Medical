@@ -73,7 +73,7 @@ export default function AddNewDrugIntoleranceModal(
     >
       <FlowBiteModal.Header>Add Patient Drug Intolerance</FlowBiteModal.Header>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <FlowBiteModal.Body>
+        <FlowBiteModal.Body className="overflow-visible">
           <LoadingOverlay isLoading={viewState.loading} />
           <div className="grid gap-6 mb-6 md:grid-cols-2">
             <div>

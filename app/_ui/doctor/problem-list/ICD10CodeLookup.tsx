@@ -62,7 +62,7 @@ export default function ICD10CodeLookup(props: IICD10CodeLookup) {
             <div className="w-1/12 font-bold">ICD10</div>
           </div>
         ) : null}
-        <ul className="absolute bg-white w-full z-50 max-h-60 overflow-y-auto ">
+        <ul className="absolute bg-white w-full z-50 overflow-scroll max-h-50vh">
           {searchTerm &&
             results.map((code) => (
               <li className="border w-full" key={code.id}>

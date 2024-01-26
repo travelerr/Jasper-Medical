@@ -26,6 +26,19 @@ input[type="number"]::-webkit-outer-spin-button {
   }
 }
 
+.max-h-50vh {
+  max-height: 50vh;
+}
+
+.link {
+  color: #284093;
+  cursor: pointer;
+}
+
+.link:hover {
+  color: #282a33;
+}
+
 .rbc-calendar {
   height: 100vh !important;
 }
@@ -38,4 +51,27 @@ input[type="number"]::-webkit-outer-spin-button {
   padding: 0.25rem !important;
   --tw-ring-opacity: 0px;
   border-radius: 0px !important;
+}
+
+[data-testid="flowbite-accordion-content"] {
+  border-radius: 0px !important;
+}
+
+/* Open date picker on click anywhere in input */
+input[type="date"] {
+  display: inline-block;
+  position: relative;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  background: transparent;
+  bottom: 0;
+  color: transparent;
+  cursor: pointer;
+  height: auto;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: auto;
 }

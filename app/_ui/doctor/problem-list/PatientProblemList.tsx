@@ -52,7 +52,7 @@ export default function PatientProblemList(props: IProblemListProps) {
                   }`}
                 >
                   <p
-                    className="text-blue-500 font-medium cursor-pointer"
+                    className="link font-bold"
                     onClick={() => handleEditClick(problem)}
                   >
                     {problem.name}

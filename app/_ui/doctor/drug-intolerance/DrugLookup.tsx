@@ -8,12 +8,19 @@ import { useDebounce } from "use-debounce";
 
 interface IDrugLookup {
   handleSelectedDrug: Function;
+  initialValue?: Drug;
 }
 
 export default function DrugLookup(props: IDrugLookup) {
-  const { handleSelectedDrug } = props;
+  const { handleSelectedDrug, initialValue } = props;
   const [searchTerm, setSearchTerm] = useState("");
   const [results, setResults] = useState<Drug[]>([]);
+
+  useEffect(() => {
+    if (initialValue) {
+      setSearchTerm(initialValue.proprietaryName);
+    }
+  }, [initialValue]);
 
   const [debouncedSearchTerm] = useDebounce(searchTerm, 500);
 
@@ -55,7 +62,12 @@ export default function DrugLookup(props: IDrugLookup) {
         placeholder="Search drugs..."
         className="bg-gray-50 border rounded-lg border-gray-300 text-gray-900 text-sm  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
       />
-      <ul className="absolute bg-white w-full z-50">
+      {results.length > 0 ? (
+        <div className="flex w-full border p-1">
+          <div className="w-11/12 font-bold">Drug Name - Generic Name</div>
+        </div>
+      ) : null}
+      <ul className="absolute bg-white w-full z-50 overflow-scroll max-h-50vh">
         {searchTerm &&
           results.map((drug) => (
             <li className="border w-full" key={drug.id}>
@@ -67,6 +79,11 @@ export default function DrugLookup(props: IDrugLookup) {
               </button>
             </li>
           ))}
+        {results.length > 0 ? (
+          <li className="flex w-full border p-1 italic">
+            {`Showing top ${results.length} results`}
+          </li>
+        ) : null}
       </ul>
     </div>
   );

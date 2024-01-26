@@ -213,7 +213,7 @@ export async function getDrugsTypeAhead(searchValue?: string): Promise<Drug[]> {
         ],
       },
       distinct: ["proprietaryName", "nonProprietaryName"],
-      take: 5,
+      take: 50,
     });
     return drugs;
   } catch (error) {

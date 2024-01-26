@@ -22,6 +22,7 @@ import {
   updateDrugIntolerance,
 } from "@/app/_lib/actions";
 import PatientDataContext from "@/app/_lib/contexts/PatientDataContext";
+import DrugLookup from "./DrugLookup";
 
 interface IEditDrugIntoleranceModal {
   openEditModal: boolean;
@@ -47,7 +48,7 @@ export default function EditDrugIntoleranceModal(
   } = useForm<EditDrugIntoleranceInputs>();
 
   const onSubmit: SubmitHandler<EditDrugIntoleranceInputs> = async (data) => {
-    data.drugIntoleranceId = drugIntoleranceToEdit.id;
+    data.id = drugIntoleranceToEdit.id;
     try {
       setLoading(true);
       await updateDrugIntolerance(data);
@@ -78,10 +79,7 @@ export default function EditDrugIntoleranceModal(
 
   useEffect(() => {
     if (drugIntoleranceToEdit) {
-      setValue(
-        "drugName",
-        `${drugIntoleranceToEdit.drug.proprietaryName} - ${drugIntoleranceToEdit.drug.nonProprietaryName}`
-      );
+      setValue("drug", drugIntoleranceToEdit.drug);
       setValue("reaction", drugIntoleranceToEdit.reaction);
       setValue("severity", drugIntoleranceToEdit.severity);
       setValue("status", drugIntoleranceToEdit.status);
@@ -92,6 +90,10 @@ export default function EditDrugIntoleranceModal(
     }
   }, [drugIntoleranceToEdit, setValue]);
 
+  const handleSelectedDrug = (drug: Drug) => {
+    setValue("drug", drug);
+  };
+
   return (
     <FlowBiteModal
       size={"7xl"}
@@ -101,18 +103,18 @@ export default function EditDrugIntoleranceModal(
     >
       <FlowBiteModal.Header>Edit Patient Drug Intolerance</FlowBiteModal.Header>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <FlowBiteModal.Body>
+        <FlowBiteModal.Body className="overflow-visible">
           <LoadingOverlay isLoading={viewState.loading} />
           <div className="grid gap-6 mb-6 md:grid-cols-2">
             <div>
-              <Label htmlFor="drugName" value="Drug Intolerance " />
-              <TextInput
-                disabled={true}
-                id="drugName"
-                {...register("drugName", { required: true })}
-              />
+              {drugIntoleranceToEdit && (
+                <DrugLookup
+                  handleSelectedDrug={handleSelectedDrug}
+                  initialValue={drugIntoleranceToEdit.drug}
+                />
+              )}
               <div id="title-error" aria-live="polite" aria-atomic="true">
-                {errors.drugName && <p>{errors.drugName.message}</p>}
+                {errors.drug && <p>{errors.drug.message}</p>}
               </div>
             </div>
             <div>

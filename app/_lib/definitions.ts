@@ -161,12 +161,12 @@ export type CreateDrugIntoleranceInputs = {
 };
 
 export type EditDrugIntoleranceInputs = {
-  drugName: string;
+  drug: Drug;
   reaction: string;
   severity: DrugIntoleranceSeverity;
   status: DrugIntoleranceStatus;
   onsetDate: string;
-  drugIntoleranceId: number;
+  id: number;
 };
 
 // #endregion
@@ -189,7 +189,7 @@ export type EditProblemInputs = {
   status: ProblemListStatus;
   synopsis: string;
   patientId: number;
-  icd10Codes: ProblemListICD10Code[];
+  icd10Codes: ICD10Code[];
 };
 
 // #endregion

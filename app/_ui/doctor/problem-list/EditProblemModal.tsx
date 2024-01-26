@@ -17,8 +17,14 @@ import {
   ProblemListICD10Code,
   ProblemListStatus,
 } from "@prisma/client";
-import { deleteProblemListByID, updateProblem } from "@/app/_lib/actions";
+import {
+  deleteProblemListByID,
+  deleteProblemListICD10CodeByID,
+  updateProblem,
+} from "@/app/_lib/actions";
 import PatientDataContext from "@/app/_lib/contexts/PatientDataContext";
+import { HiX } from "react-icons/hi";
+import ICD10CodeLookup from "./ICD10CodeLookup";
 
 interface IEditProblemListModal {
   openEditModal: boolean;
@@ -32,6 +38,8 @@ export default function EditDrugIntoleranceModal(props: IEditProblemListModal) {
   const { openEditModal, setOpenEditModal, problemToEdit } = props;
   const { viewState, setLoading } = useViewState();
   const [formMessage, setFormMessage] = useState<string>("");
+  const [existingICD10Codes, setExistingICD10Codes] = useState<ICD10Code[]>([]);
+  const [newICD10Codes, setNewICD10Codes] = useState<ICD10Code[]>([]);
   const router = useRouter();
   const { refetchPatientData, patient } = useContext(PatientDataContext);
 
@@ -46,6 +54,7 @@ export default function EditDrugIntoleranceModal(props: IEditProblemListModal) {
   const onSubmit: SubmitHandler<EditProblemInputs> = async (data) => {
     try {
       data.id = problemToEdit.id;
+      data.icd10Codes = newICD10Codes;
       setLoading(true);
       await updateProblem(data);
       await refetchPatientData();
@@ -76,11 +85,43 @@ export default function EditDrugIntoleranceModal(props: IEditProblemListModal) {
 
   useEffect(() => {
     if (problemToEdit) {
+      setValue("name", problemToEdit.name);
       setValue("synopsis", problemToEdit.synopsis);
       setValue("status", problemToEdit.status);
       setValue("dxDate", problemToEdit.dxDate?.toISOString().split("T")[0]);
+      if (problemToEdit.icd10Codes.length) {
+        let x = problemToEdit.icd10Codes.map((code) => ({
+          ...code.icd10Code,
+          idToDelete: code.id,
+        }));
+        // @ts-ignore
+        setExistingICD10Codes(x);
+      }
     }
   }, [problemToEdit, setValue]);
+
+  const handleSelectedICD10Code = (code: ICD10Code) => {
+    // @ts-ignore
+    setNewICD10Codes((prevCodes) => [...prevCodes, code]);
+  };
+
+  const removeExistingCode = async (codeToRemove: ICD10Code) => {
+    try {
+      //@ts-ignore
+      await deleteProblemListICD10CodeByID(codeToRemove.idToDelete);
+      setExistingICD10Codes((currentCodes) =>
+        currentCodes.filter((code) => code.id !== codeToRemove.id)
+      );
+    } catch {
+      console.log("Error deleting the problem list icd10 code by id.");
+    }
+  };
+
+  const removeNewCode = async (codeToRemove: ICD10Code) => {
+    setNewICD10Codes((currentCodes) =>
+      currentCodes.filter((code) => code.id !== codeToRemove.id)
+    );
+  };
 
   return (
     <FlowBiteModal
@@ -93,25 +134,48 @@ export default function EditDrugIntoleranceModal(props: IEditProblemListModal) {
       <form onSubmit={handleSubmit(onSubmit)}>
         <FlowBiteModal.Body>
           <LoadingOverlay isLoading={viewState.loading} />
+          <div className="mb-6">
+            <Label value="Title" />
+            <TextInput id="name" {...register("name", { required: true })} />
+          </div>
           <div className="grid gap-6 mb-6 md:grid-cols-2">
             <div>
+              <div>
+                <ICD10CodeLookup
+                  handleSelectedICD10Code={handleSelectedICD10Code}
+                />
+              </div>
+            </div>
+            <div>
+              <Label value="Assigned ICD10 Codes" />
               <ul>
-                {problemToEdit && problemToEdit.icd10Codes?.length > 0 ? (
+                {problemToEdit && existingICD10Codes?.length > 0 ? (
                   <li className="flex w-full border-b">
                     <div className="w-11/12 font-bold">Diagnosis</div>
                     <div className="w-1/12 font-bold">ICD10</div>
                   </li>
                 ) : null}
                 {problemToEdit &&
-                  problemToEdit.icd10Codes.map((code, index) => (
-                    <li
-                      key={code.icd10Code.id}
-                      className="flex w-full text-left"
-                    >
-                      <div className="w-11/12">
-                        {code.icd10Code.shortDescription}
-                      </div>
-                      <div className="w-1/12">{code.icd10Code.code}</div>
+                  existingICD10Codes.map((code, index) => (
+                    <li key={code.id + index} className="flex w-full text-left">
+                      <div className="w-10/12">{code.shortDescription}</div>
+                      <div className="w-2/12">{code.code}</div>
+                      <button
+                        type="button"
+                        onClick={() => removeExistingCode(code)}
+                      >
+                        <HiX className="text-red-500" />
+                      </button>
+                    </li>
+                  ))}
+                {newICD10Codes &&
+                  newICD10Codes.map((code, index) => (
+                    <li key={code.id + index} className="flex w-full text-left">
+                      <div className="w-10/12">{code.shortDescription}</div>
+                      <div className="w-2/12">{code.code}</div>
+                      <button type="button" onClick={() => removeNewCode(code)}>
+                        <HiX className="text-red-500" />
+                      </button>
                     </li>
                   ))}
               </ul>

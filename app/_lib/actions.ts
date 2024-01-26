@@ -308,18 +308,18 @@ export async function createDrugIntolerance(
 export async function updateDrugIntolerance(
   formData: EditDrugIntoleranceInputs
 ) {
-  const { reaction, severity, status, onsetDate, drugIntoleranceId } = formData;
+  const { reaction, severity, status, onsetDate, id, drug } = formData;
   try {
     await prisma.drugIntolerance.update({
       where: {
-        id: drugIntoleranceId,
+        id: id,
       },
       data: {
+        drugId: drug.id,
         reaction: reaction,
         severity: severity,
         status: status,
         onsetDate: new Date(onsetDate),
-        id: drugIntoleranceId,
       },
     });
 
@@ -382,6 +382,14 @@ export async function updateProblem(formData: EditProblemInputs) {
         id: id,
       },
       data: {
+        icd10Codes: {
+          create: icd10Codes
+            // @ts-ignore
+            .filter((code) => code.isNew) // Filter to include only codes where isNew is true
+            .map((code) => ({
+              icd10CodeId: code.id,
+            })),
+        },
         name: name,
         synopsis: synopsis,
         status: status,
@@ -407,6 +415,17 @@ export async function deleteProblemListByID(id: number) {
     });
 
     return prisma.problemList.delete({
+      where: {
+        id: id,
+      },
+    });
+  });
+  return result;
+}
+
+export async function deleteProblemListICD10CodeByID(id: number) {
+  const result = await prisma.$transaction(async (prisma) => {
+    await prisma.problemListICD10Code.deleteMany({
       where: {
         id: id,
       },

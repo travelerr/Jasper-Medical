@@ -248,13 +248,12 @@ model ICD10Code {
 }
 
 model ProblemListICD10Code {
+  id            Int @id @default(autoincrement())
   problemListId Int
   icd10CodeId   Int
 
   problemList ProblemList @relation(fields: [problemListId], references: [id])
   icd10Code   ICD10Code   @relation(fields: [icd10CodeId], references: [id])
-
-  @@id([problemListId, icd10CodeId])
 }
 
 model DrugIntolerance {
