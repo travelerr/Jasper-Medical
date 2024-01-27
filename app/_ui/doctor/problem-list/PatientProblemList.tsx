@@ -37,11 +37,18 @@ export default function PatientProblemList(props: IProblemListProps) {
 
   return (
     <>
-      {problemList.length ? (
+      {problemList?.length ? (
         <Accordion className="rounded-none" collapseAll>
           <AccordionPanel className="py-1 focus:outline-none">
             <AccordionTitle className="text-black">Problem List</AccordionTitle>
             <AccordionContent className="p-1 bg-white">
+              <button
+                className="border divide-gray-200 flex hover:bg-gray-100 justify-between p-1 w-full"
+                onClick={() => setOpenCreateModal(true)}
+              >
+                <span className="font-medium">Add Problem</span>
+                <HiPlus className="h-5 w-5" />
+              </button>
               {problemList.map((problem, index) => (
                 <div
                   key={problem.id}
@@ -69,13 +76,6 @@ export default function PatientProblemList(props: IProblemListProps) {
       ) : (
         <span className="text-black italic">No Problem List</span>
       )}
-      <button
-        className="border divide-gray-200 flex hover:bg-gray-100 justify-between p-1 w-full"
-        onClick={() => setOpenCreateModal(true)}
-      >
-        <span className="font-medium">Add Problem</span>
-        <HiPlus className="h-5 w-5" />
-      </button>
       <NewProblemModal
         setOpenCreateModal={setOpenCreateModal}
         openCreateModal={openCreateModal}

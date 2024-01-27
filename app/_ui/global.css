@@ -75,3 +75,12 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   top: 0;
   width: auto;
 }
+
+.caret-accordion [data-testid="flowbite-accordion-arrow"] {
+  display: none;
+}
+
+.caret-accordion [data-testid="flowbite-accordion-heading"] {
+  display: flex;
+  align-items: center;
+}

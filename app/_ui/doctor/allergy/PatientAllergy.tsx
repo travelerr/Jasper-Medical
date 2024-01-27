@@ -25,13 +25,20 @@ export default function PatientAllery(props: IPatientAlleryProps) {
   };
   return (
     <>
-      {allergies.length ? (
+      {allergies?.length ? (
         <Accordion className="rounded-none" collapseAll>
           <AccordionPanel className="py-1 focus:outline-none rounded-none">
             <AccordionTitle className="text-red-600 rounded-none">
               Allergies
             </AccordionTitle>
             <AccordionContent className="p-1 bg-white rounded-none">
+              <button
+                className="border divide-gray-200 flex hover:bg-gray-100 justify-between p-1 w-full"
+                onClick={() => setOpenCreateModal(true)}
+              >
+                <span className="font-medium">Add Allergy</span>
+                <HiPlus className="h-5 w-5" />
+              </button>
               {allergies.map((allergy, index) => (
                 <div
                   key={allergy.id}
@@ -61,13 +68,6 @@ export default function PatientAllery(props: IPatientAlleryProps) {
       ) : (
         <span className="text-black italic">No Allergies</span>
       )}
-      <button
-        className="border divide-gray-200 flex hover:bg-gray-100 justify-between p-1 w-full"
-        onClick={() => setOpenCreateModal(true)}
-      >
-        <span className="font-medium">Add Allergy</span>
-        <HiPlus className="h-5 w-5" />
-      </button>
       <AddNewAllergyModal
         setOpenCreateModal={setOpenCreateModal}
         openCreateModal={openCreateModal}

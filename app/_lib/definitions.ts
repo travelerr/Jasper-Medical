@@ -17,7 +17,10 @@ import {
   Ethnicity,
   ICD10Code,
   Insurance,
+  PastMedicalHistory,
+  PastSurgicalHistory,
   Patient,
+  PatientHistory,
   Prisma,
   ProblemList,
   ProblemListICD10Code,
@@ -208,6 +211,7 @@ export type FullPatientProfile = Patient & {
   problemList: (ProblemList & {
     icd10Codes: (ProblemListICD10Code & { icd10Code: ICD10Code })[];
   })[];
+  patientHistory: PatientHistory & FullPatientHistory;
   appointments: Appointment[];
   consults: Consult[];
   testResults: TestResult[];
@@ -218,8 +222,48 @@ export type PatientNextAndLastApt = {
   nextApt: Appointment;
 };
 
+export type FullPatientHistory = {
+  pastMedicalHistory: PastMedicalHistory[];
+  pastSurgicalHistory: PastSurgicalHistory[];
+};
+
 // #endregion
 
+// #region History
+
+export type CreatePastMedicalHistoryInputs = {
+  name?: string;
+  note: string;
+  patientHistoryId: number;
+};
+
+export type EditPastMedicalHistoryInputs = {
+  name?: string;
+  note: string;
+  id: number;
+};
+
+export type DeletePastMedicalHistoryInputs = {
+  id: number;
+};
+
+export type CreatePastSurgicalHistoryInputs = {
+  name?: string;
+  note: string;
+  patientHistoryId: number;
+};
+
+export type EditPastSurgicalHistoryInputs = {
+  name?: string;
+  note: string;
+  id: number;
+};
+
+export type DeletePastSurgicalHistoryInputs = {
+  id: number;
+};
+
+// #endregion
 /*****************/
 export type Customer = {
   id: string;

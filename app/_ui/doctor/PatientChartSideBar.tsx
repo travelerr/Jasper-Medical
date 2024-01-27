@@ -14,6 +14,7 @@ import PatientNextAndLastAppointentComponent from "./PatientNextAndLastAppointen
 import PatientAllergy from "./allergy/PatientAllergy";
 import PatientDrugIntolerances from "./drug-intolerance/PatientDrugIntolerances";
 import PatientProblemList from "./problem-list/PatientProblemList";
+import PatientHistory from "./history/PatientHistory";
 
 export default function PatientChartSideBar() {
   const { patient } = useContext(PatientDataContext);
@@ -140,6 +141,10 @@ export default function PatientChartSideBar() {
       <div id="patient-sidebard-problem-list" className="pt-2">
         <div className="grid grid-cols-2 gap-2"></div>
         {patient && <PatientProblemList problemList={patient.problemList} />}
+      </div>
+      <div id="patient-sidebard-problem-list" className="pt-2">
+        <div className="grid grid-cols-2 gap-2"></div>
+        {patient && <PatientHistory patientHistory={patient.patientHistory} />}
       </div>
     </Sidebar>
   );

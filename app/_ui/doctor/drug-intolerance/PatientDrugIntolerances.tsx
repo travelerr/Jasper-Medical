@@ -30,13 +30,20 @@ export default function PatientDrugIntolerances(
 
   return (
     <>
-      {intolerances.length ? (
+      {intolerances?.length ? (
         <Accordion className="rounded-none" collapseAll>
           <AccordionPanel className="py-1 focus:outline-none">
             <AccordionTitle className="text-red-600">
               Drug Intolerances
             </AccordionTitle>
             <AccordionContent className="p-1 bg-white">
+              <button
+                className="border divide-gray-200 flex hover:bg-gray-100 justify-between p-1 w-full"
+                onClick={() => setOpenCreateModal(true)}
+              >
+                <span className="font-medium">Add Drug Intolerance</span>
+                <HiPlus className="h-5 w-5" />
+              </button>
               {intolerances.map((intolerance, index) => (
                 <div
                   key={intolerance.id}
@@ -67,13 +74,6 @@ export default function PatientDrugIntolerances(
       ) : (
         <span className="text-black italic">No Drug Intolerances</span>
       )}
-      <button
-        className="border divide-gray-200 flex hover:bg-gray-100 justify-between p-1 w-full"
-        onClick={() => setOpenCreateModal(true)}
-      >
-        <span className="font-medium">Add Drug Intolerance</span>
-        <HiPlus className="h-5 w-5" />
-      </button>
       <AddNewDrugIntoleranceModal
         setOpenCreateModal={setOpenCreateModal}
         openCreateModal={openCreateModal}

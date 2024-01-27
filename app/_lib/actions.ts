@@ -10,9 +10,15 @@ import {
   CreateAllergenInputs,
   CreateAppointmentInputs,
   CreateDrugIntoleranceInputs,
+  CreatePastMedicalHistoryInputs,
+  CreatePastSurgicalHistoryInputs,
   CreateProblemInputs,
+  DeletePastMedicalHistoryInputs,
+  DeletePastSurgicalHistoryInputs,
   EditAllergenInputs,
   EditDrugIntoleranceInputs,
+  EditPastMedicalHistoryInputs,
+  EditPastSurgicalHistoryInputs,
   EditProblemInputs,
   State,
 } from "./definitions";
@@ -432,6 +438,138 @@ export async function deleteProblemListICD10CodeByID(id: number) {
     });
   });
   return result;
+}
+
+// #endregion
+
+// #region History
+
+export async function createPastMedicalHistory(
+  formData: CreatePastMedicalHistoryInputs
+) {
+  const { note, patientHistoryId } = formData;
+  try {
+    await prisma.pastMedicalHistory.create({
+      data: {
+        note: note,
+        patientHistoryId: patientHistoryId,
+      },
+    });
+
+    return { message: "Patient past medical history created successfully." };
+  } catch (error) {
+    console.error(error);
+    return {
+      message: "Database Error: Failed to create patient past medical history",
+    };
+  }
+}
+
+export async function editPastMedicalHistory(
+  formData: EditPastMedicalHistoryInputs
+) {
+  const { note, id } = formData;
+  try {
+    await prisma.pastMedicalHistory.update({
+      where: {
+        id: id,
+      },
+      data: {
+        note: note,
+      },
+    });
+
+    return { message: "Patient past medical history updated successfully." };
+  } catch (error) {
+    console.error(error);
+    return {
+      message: "Database Error: Failed to update patient past medical history",
+    };
+  }
+}
+
+export async function deletePastMedicalHistory(
+  formData: DeletePastMedicalHistoryInputs
+) {
+  const { id } = formData;
+  try {
+    await prisma.pastMedicalHistory.delete({
+      where: {
+        id: id,
+      },
+    });
+
+    return { message: "Patient past medical history deleted successfully." };
+  } catch (error) {
+    console.error(error);
+    return {
+      message: "Database Error: Failed to delete patient past medical history",
+    };
+  }
+}
+
+export async function createPastSurgicalHistory(
+  formData: CreatePastSurgicalHistoryInputs
+) {
+  const { note, patientHistoryId } = formData;
+  try {
+    await prisma.pastSurgicalHistory.create({
+      data: {
+        note: note,
+        patientHistoryId: patientHistoryId,
+      },
+    });
+
+    return { message: "Patient past Surgical history created successfully." };
+  } catch (error) {
+    console.error(error);
+    return {
+      message: "Database Error: Failed to create patient past Surgical history",
+    };
+  }
+}
+
+export async function editPastSurgicalHistory(
+  formData: EditPastSurgicalHistoryInputs
+) {
+  const { note, id } = formData;
+  try {
+    await prisma.pastSurgicalHistory.update({
+      where: {
+        id: id,
+      },
+      data: {
+        note: note,
+      },
+    });
+
+    return { message: "Patient past Surgical history updated successfully." };
+  } catch (error) {
+    console.error(error);
+    return {
+      message: "Database Error: Failed to update patient past Surgical history",
+    };
+  }
+}
+
+export async function deletePastSurgicalHistory(
+  formData: DeletePastSurgicalHistoryInputs
+) {
+  const { id } = formData;
+  try {
+    await prisma.pastSurgicalHistory.delete({
+      where: {
+        id: id,
+      },
+    });
+
+    return { message: "Patient past Surgical history deleted successfully." };
+  } catch (error) {
+    console.error(error);
+    return {
+      message: "Database Error: Failed to delete patient past Surgical history",
+    };
+  }
 }
 
 // #endregion
