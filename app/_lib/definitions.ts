@@ -15,6 +15,7 @@ import {
   DrugIntoleranceSeverity,
   DrugIntoleranceStatus,
   Ethnicity,
+  FamilyHistory,
   ICD10Code,
   Insurance,
   PastMedicalHistory,
@@ -225,6 +226,7 @@ export type PatientNextAndLastApt = {
 export type FullPatientHistory = {
   pastMedicalHistory: PastMedicalHistory[];
   pastSurgicalHistory: PastSurgicalHistory[];
+  familyHistory: FamilyHistory[];
 };
 
 // #endregion
@@ -261,6 +263,28 @@ export type EditPastSurgicalHistoryInputs = {
 
 export type DeletePastSurgicalHistoryInputs = {
   id: number;
+};
+
+export type CreateFamilyHistoryInputs = {
+  name?: string;
+  note: string;
+  patientHistoryId: number;
+};
+
+export type EditFamilyHistoryInputs = {
+  name?: string;
+  note: string;
+  id: number;
+};
+
+export type DeleteFamilyHistoryInputs = {
+  id: number;
+};
+
+export type UpdateFamilyRelativeInputs = {
+  id: number;
+  relative: string;
+  value: string;
 };
 
 // #endregion

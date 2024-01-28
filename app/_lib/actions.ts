@@ -10,17 +10,21 @@ import {
   CreateAllergenInputs,
   CreateAppointmentInputs,
   CreateDrugIntoleranceInputs,
+  CreateFamilyHistoryInputs,
   CreatePastMedicalHistoryInputs,
   CreatePastSurgicalHistoryInputs,
   CreateProblemInputs,
+  DeleteFamilyHistoryInputs,
   DeletePastMedicalHistoryInputs,
   DeletePastSurgicalHistoryInputs,
   EditAllergenInputs,
   EditDrugIntoleranceInputs,
+  EditFamilyHistoryInputs,
   EditPastMedicalHistoryInputs,
   EditPastSurgicalHistoryInputs,
   EditProblemInputs,
   State,
+  UpdateFamilyRelativeInputs,
 } from "./definitions";
 import prisma from "./prisma";
 import { AppointmentStatus } from "@prisma/client";
@@ -568,6 +572,124 @@ export async function deletePastSurgicalHistory(
     console.error(error);
     return {
       message: "Database Error: Failed to delete patient past Surgical history",
+    };
+  }
+}
+
+export async function createFamilyHistory(formData: CreateFamilyHistoryInputs) {
+  const { note, patientHistoryId } = formData;
+  try {
+    await prisma.familyHistory.create({
+      data: {
+        note: note,
+        patientHistoryId: patientHistoryId,
+      },
+    });
+
+    return { message: "Patient family history created successfully." };
+  } catch (error) {
+    console.error(error);
+    return {
+      message: "Database Error: Failed to create patient family history",
+    };
+  }
+}
+
+export async function editFamilyHistory(formData: EditFamilyHistoryInputs) {
+  const { note, id } = formData;
+  try {
+    await prisma.familyHistory.update({
+      where: {
+        id: id,
+      },
+      data: {
+        note: note,
+      },
+    });
+
+    return { message: "Patient family history updated successfully." };
+  } catch (error) {
+    console.error(error);
+    return {
+      message: "Database Error: Failed to update patient family history",
+    };
+  }
+}
+
+export async function deleteFamilyHistory(formData: DeleteFamilyHistoryInputs) {
+  const { id } = formData;
+  try {
+    await prisma.familyHistory.delete({
+      where: {
+        id: id,
+      },
+    });
+
+    return { message: "Patient family history deleted successfully." };
+  } catch (error) {
+    console.error(error);
+    return {
+      message: "Database Error: Failed to delete patient family history",
+    };
+  }
+}
+
+export async function updateFamilyRelative(
+  formData: UpdateFamilyRelativeInputs
+) {
+  const { id, relative, value } = formData;
+  let dto = {};
+  switch (relative) {
+    case "mother":
+      dto = { familyHistoryMother: value };
+      break;
+    case "father":
+      dto = { familyHistoryFather: value };
+      break;
+    case "brother":
+      dto = { familyHistoryBrother: value };
+      break;
+    case "sister":
+      dto = { familyHistorySister: value };
+      break;
+    case "son":
+      dto = { familyHistorySon: value };
+      break;
+    case "daughter":
+      dto = { familyHistoryDaughter: value };
+      break;
+    case "grandmother":
+      dto = { familyHistoryGrandmother: value };
+      break;
+    case "grandfather":
+      dto = { familyHistoryGrandfather: value };
+      break;
+    case "aunt":
+      dto = { familyHistoryAunt: value };
+      break;
+    case "uncle":
+      dto = { familyHistoryUncle: value };
+      break;
+    case "other":
+      dto = { familyHistoryOther: value };
+      break;
+    default:
+      console.log("error in switch statement");
+  }
+
+  try {
+    await prisma.patientHistory.update({
+      where: {
+        id: id,
+      },
+      data: dto,
+    });
+
+    return { message: "Patient past Surgical history updated successfully." };
+  } catch (error) {
+    console.error(error);
+    return {
+      message: "Database Error: Failed to update patient past Surgical history",
     };
   }
 }

@@ -4,11 +4,21 @@ interface IOnBlurTextInput {
   placeholder?: string;
   initialValue?: string;
   editId?: number;
-  onBlurCallback: (value: string, id?: number) => void;
+  editString?: string;
+  relativeToEdit?: any;
+  onBlurCallback: (value: string, id?: number, string?: string) => void;
+  className?: string;
 }
 
 export default function OnBlurTextInput(props: IOnBlurTextInput) {
-  const { placeholder, onBlurCallback, initialValue, editId } = props;
+  const {
+    placeholder,
+    onBlurCallback,
+    initialValue,
+    editId,
+    editString,
+    className,
+  } = props;
   const [inputValue, setInputValue] = useState("");
 
   useEffect(() => {
@@ -24,7 +34,7 @@ export default function OnBlurTextInput(props: IOnBlurTextInput) {
   const makeCallback = () => {
     if (inputValue.trim() !== "") {
       console.log("Making API call with:", inputValue);
-      onBlurCallback(inputValue, editId);
+      onBlurCallback(inputValue, editId, editString);
       console.log("Made API call with:", inputValue);
     }
   };
@@ -44,7 +54,7 @@ export default function OnBlurTextInput(props: IOnBlurTextInput) {
   return (
     <input
       type="text"
-      className="h-0.5 rounded text-sm w-full"
+      className={`h-0.5 rounded text-sm w-full ${className}`}
       placeholder={placeholder}
       value={inputValue}
       onChange={handleInputChange}

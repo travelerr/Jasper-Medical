@@ -314,7 +314,7 @@ model PatientHistory {
   familyHistoryDaughter        String?
   familyHistoryGrandmother     String?
   familyHistoryGrandfather     String?
-  familyHistoyAunt             String?
+  familyHistoryAunt             String?
   familyHistoryUncle           String?
   familyHistoryOther           String?
   socialHistoryEducation       PatientEducationLevel

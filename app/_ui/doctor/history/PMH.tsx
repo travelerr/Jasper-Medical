@@ -81,7 +81,7 @@ export default function PMH(props: IPMH) {
 
   return (
     <>
-      {"PMH:"}
+      <div className="font-bold">{"PMH:"}</div>
       {pastMedicalHistory
         ?.sort(
           (a, b) =>

@@ -81,7 +81,7 @@ export default function PSH(props: IPSH) {
 
   return (
     <>
-      {"PSH:"}
+      <div className="font-bold">{"PSH:"}</div>
       {pastSurgicalHistory
         ?.sort(
           (a, b) =>
