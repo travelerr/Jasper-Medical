@@ -305,7 +305,7 @@ model PatientHistory {
   psychologicalStatus          PsychologicalStatus[]
   habits                       Habits[]
   diet                         Diet[]
-  exercise                     Excercise[]
+  exercise                     Exercise[]
   familyHistoryMother          String?
   familyHistoryFather          String?
   familyHistoryBrother         String?
@@ -423,7 +423,7 @@ model Diet {
   patientHistory   PatientHistory @relation(fields: [patientHistoryId], references: [id])
 }
 
-model Excercise {
+model Exercise {
   id               Int            @id @default(autoincrement())
   createdDate      DateTime?      @default(now())
   updatedDate      DateTime?      @updatedAt

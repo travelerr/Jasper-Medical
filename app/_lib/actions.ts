@@ -9,20 +9,41 @@ import { auth } from "../../auth";
 import {
   CreateAllergenInputs,
   CreateAppointmentInputs,
+  CreateCognitiveStatusInputs,
+  CreateDietInputs,
   CreateDrugIntoleranceInputs,
+  CreateExerciseInputs,
   CreateFamilyHistoryInputs,
+  CreateFunctionalStatusInputs,
+  CreateHabitInputs,
   CreatePastMedicalHistoryInputs,
   CreatePastSurgicalHistoryInputs,
   CreateProblemInputs,
+  CreatePsychologicalStatusInputs,
+  CreateSocialHistoryInputs,
+  DeleteCognitiveStatusInputs,
+  DeleteDietInputs,
+  DeleteExerciseInputs,
   DeleteFamilyHistoryInputs,
+  DeleteFunctionalStatusInputs,
+  DeleteHabitInputs,
   DeletePastMedicalHistoryInputs,
   DeletePastSurgicalHistoryInputs,
+  DeletePsychologicalStatusInputs,
+  DeleteSocialHistoryInputs,
   EditAllergenInputs,
+  EditCognitiveStatusInputs,
+  EditDietInputs,
   EditDrugIntoleranceInputs,
+  EditExerciseInputs,
   EditFamilyHistoryInputs,
+  EditFunctionalStatusInputs,
+  EditHabitInputs,
   EditPastMedicalHistoryInputs,
   EditPastSurgicalHistoryInputs,
   EditProblemInputs,
+  EditPsychologicalStatusInputs,
+  EditSocialHistoryInputs,
   State,
   UpdateFamilyRelativeInputs,
 } from "./definitions";
@@ -690,6 +711,428 @@ export async function updateFamilyRelative(
     console.error(error);
     return {
       message: "Database Error: Failed to update patient past Surgical history",
+    };
+  }
+}
+
+export async function createCognitiveStatus(
+  formData: CreateCognitiveStatusInputs
+) {
+  const { note, patientHistoryId } = formData;
+  try {
+    await prisma.cognitiveStatus.create({
+      data: {
+        note: note,
+        patientHistoryId: patientHistoryId,
+      },
+    });
+
+    return { message: "Patient cognitive status created successfully." };
+  } catch (error) {
+    console.error(error);
+    return {
+      message: "Database Error: Failed to create patient cognitive status",
+    };
+  }
+}
+
+export async function editCognitiveStatus(formData: EditCognitiveStatusInputs) {
+  const { note, id } = formData;
+  try {
+    await prisma.cognitiveStatus.update({
+      where: {
+        id: id,
+      },
+      data: {
+        note: note,
+      },
+    });
+
+    return { message: "Patient cognitive status updated successfully." };
+  } catch (error) {
+    console.error(error);
+    return {
+      message: "Database Error: Failed to update patient cognitive status",
+    };
+  }
+}
+
+export async function deleteCognitiveStatus(
+  formData: DeleteCognitiveStatusInputs
+) {
+  const { id } = formData;
+  try {
+    await prisma.cognitiveStatus.delete({
+      where: {
+        id: id,
+      },
+    });
+
+    return { message: "Patient cognitive status deleted successfully." };
+  } catch (error) {
+    console.error(error);
+    return {
+      message: "Database Error: Failed to delete patient cognitive status",
+    };
+  }
+}
+
+export async function createFunctionalStatus(
+  formData: CreateFunctionalStatusInputs
+) {
+  const { note, patientHistoryId } = formData;
+  try {
+    await prisma.functionalStatus.create({
+      data: {
+        note: note,
+        patientHistoryId: patientHistoryId,
+      },
+    });
+
+    return { message: "Patient functional status created successfully." };
+  } catch (error) {
+    console.error(error);
+    return {
+      message: "Database Error: Failed to create patient functional status",
+    };
+  }
+}
+
+export async function editFunctionalStatus(
+  formData: EditFunctionalStatusInputs
+) {
+  const { note, id } = formData;
+  try {
+    await prisma.functionalStatus.update({
+      where: {
+        id: id,
+      },
+      data: {
+        note: note,
+      },
+    });
+
+    return { message: "Patient functional status updated successfully." };
+  } catch (error) {
+    console.error(error);
+    return {
+      message: "Database Error: Failed to update patient functional status",
+    };
+  }
+}
+
+export async function deleteFunctionalStatus(
+  formData: DeleteFunctionalStatusInputs
+) {
+  const { id } = formData;
+  try {
+    await prisma.functionalStatus.delete({
+      where: {
+        id: id,
+      },
+    });
+
+    return { message: "Patient functional status deleted successfully." };
+  } catch (error) {
+    console.error(error);
+    return {
+      message: "Database Error: Failed to delete patient functional status",
+    };
+  }
+}
+
+export async function createPsychologicalStatus(
+  formData: CreatePsychologicalStatusInputs
+) {
+  const { note, patientHistoryId } = formData;
+  try {
+    await prisma.psychologicalStatus.create({
+      data: {
+        note: note,
+        patientHistoryId: patientHistoryId,
+      },
+    });
+
+    return { message: "Patient psychological status created successfully." };
+  } catch (error) {
+    console.error(error);
+    return {
+      message: "Database Error: Failed to create patient psychological status",
+    };
+  }
+}
+
+export async function editPsychologicalStatus(
+  formData: EditPsychologicalStatusInputs
+) {
+  const { note, id } = formData;
+  try {
+    await prisma.psychologicalStatus.update({
+      where: {
+        id: id,
+      },
+      data: {
+        note: note,
+      },
+    });
+
+    return { message: "Patient psychological status updated successfully." };
+  } catch (error) {
+    console.error(error);
+    return {
+      message: "Database Error: Failed to update patient psychological status",
+    };
+  }
+}
+
+export async function deletePsychologicalStatus(
+  formData: DeletePsychologicalStatusInputs
+) {
+  const { id } = formData;
+  try {
+    await prisma.psychologicalStatus.delete({
+      where: {
+        id: id,
+      },
+    });
+
+    return { message: "Patient psychological status deleted successfully." };
+  } catch (error) {
+    console.error(error);
+    return {
+      message: "Database Error: Failed to delete patient psychological status",
+    };
+  }
+}
+
+export async function createHabit(formData: CreateHabitInputs) {
+  const { note, patientHistoryId } = formData;
+  try {
+    await prisma.habits.create({
+      data: {
+        note: note,
+        patientHistoryId: patientHistoryId,
+      },
+    });
+
+    return { message: "Patient habit created successfully." };
+  } catch (error) {
+    console.error(error);
+    return {
+      message: "Database Error: Failed to create patient habit",
+    };
+  }
+}
+
+export async function editHabit(formData: EditHabitInputs) {
+  const { note, id } = formData;
+  try {
+    await prisma.habits.update({
+      where: {
+        id: id,
+      },
+      data: {
+        note: note,
+      },
+    });
+
+    return { message: "Patient habit updated successfully." };
+  } catch (error) {
+    console.error(error);
+    return {
+      message: "Database Error: Failed to update patient habit",
+    };
+  }
+}
+
+export async function deleteHabit(formData: DeleteHabitInputs) {
+  const { id } = formData;
+  try {
+    await prisma.habits.delete({
+      where: {
+        id: id,
+      },
+    });
+
+    return { message: "Patient habit deleted successfully." };
+  } catch (error) {
+    console.error(error);
+    return {
+      message: "Database Error: Failed to delete patient habit",
+    };
+  }
+}
+
+export async function createDiet(formData: CreateDietInputs) {
+  const { note, patientHistoryId } = formData;
+  try {
+    await prisma.diet.create({
+      data: {
+        note: note,
+        patientHistoryId: patientHistoryId,
+      },
+    });
+
+    return { message: "Patient diet created successfully." };
+  } catch (error) {
+    console.error(error);
+    return {
+      message: "Database Error: Failed to create patient diet",
+    };
+  }
+}
+
+export async function editDiet(formData: EditDietInputs) {
+  const { note, id } = formData;
+  try {
+    await prisma.diet.update({
+      where: {
+        id: id,
+      },
+      data: {
+        note: note,
+      },
+    });
+
+    return { message: "Patient diet updated successfully." };
+  } catch (error) {
+    console.error(error);
+    return {
+      message: "Database Error: Failed to update patient diet",
+    };
+  }
+}
+
+export async function deleteDiet(formData: DeleteDietInputs) {
+  const { id } = formData;
+  try {
+    await prisma.diet.delete({
+      where: {
+        id: id,
+      },
+    });
+
+    return { message: "Patient diet deleted successfully." };
+  } catch (error) {
+    console.error(error);
+    return {
+      message: "Database Error: Failed to delete patient diet",
+    };
+  }
+}
+
+export async function createExercise(formData: CreateExerciseInputs) {
+  const { note, patientHistoryId } = formData;
+  try {
+    await prisma.exercise.create({
+      data: {
+        note: note,
+        patientHistoryId: patientHistoryId,
+      },
+    });
+
+    return { message: "Patient exercise created successfully." };
+  } catch (error) {
+    console.error(error);
+    return {
+      message: "Database Error: Failed to create patient exercise",
+    };
+  }
+}
+
+export async function editExercise(formData: EditExerciseInputs) {
+  const { note, id } = formData;
+  try {
+    await prisma.exercise.update({
+      where: {
+        id: id,
+      },
+      data: {
+        note: note,
+      },
+    });
+
+    return { message: "Patient exercise updated successfully." };
+  } catch (error) {
+    console.error(error);
+    return {
+      message: "Database Error: Failed to update patient exercise",
+    };
+  }
+}
+
+export async function deleteExercise(formData: DeleteExerciseInputs) {
+  const { id } = formData;
+  try {
+    await prisma.exercise.delete({
+      where: {
+        id: id,
+      },
+    });
+
+    return { message: "Patient exercise deleted successfully." };
+  } catch (error) {
+    console.error(error);
+    return {
+      message: "Database Error: Failed to delete patient exercise",
+    };
+  }
+}
+
+export async function createSocialHistory(formData: CreateSocialHistoryInputs) {
+  const { note, patientHistoryId } = formData;
+  try {
+    await prisma.socialHistory.create({
+      data: {
+        note: note,
+        patientHistoryId: patientHistoryId,
+      },
+    });
+
+    return { message: "Patient social history created successfully." };
+  } catch (error) {
+    console.error(error);
+    return {
+      message: "Database Error: Failed to create patient social history",
+    };
+  }
+}
+
+export async function editSocialHistory(formData: EditSocialHistoryInputs) {
+  const { note, id } = formData;
+  try {
+    await prisma.socialHistory.update({
+      where: {
+        id: id,
+      },
+      data: {
+        note: note,
+      },
+    });
+
+    return { message: "Patient social history updated successfully." };
+  } catch (error) {
+    console.error(error);
+    return {
+      message: "Database Error: Failed to update patient social history",
+    };
+  }
+}
+
+export async function deleteSocialHistory(formData: DeleteSocialHistoryInputs) {
+  const { id } = formData;
+  try {
+    await prisma.socialHistory.delete({
+      where: {
+        id: id,
+      },
+    });
+
+    return { message: "Patient social history deleted successfully." };
+  } catch (error) {
+    console.error(error);
+    return {
+      message: "Database Error: Failed to delete patient social history",
     };
   }
 }

@@ -50,7 +50,7 @@ export default function PSH(props: IPSH) {
       await refetchPatientData();
       setPshEditMode((prevEditMode) => {
         const updatedEditMode = { ...prevEditMode };
-        delete updatedEditMode[dto.id]; // Remove the key-value pair for the edited PSH item
+        delete updatedEditMode[dto.id];
         return updatedEditMode;
       });
     } catch {

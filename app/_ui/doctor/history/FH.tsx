@@ -48,6 +48,9 @@ export default function FH(props: IFH) {
     other,
   } = props;
   const [fhEditMode, setFhEditMode] = useState<Record<number, boolean>>({});
+  const [relativeEditMode, setRelativeEditMode] = useState<
+    Record<string, boolean>
+  >({});
   const { refetchPatientData } = useContext(PatientDataContext);
 
   const createFamilyHistoryHandler = async (inputValue: string) => {
@@ -125,6 +128,11 @@ export default function FH(props: IFH) {
           value: inputValue,
         });
         await refetchPatientData();
+        setRelativeEditMode((prevEditMode) => {
+          const updatedEditMode = { ...prevEditMode };
+          delete updatedEditMode[relative];
+          return updatedEditMode;
+        });
       } else {
         console.log("Invalid relative type");
       }
@@ -137,110 +145,190 @@ export default function FH(props: IFH) {
     setFhEditMode((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
-  // How to hanle updating mother, father, etc
-  // How to only refecth parts of patient profile
+  const toggleRelativeEditMode = (relative: string) => {
+    setRelativeEditMode((prev) => ({ ...prev, [relative]: !prev[relative] }));
+  };
 
   return (
     <>
-      <div className="font-bold">{"FH:"}</div>
-      <div className="flex items-center">
-        <span>Mother:</span>
-        <OnBlurTextInput
-          className="ml-1"
-          onBlurCallback={updateFamilyHistoryRelative}
-          editString={"mother"}
-          initialValue={mother}
-        />
-      </div>
-      <div className="flex items-center">
-        <span>Father:</span>
-        <OnBlurTextInput
-          className="ml-1"
-          onBlurCallback={updateFamilyHistoryRelative}
-          editString={"father"}
-          initialValue={father}
-        />
-      </div>
-      <div className="flex items-center">
-        <span>Brother:</span>
-        <OnBlurTextInput
-          className="ml-1"
-          onBlurCallback={updateFamilyHistoryRelative}
-          editString={"brother"}
-          initialValue={brother}
-        />
-      </div>
-      <div className="flex items-center">
-        <span>Sister:</span>
-        <OnBlurTextInput
-          className="ml-1"
-          onBlurCallback={updateFamilyHistoryRelative}
-          editString={"sister"}
-          initialValue={sister}
-        />
-      </div>
-      <div className="flex items-center">
-        <span>Son:</span>
-        <OnBlurTextInput
-          className="ml-1"
-          onBlurCallback={updateFamilyHistoryRelative}
-          editString={"son"}
-          initialValue={son}
-        />
-      </div>
-      <div className="flex items-center">
-        <span>Daughter:</span>
-        <OnBlurTextInput
-          className="ml-1"
-          onBlurCallback={updateFamilyHistoryRelative}
-          editString={"daughter"}
-          initialValue={daughter}
-        />
-      </div>
-      <div className="flex items-center">
-        <span>GMother:</span>
-        <OnBlurTextInput
-          className="ml-1"
-          onBlurCallback={updateFamilyHistoryRelative}
-          editString={"grandmother"}
-          initialValue={grandmother}
-        />
-      </div>
-      <div className="flex items-center">
-        <span>GFather:</span>
-        <OnBlurTextInput
-          className="ml-1"
-          onBlurCallback={updateFamilyHistoryRelative}
-          editString={"grandfather"}
-          initialValue={grandfather}
-        />
-      </div>
-      <div className="flex items-center">
-        <span>Aunt:</span>
-        <OnBlurTextInput
-          className="ml-1"
-          onBlurCallback={updateFamilyHistoryRelative}
-          editString={"aunt"}
-          initialValue={aunt}
-        />
-      </div>
-      <div className="flex items-center">
-        <span>Uncle:</span>
-        <OnBlurTextInput
-          className="ml-1"
-          onBlurCallback={updateFamilyHistoryRelative}
-          editString={"uncle"}
-          initialValue={uncle}
-        />
-      </div>
-      <div className="flex items-center">
-        <span>Other:</span>
-        <OnBlurTextInput
-          className="ml-1"
-          onBlurCallback={updateFamilyHistoryRelative}
-          editString={"other"}
-          initialValue={other}
-        />
+      <div className="border-b border-black">
+        <div className="font-bold">{"FH:"}</div>
+        <div className="flex items-center">
+          <FaCaretRight onClick={() => toggleRelativeEditMode("mother")} />
+          <span className="mr-1">Mother:</span>
+          {relativeEditMode["mother"] ? (
+            <div className="flex m-1">
+              <OnBlurTextInput
+                className="ml-1"
+                onBlurCallback={updateFamilyHistoryRelative}
+                editString={"mother"}
+                initialValue={mother}
+              />
+            </div>
+          ) : (
+            <span>{mother}</span>
+          )}
+        </div>
+        <div className="flex items-center">
+          <FaCaretRight onClick={() => toggleRelativeEditMode("father")} />
+          <span className="mr-1">Father:</span>
+          {relativeEditMode["father"] ? (
+            <div className="flex m-1">
+              <OnBlurTextInput
+                className="ml-1"
+                onBlurCallback={updateFamilyHistoryRelative}
+                editString={"father"}
+                initialValue={father}
+              />
+            </div>
+          ) : (
+            <span>{father}</span>
+          )}
+        </div>
+        <div className="flex items-center">
+          <FaCaretRight onClick={() => toggleRelativeEditMode("brother")} />
+          <span className="mr-1">Brother:</span>
+          {relativeEditMode["brother"] ? (
+            <div className="flex m-1">
+              <OnBlurTextInput
+                className="ml-1"
+                onBlurCallback={updateFamilyHistoryRelative}
+                editString={"brother"}
+                initialValue={brother}
+              />
+            </div>
+          ) : (
+            <span>{brother}</span>
+          )}
+        </div>
+        <div className="flex items-center">
+          <FaCaretRight onClick={() => toggleRelativeEditMode("sister")} />
+          <span className="mr-1">Sister:</span>
+          {relativeEditMode["sister"] ? (
+            <div className="flex m-1">
+              <OnBlurTextInput
+                className="ml-1"
+                onBlurCallback={updateFamilyHistoryRelative}
+                editString={"sister"}
+                initialValue={sister}
+              />
+            </div>
+          ) : (
+            <span>{sister}</span>
+          )}
+        </div>
+        <div className="flex items-center">
+          <FaCaretRight onClick={() => toggleRelativeEditMode("son")} />
+          <span className="mr-1">Son:</span>
+          {relativeEditMode["son"] ? (
+            <div className="flex m-1">
+              <OnBlurTextInput
+                className="ml-1"
+                onBlurCallback={updateFamilyHistoryRelative}
+                editString={"son"}
+                initialValue={son}
+              />
+            </div>
+          ) : (
+            <span>{son}</span>
+          )}
+        </div>
+        <div className="flex items-center">
+          <FaCaretRight onClick={() => toggleRelativeEditMode("daughter")} />
+          <span className="mr-1">Daughter:</span>
+          {relativeEditMode["daughter"] ? (
+            <div className="flex m-1">
+              <OnBlurTextInput
+                className="ml-1"
+                onBlurCallback={updateFamilyHistoryRelative}
+                editString={"daughter"}
+                initialValue={daughter}
+              />
+            </div>
+          ) : (
+            <span>{daughter}</span>
+          )}
+        </div>
+        <div className="flex items-center">
+          <FaCaretRight onClick={() => toggleRelativeEditMode("grandmother")} />
+          <span className="mr-1">GMother:</span>
+          {relativeEditMode["grandmother"] ? (
+            <div className="flex m-1">
+              <OnBlurTextInput
+                className="ml-1"
+                onBlurCallback={updateFamilyHistoryRelative}
+                editString={"grandmother"}
+                initialValue={grandmother}
+              />
+            </div>
+          ) : (
+            <span>{grandmother}</span>
+          )}
+        </div>
+        <div className="flex items-center">
+          <FaCaretRight onClick={() => toggleRelativeEditMode("grandfather")} />
+          <span className="mr-1">GFather:</span>
+          {relativeEditMode["grandfather"] ? (
+            <div className="flex m-1">
+              <OnBlurTextInput
+                className="ml-1"
+                onBlurCallback={updateFamilyHistoryRelative}
+                editString={"grandfather"}
+                initialValue={grandfather}
+              />
+            </div>
+          ) : (
+            <span>{grandfather}</span>
+          )}
+        </div>
+        <div className="flex items-center">
+          <FaCaretRight onClick={() => toggleRelativeEditMode("aunt")} />
+          <span className="mr-1">Aunt:</span>
+          {relativeEditMode["aunt"] ? (
+            <div className="flex m-1">
+              <OnBlurTextInput
+                className="ml-1"
+                onBlurCallback={updateFamilyHistoryRelative}
+                editString={"aunt"}
+                initialValue={aunt}
+              />
+            </div>
+          ) : (
+            <span>{aunt}</span>
+          )}
+        </div>
+        <div className="flex items-center">
+          <FaCaretRight onClick={() => toggleRelativeEditMode("uncle")} />
+          <span className="mr-1">Uncle:</span>
+          {relativeEditMode["uncle"] ? (
+            <div className="flex m-1">
+              <OnBlurTextInput
+                className="ml-1"
+                onBlurCallback={updateFamilyHistoryRelative}
+                editString={"uncle"}
+                initialValue={uncle}
+              />
+            </div>
+          ) : (
+            <span>{uncle}</span>
+          )}
+        </div>
+        <div className="flex items-center">
+          <FaCaretRight onClick={() => toggleRelativeEditMode("other")} />
+          <span className="mr-1">Other:</span>
+          {relativeEditMode["other"] ? (
+            <div className="flex m-1">
+              <OnBlurTextInput
+                className="ml-1"
+                onBlurCallback={updateFamilyHistoryRelative}
+                editString={"other"}
+                initialValue={other}
+              />
+            </div>
+          ) : (
+            <span>{other}</span>
+          )}
+        </div>
       </div>
       {familyHistory
         ?.sort(

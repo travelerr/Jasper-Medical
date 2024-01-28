@@ -9,6 +9,13 @@ import {
 import PMH from "./PMH";
 import PSH from "./PSH";
 import FH from "./FH";
+import CognitiveStatus from "./CognitiveStatus";
+import FunctionalStatus from "./FunctionalStatus";
+import PsychologicalStatus from "./PsychologicalStatus";
+import Habits from "./Habits";
+import Diet from "./Diet";
+import SocialHistory from "./SocialHistory";
+import Exercise from "./Exercise";
 
 interface IPatientHistoryProps {
   patientHistory: PatientHistory & FullPatientHistory;
@@ -47,6 +54,34 @@ export default function PatientHistory(props: IPatientHistoryProps) {
               aunt={patientHistory?.familyHistoryAunt}
               uncle={patientHistory?.familyHistoryUncle}
               other={patientHistory?.familyHistoryOther}
+            />
+            <CognitiveStatus
+              cognitiveStatus={patientHistory?.cognitiveStatus}
+              patientHistoryId={patientHistory?.id}
+            />
+            <FunctionalStatus
+              functionalStatus={patientHistory?.functionalStatus}
+              patientHistoryId={patientHistory?.id}
+            />
+            <PsychologicalStatus
+              psychologicalStatus={patientHistory?.psychologicalStatus}
+              patientHistoryId={patientHistory?.id}
+            />
+            <Habits
+              habits={patientHistory?.habits}
+              patientHistoryId={patientHistory?.id}
+            />
+            <Diet
+              diet={patientHistory?.diet}
+              patientHistoryId={patientHistory?.id}
+            />
+            <Exercise
+              exercise={patientHistory?.exercise}
+              patientHistoryId={patientHistory?.id}
+            />
+            <SocialHistory
+              socialHistory={patientHistory?.socialHistory}
+              patientHistoryId={patientHistory?.id}
             />
           </AccordionContent>
         </AccordionPanel>

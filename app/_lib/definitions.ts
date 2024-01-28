@@ -8,14 +8,19 @@ import {
   AllergyStatus,
   Appointment,
   AppointmentStatus,
+  CognitiveStatus,
   Consult,
   Contact,
+  Diet,
   Drug,
   DrugIntolerance,
   DrugIntoleranceSeverity,
   DrugIntoleranceStatus,
   Ethnicity,
+  Exercise,
   FamilyHistory,
+  FunctionalStatus,
+  Habits,
   ICD10Code,
   Insurance,
   PastMedicalHistory,
@@ -27,8 +32,10 @@ import {
   ProblemListICD10Code,
   ProblemListStatus,
   Provider,
+  PsychologicalStatus,
   Race,
   Sex,
+  SocialHistory,
   TestResult,
 } from "@prisma/client";
 
@@ -227,6 +234,13 @@ export type FullPatientHistory = {
   pastMedicalHistory: PastMedicalHistory[];
   pastSurgicalHistory: PastSurgicalHistory[];
   familyHistory: FamilyHistory[];
+  cognitiveStatus: CognitiveStatus[];
+  functionalStatus: FunctionalStatus[];
+  psychologicalStatus: PsychologicalStatus[];
+  habits: Habits[];
+  diet: Diet[];
+  exercise: Exercise[];
+  socialHistory: SocialHistory[];
 };
 
 // #endregion
@@ -285,6 +299,118 @@ export type UpdateFamilyRelativeInputs = {
   id: number;
   relative: string;
   value: string;
+};
+
+export type CreateCognitiveStatusInputs = {
+  name?: string;
+  note: string;
+  patientHistoryId: number;
+};
+
+export type EditCognitiveStatusInputs = {
+  name?: string;
+  note: string;
+  id: number;
+};
+
+export type DeleteCognitiveStatusInputs = {
+  id: number;
+};
+
+export type CreateFunctionalStatusInputs = {
+  name?: string;
+  note: string;
+  patientHistoryId: number;
+};
+
+export type EditFunctionalStatusInputs = {
+  name?: string;
+  note: string;
+  id: number;
+};
+
+export type DeleteFunctionalStatusInputs = {
+  id: number;
+};
+
+export type CreatePsychologicalStatusInputs = {
+  name?: string;
+  note: string;
+  patientHistoryId: number;
+};
+
+export type EditPsychologicalStatusInputs = {
+  name?: string;
+  note: string;
+  id: number;
+};
+
+export type DeletePsychologicalStatusInputs = {
+  id: number;
+};
+
+export type CreateHabitInputs = {
+  name?: string;
+  note: string;
+  patientHistoryId: number;
+};
+
+export type EditHabitInputs = {
+  name?: string;
+  note: string;
+  id: number;
+};
+
+export type DeleteHabitInputs = {
+  id: number;
+};
+
+export type CreateDietInputs = {
+  name?: string;
+  note: string;
+  patientHistoryId: number;
+};
+
+export type EditDietInputs = {
+  name?: string;
+  note: string;
+  id: number;
+};
+
+export type DeleteDietInputs = {
+  id: number;
+};
+
+export type CreateExerciseInputs = {
+  name?: string;
+  note: string;
+  patientHistoryId: number;
+};
+
+export type EditExerciseInputs = {
+  name?: string;
+  note: string;
+  id: number;
+};
+
+export type DeleteExerciseInputs = {
+  id: number;
+};
+
+export type CreateSocialHistoryInputs = {
+  name?: string;
+  note: string;
+  patientHistoryId: number;
+};
+
+export type EditSocialHistoryInputs = {
+  name?: string;
+  note: string;
+  id: number;
+};
+
+export type DeleteSocialHistoryInputs = {
+  id: number;
 };
 
 // #endregion
