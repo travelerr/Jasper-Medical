@@ -54,7 +54,7 @@ export default function OnBlurTextInput(props: IOnBlurTextInput) {
   return (
     <input
       type="text"
-      className={`h-0.5 rounded text-sm w-full ${className}`}
+      className={`h-0.5 rounded text-sm w-full ${className ?? ""}`}
       placeholder={placeholder}
       value={inputValue}
       onChange={handleInputChange}

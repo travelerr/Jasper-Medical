@@ -39,10 +39,14 @@ import {
   EditFamilyHistoryInputs,
   EditFunctionalStatusInputs,
   EditHabitInputs,
+  EditHabitSmokingStatusInputs,
   EditPastMedicalHistoryInputs,
   EditPastSurgicalHistoryInputs,
   EditProblemInputs,
   EditPsychologicalStatusInputs,
+  EditPsychologicalStatusStressLevelInputs,
+  EditSocialHistoryEducationLevelInputs,
+  EditSocialHistoryFinancialStrainInputs,
   EditSocialHistoryInputs,
   State,
   UpdateFamilyRelativeInputs,
@@ -885,6 +889,31 @@ export async function editPsychologicalStatus(
   }
 }
 
+export async function editPsychologicalStatusStressLevel(
+  formData: EditPsychologicalStatusStressLevelInputs
+) {
+  const { value, id } = formData;
+  try {
+    await prisma.patientHistory.update({
+      where: {
+        id: id,
+      },
+      data: {
+        psychologicalStatusStress: value,
+      },
+    });
+
+    return {
+      message: "Patient stress level updated successfully.",
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      message: "Database Error: Failed to update patient stress level",
+    };
+  }
+}
+
 export async function deletePsychologicalStatus(
   formData: DeletePsychologicalStatusInputs
 ) {
@@ -941,6 +970,31 @@ export async function editHabit(formData: EditHabitInputs) {
     console.error(error);
     return {
       message: "Database Error: Failed to update patient habit",
+    };
+  }
+}
+
+export async function editHabitSmokingStatus(
+  formData: EditHabitSmokingStatusInputs
+) {
+  const { value, id } = formData;
+  try {
+    await prisma.patientHistory.update({
+      where: {
+        id: id,
+      },
+      data: {
+        habitsSmokingStatus: value,
+      },
+    });
+
+    return {
+      message: "Patient smoking status updated successfully.",
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      message: "Database Error: Failed to update patient smoking status",
     };
   }
 }
@@ -1115,6 +1169,58 @@ export async function editSocialHistory(formData: EditSocialHistoryInputs) {
     console.error(error);
     return {
       message: "Database Error: Failed to update patient social history",
+    };
+  }
+}
+
+export async function editSocialHistoryFinancialStrain(
+  formData: EditSocialHistoryFinancialStrainInputs
+) {
+  const { value, id } = formData;
+  try {
+    await prisma.patientHistory.update({
+      where: {
+        id: id,
+      },
+      data: {
+        socialHistoryFinancialStrain: value,
+      },
+    });
+
+    return {
+      message: "Patient social history education level updated successfully.",
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      message:
+        "Database Error: Failed to update patient social history education level",
+    };
+  }
+}
+
+export async function editSocialHistoryEducationLevel(
+  formData: EditSocialHistoryEducationLevelInputs
+) {
+  const { value, id } = formData;
+  try {
+    await prisma.patientHistory.update({
+      where: {
+        id: id,
+      },
+      data: {
+        socialHistoryEducation: value,
+      },
+    });
+
+    return {
+      message: "Patient social history financial strain updated successfully.",
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      message:
+        "Database Error: Failed to update patient social history financial strain",
     };
   }
 }

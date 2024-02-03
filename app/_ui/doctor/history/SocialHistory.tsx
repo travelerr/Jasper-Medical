@@ -1,30 +1,64 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import OnBlurTextInput from "./OnBlurTextInput";
 import { FaCaretRight, FaTrash } from "react-icons/fa6";
-import { SocialHistory } from "@prisma/client";
+import {
+  PatientEducationLevel,
+  PatientFinancialStrain,
+  SocialHistory,
+} from "@prisma/client";
 import PatientDataContext from "@/app/_lib/contexts/PatientDataContext";
 import {
   CreateSocialHistoryInputs,
   DeleteSocialHistoryInputs,
+  EditSocialHistoryEducationLevelInputs,
+  EditSocialHistoryFinancialStrainInputs,
   EditSocialHistoryInputs,
 } from "@/app/_lib/definitions";
 import {
   createSocialHistory,
   editSocialHistory,
   deleteSocialHistory,
+  editSocialHistoryFinancialStrain,
+  editSocialHistoryEducationLevel,
 } from "@/app/_lib/actions";
+import { covertPascalCase } from "@/app/_lib/utils";
 
 interface ISocialHistory {
   socialHistory: SocialHistory[];
   patientHistoryId: number;
+  socialHistoryEducation: PatientEducationLevel;
+  socialHistoryFinancialStrain: PatientFinancialStrain;
 }
 
 export default function SocialHistory(props: ISocialHistory) {
-  const { socialHistory, patientHistoryId } = props;
+  const {
+    socialHistory,
+    patientHistoryId,
+    socialHistoryEducation,
+    socialHistoryFinancialStrain,
+  } = props;
   const [socialHistoryEditMode, setSocialHistoryEditMode] = useState<
     Record<number, boolean>
   >({});
+  const [educationLevel, setEducationLevel] =
+    useState<PatientEducationLevel>(null);
+  const [educationLevelToggleMode, setEducationLevelToggleMode] =
+    useState<boolean>(false);
+  const [financialStrain, setFinancialStrain] =
+    useState<PatientFinancialStrain>(null);
+  const [financialStrainToggleMode, setFinancialStrainToggleMode] =
+    useState<boolean>(false);
+
   const { refetchPatientData } = useContext(PatientDataContext);
+
+  useEffect(() => {
+    if (socialHistoryEducation) {
+      setEducationLevel(socialHistoryEducation);
+    }
+    if (socialHistoryFinancialStrain) {
+      setFinancialStrain(socialHistoryFinancialStrain);
+    }
+  }, [socialHistoryEducation, socialHistoryFinancialStrain]);
 
   const createSocialHistoryHandler = async (inputValue: string) => {
     const dto: CreateSocialHistoryInputs = {
@@ -78,9 +112,114 @@ export default function SocialHistory(props: ISocialHistory) {
     setSocialHistoryEditMode((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
+  const onChangeUpdateEducationLevel = async (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    let temp =
+      PatientEducationLevel[
+        event.target.value as keyof typeof PatientEducationLevel
+      ];
+    setEducationLevel(temp);
+    try {
+      const dto: EditSocialHistoryEducationLevelInputs = {
+        id: patientHistoryId,
+        value: temp,
+      };
+      await editSocialHistoryEducationLevel(dto);
+      await refetchPatientData();
+      setEducationLevelToggleMode(false);
+    } catch {
+      console.log("Error setting social history education level");
+    }
+  };
+
+  const onChangeUpdateFinancialStrain = async (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    let temp =
+      PatientFinancialStrain[
+        event.target.value as keyof typeof PatientFinancialStrain
+      ];
+    setFinancialStrain(temp);
+    try {
+      const dto: EditSocialHistoryFinancialStrainInputs = {
+        id: patientHistoryId,
+        value: temp,
+      };
+      await editSocialHistoryFinancialStrain(dto);
+      await refetchPatientData();
+      setFinancialStrainToggleMode(false);
+    } catch {
+      console.log("Error setting social history financial strain");
+    }
+  };
+
   return (
     <>
       <div className="font-bold">{"Social History:"}</div>
+      <div>
+        Financial Strain:
+        <div className="flex items-center">
+          <FaCaretRight
+            onClick={() =>
+              setFinancialStrainToggleMode(!financialStrainToggleMode)
+            }
+          />
+          {financialStrainToggleMode ? (
+            <div className="flex m-1">
+              <select
+                className="p-0 px-2.5 rounded text-sm w-full"
+                value={financialStrain}
+                onChange={onChangeUpdateFinancialStrain}
+              >
+                {Object.values(PatientFinancialStrain).map((el, index) => (
+                  <option className="text-sm" key={index} value={el}>
+                    {covertPascalCase(el)}
+                  </option>
+                ))}
+              </select>
+            </div>
+          ) : (
+            <span>
+              {" "}
+              {financialStrain?.length > 0
+                ? covertPascalCase(financialStrain)
+                : "Not set"}
+            </span>
+          )}
+        </div>
+      </div>
+      <div>
+        Education Level:
+        <div className="flex items-center">
+          <FaCaretRight
+            onClick={() =>
+              setEducationLevelToggleMode(!educationLevelToggleMode)
+            }
+          />
+          {educationLevelToggleMode ? (
+            <div className="flex m-1">
+              <select
+                className="p-0 px-2.5 rounded text-sm w-full"
+                value={educationLevel}
+                onChange={onChangeUpdateEducationLevel}
+              >
+                {Object.values(PatientEducationLevel).map((el, index) => (
+                  <option className="text-sm" key={index} value={el}>
+                    {covertPascalCase(el)}
+                  </option>
+                ))}
+              </select>
+            </div>
+          ) : (
+            <span>
+              {educationLevel?.length > 0
+                ? covertPascalCase(educationLevel)
+                : "Not set"}
+            </span>
+          )}
+        </div>
+      </div>
       {socialHistory
         ?.sort(
           (a, b) =>

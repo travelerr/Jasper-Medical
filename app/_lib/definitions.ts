@@ -26,7 +26,11 @@ import {
   PastMedicalHistory,
   PastSurgicalHistory,
   Patient,
+  PatientEducationLevel,
+  PatientFinancialStrain,
   PatientHistory,
+  PatientSmokingStatus,
+  PatientStressLevel,
   Prisma,
   ProblemList,
   ProblemListICD10Code,
@@ -345,6 +349,12 @@ export type EditPsychologicalStatusInputs = {
   id: number;
 };
 
+export type EditPsychologicalStatusStressLevelInputs = {
+  name?: string;
+  value: PatientStressLevel;
+  id: number;
+};
+
 export type DeletePsychologicalStatusInputs = {
   id: number;
 };
@@ -358,6 +368,12 @@ export type CreateHabitInputs = {
 export type EditHabitInputs = {
   name?: string;
   note: string;
+  id: number;
+};
+
+export type EditHabitSmokingStatusInputs = {
+  name?: string;
+  value: PatientSmokingStatus;
   id: number;
 };
 
@@ -406,6 +422,18 @@ export type CreateSocialHistoryInputs = {
 export type EditSocialHistoryInputs = {
   name?: string;
   note: string;
+  id: number;
+};
+
+export type EditSocialHistoryFinancialStrainInputs = {
+  name?: string;
+  value: PatientFinancialStrain;
+  id: number;
+};
+
+export type EditSocialHistoryEducationLevelInputs = {
+  name?: string;
+  value: PatientEducationLevel;
   id: number;
 };
 

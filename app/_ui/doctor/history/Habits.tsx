@@ -1,26 +1,44 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import OnBlurTextInput from "./OnBlurTextInput";
 import { FaCaretRight, FaTrash } from "react-icons/fa6";
-import { Habits } from "@prisma/client";
+import { Habits, PatientSmokingStatus } from "@prisma/client";
 import PatientDataContext from "@/app/_lib/contexts/PatientDataContext";
 import {
   CreateHabitInputs,
   DeleteHabitInputs,
   EditHabitInputs,
+  EditHabitSmokingStatusInputs,
 } from "@/app/_lib/definitions";
-import { createHabit, editHabit, deleteHabit } from "@/app/_lib/actions";
+import {
+  createHabit,
+  editHabit,
+  deleteHabit,
+  editHabitSmokingStatus,
+} from "@/app/_lib/actions";
+import { covertPascalCase } from "@/app/_lib/utils";
 
 interface IHabits {
   habits: Habits[];
   patientHistoryId: number;
+  habitsSmokingStatus: PatientSmokingStatus;
 }
 
 export default function Habits(props: IHabits) {
-  const { habits, patientHistoryId } = props;
+  const { habits, patientHistoryId, habitsSmokingStatus } = props;
   const [habitsEditMode, setHabitEditMode] = useState<Record<number, boolean>>(
     {}
   );
+  const [smokingStatus, setSmokingStatus] =
+    useState<PatientSmokingStatus>(null);
+  const [smokingStatusToggleMode, setSmokingStatusToggleMode] =
+    useState<boolean>(false);
   const { refetchPatientData } = useContext(PatientDataContext);
+
+  useEffect(() => {
+    if (habitsSmokingStatus) {
+      setSmokingStatus(habitsSmokingStatus);
+    }
+  }, [habitsSmokingStatus]);
 
   const createHabitHandler = async (inputValue: string) => {
     const dto: CreateHabitInputs = {
@@ -74,8 +92,59 @@ export default function Habits(props: IHabits) {
     setHabitEditMode((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
+  const onChangeUpdateSmokingStatus = async (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    let temp =
+      PatientSmokingStatus[
+        event.target.value as keyof typeof PatientSmokingStatus
+      ];
+    setSmokingStatus(temp);
+    try {
+      const dto: EditHabitSmokingStatusInputs = {
+        id: patientHistoryId,
+        value: temp,
+      };
+      await editHabitSmokingStatus(dto);
+      await refetchPatientData();
+      setSmokingStatusToggleMode(false);
+    } catch {
+      console.log("Error setting social history financial strain");
+    }
+  };
+
   return (
     <>
+      <div>
+        Smoking Status:
+        <div className="flex items-center">
+          <FaCaretRight
+            onClick={() => setSmokingStatusToggleMode(!smokingStatusToggleMode)}
+          />
+          {smokingStatusToggleMode ? (
+            <div className="flex m-1">
+              <select
+                className="p-0 px-2.5 rounded text-sm w-full"
+                value={smokingStatus}
+                onChange={onChangeUpdateSmokingStatus}
+              >
+                {Object.values(PatientSmokingStatus).map((ss, index) => (
+                  <option className="text-sm" key={index} value={ss}>
+                    {covertPascalCase(ss)}
+                  </option>
+                ))}
+              </select>
+            </div>
+          ) : (
+            <span>
+              {" "}
+              {smokingStatus?.length > 0
+                ? covertPascalCase(smokingStatus)
+                : "Not set"}
+            </span>
+          )}
+        </div>
+      </div>
       <div className="font-bold">{"Habits:"}</div>
       {habits
         ?.sort(

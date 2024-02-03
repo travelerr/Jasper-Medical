@@ -91,8 +91,17 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   --light-blue-gradient-end: #87ceeb;
 }
 
+.shiny-light-blue-bg {
+  background: linear-gradient(
+    145deg,
+    var(--light-blue-gradient-start),
+    var(--light-blue-gradient-end)
+  );
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
 /* Shiny light blue button */
-.shiny-light-blue-button {
+/* .shiny-light-blue-button {
   background: linear-gradient(
     145deg,
     var(--light-blue-gradient-start),
@@ -118,22 +127,4 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     var(--light-blue-gradient-start)
   );
   transform: scale(1.05);
-}
-
-/* Shiny light blue panel */
-.shiny-light-blue-panel {
-  background: linear-gradient(
-    145deg,
-    var(--light-blue-gradient-start),
-    var(--light-blue-gradient-end)
-  );
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  color: #fff;
-}
-
-/* General text color for light blue theme */
-.light-blue-text {
-  color: var(--light-blue);
-}
+} */

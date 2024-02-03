@@ -66,10 +66,14 @@ export default function PatientHistory(props: IPatientHistoryProps) {
             <PsychologicalStatus
               psychologicalStatus={patientHistory?.psychologicalStatus}
               patientHistoryId={patientHistory?.id}
+              psychologicalStatusStress={
+                patientHistory?.psychologicalStatusStress
+              }
             />
             <Habits
               habits={patientHistory?.habits}
               patientHistoryId={patientHistory?.id}
+              habitsSmokingStatus={patientHistory.habitsSmokingStatus}
             />
             <Diet
               diet={patientHistory?.diet}
@@ -82,6 +86,10 @@ export default function PatientHistory(props: IPatientHistoryProps) {
             <SocialHistory
               socialHistory={patientHistory?.socialHistory}
               patientHistoryId={patientHistory?.id}
+              socialHistoryEducation={patientHistory.socialHistoryEducation}
+              socialHistoryFinancialStrain={
+                patientHistory.socialHistoryFinancialStrain
+              }
             />
           </AccordionContent>
         </AccordionPanel>
