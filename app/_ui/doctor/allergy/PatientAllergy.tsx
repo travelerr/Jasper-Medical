@@ -28,12 +28,12 @@ export default function PatientAllery(props: IPatientAlleryProps) {
       {allergies?.length ? (
         <Accordion className="rounded-none" collapseAll>
           <AccordionPanel className="py-1 focus:outline-none rounded-none">
-            <AccordionTitle className="text-red-600 rounded-none">
+            <AccordionTitle className="text-red-600 rounded-none bg-red-100 hover:bg-red-200">
               Allergies
             </AccordionTitle>
             <AccordionContent className="p-1 bg-white rounded-none">
               <button
-                className="border divide-gray-200 flex hover:bg-gray-100 justify-between p-1 w-full"
+                className="border divide-gray-200 flex justify-between p-1 w-full bg-red-400 hover:bg-red-500"
                 onClick={() => setOpenCreateModal(true)}
               >
                 <span className="font-medium">Add Allergy</span>
@@ -44,8 +44,8 @@ export default function PatientAllery(props: IPatientAlleryProps) {
                   key={allergy.id}
                   className={`flex flex-col ${
                     index !== allergies.length - 1
-                      ? "border-b border-black"
-                      : ""
+                      ? "border-b border-black bg-red-100 p-1 rounded"
+                      : "bg-red-100 p-1 rounded my-1 bg"
                   }`}
                 >
                   <p

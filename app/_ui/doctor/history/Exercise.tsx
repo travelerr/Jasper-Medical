@@ -79,7 +79,7 @@ export default function Exercise(props: IExercise) {
   };
 
   return (
-    <>
+    <div className="bg-green-100 p-1 rounded mb-3">
       <div className="font-bold">{"Exercise:"}</div>
       {exercise
         ?.sort(
@@ -116,6 +116,6 @@ export default function Exercise(props: IExercise) {
         placeholder="Add exercise"
         onBlurCallback={createExerciseHandler}
       />
-    </>
+    </div>
   );
 }

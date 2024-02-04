@@ -39,9 +39,9 @@ export default function PatientChartSideBar() {
   return (
     <nav
       aria-label="Patient sidebar"
-      className="w-64 h-screen border-r rounded-none shiny-light-blue-bg"
+      className="w-64 h-screen border-r rounded-none"
     >
-      <div className="bg-gray-50 dark:bg-gray-800 h-full overflow-x-hidden overflow-y-auto px-3 py-4 rounded shiny-light-blue-bg">
+      <div className="bg-gray-50 dark:bg-gray-800 h-full overflow-x-hidden overflow-y-auto px-3 py-4 rounded-none">
         <div
           id="patient-sidebard-pesonal-info"
           className="flex items-center pb-2 border-b border-black"

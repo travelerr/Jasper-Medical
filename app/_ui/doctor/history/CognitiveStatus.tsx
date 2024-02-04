@@ -77,7 +77,7 @@ export default function CognitiveStatus(props: ICognitiveStatus) {
   };
 
   return (
-    <>
+    <div className="bg-green-100 p-1 rounded mb-3">
       <div className="font-bold">{"Cognitive Status:"}</div>
       {cognitiveStatus
         ?.sort(
@@ -116,6 +116,6 @@ export default function CognitiveStatus(props: ICognitiveStatus) {
         placeholder="Add cognitive status"
         onBlurCallback={createCognitiveStatusHandler}
       />
-    </>
+    </div>
   );
 }

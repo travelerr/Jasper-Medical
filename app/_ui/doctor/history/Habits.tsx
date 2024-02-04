@@ -114,7 +114,7 @@ export default function Habits(props: IHabits) {
   };
 
   return (
-    <>
+    <div className="bg-green-100 p-1 rounded mb-3">
       <div>
         Smoking Status:
         <div className="flex items-center">
@@ -181,6 +181,6 @@ export default function Habits(props: IHabits) {
         placeholder="Add habit"
         onBlurCallback={createHabitHandler}
       />
-    </>
+    </div>
   );
 }

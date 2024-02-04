@@ -80,7 +80,7 @@ export default function PSH(props: IPSH) {
   };
 
   return (
-    <>
+    <div className="bg-green-100 p-1 rounded mb-3">
       <div className="font-bold">{"PSH:"}</div>
       {pastSurgicalHistory
         ?.sort(
@@ -119,6 +119,6 @@ export default function PSH(props: IPSH) {
         placeholder="Add past surgical history"
         onBlurCallback={createPastSurgicalHistoryHandler}
       />
-    </>
+    </div>
   );
 }

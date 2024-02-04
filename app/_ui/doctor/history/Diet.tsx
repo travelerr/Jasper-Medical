@@ -73,7 +73,7 @@ export default function Diet(props: IDiet) {
   };
 
   return (
-    <>
+    <div className="bg-green-100 p-1 rounded mb-3">
       <div className="font-bold">{"Diet:"}</div>
       {diet
         ?.sort(
@@ -110,6 +110,6 @@ export default function Diet(props: IDiet) {
         placeholder="Add diet"
         onBlurCallback={createDietHandler}
       />
-    </>
+    </div>
   );
 }

@@ -80,7 +80,7 @@ export default function FunctionalStatus(props: IFunctionalStatus) {
   };
 
   return (
-    <>
+    <div className="bg-green-100 p-1 rounded mb-3">
       <div className="font-bold">{"Functional Status:"}</div>
       {functionalStatus
         ?.sort(
@@ -119,6 +119,6 @@ export default function FunctionalStatus(props: IFunctionalStatus) {
         placeholder="Add functional status"
         onBlurCallback={createFunctionalStatusHandler}
       />
-    </>
+    </div>
   );
 }

@@ -155,7 +155,7 @@ export default function SocialHistory(props: ISocialHistory) {
   };
 
   return (
-    <>
+    <div className="bg-green-100 p-1 rounded mb-3">
       <div className="font-bold">{"Social History:"}</div>
       <div>
         Financial Strain:
@@ -255,6 +255,6 @@ export default function SocialHistory(props: ISocialHistory) {
         placeholder="Add social history"
         onBlurCallback={createSocialHistoryHandler}
       />
-    </>
+    </div>
   );
 }

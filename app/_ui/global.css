@@ -100,31 +100,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Shiny light blue button */
-/* .shiny-light-blue-button {
-  background: linear-gradient(
-    145deg,
-    var(--light-blue-gradient-start),
-    var(--light-blue-gradient-end)
-  );
-  border: none;
-  border-radius: 5px;
-  color: white;
-  cursor: pointer;
-  font-size: 1rem;
-  padding: 10px 20px;
-  text-align: center;
-  text-transform: uppercase;
-  transition:
-    background 0.3s ease-in-out,
-    transform 0.3s ease-in-out;
+.link {
+  color: #0ea5e9 !important;
 }
-
-.shiny-light-blue-button:hover {
-  background: linear-gradient(
-    145deg,
-    var(--light-blue-gradient-end),
-    var(--light-blue-gradient-start)
-  );
-  transform: scale(1.05);
-} */

@@ -40,10 +40,12 @@ export default function PatientProblemList(props: IProblemListProps) {
       {problemList?.length ? (
         <Accordion className="rounded-none" collapseAll>
           <AccordionPanel className="py-1 focus:outline-none">
-            <AccordionTitle className="text-black">Problem List</AccordionTitle>
+            <AccordionTitle className="text-black bg-yellow-100 hover:bg-yellow-200">
+              Problem List
+            </AccordionTitle>
             <AccordionContent className="p-1 bg-white">
               <button
-                className="border divide-gray-200 flex hover:bg-gray-100 justify-between p-1 w-full"
+                className="border divide-gray-200 flex justify-between p-1 w-full bg-amber-400 hover:bg-amber-500"
                 onClick={() => setOpenCreateModal(true)}
               >
                 <span className="font-medium">Add Problem</span>
@@ -54,8 +56,8 @@ export default function PatientProblemList(props: IProblemListProps) {
                   key={problem.id}
                   className={`flex flex-col ${
                     index !== problemList.length - 1
-                      ? "border-b border-black"
-                      : ""
+                      ? "border-b border-black bg-yellow-100 p-1 rounded my-1"
+                      : "bg-yellow-100 p-1 rounded my-1"
                   }`}
                 >
                   <p

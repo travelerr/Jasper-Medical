@@ -80,7 +80,7 @@ export default function PMH(props: IPMH) {
   };
 
   return (
-    <>
+    <div className="bg-green-100 p-1 rounded my-3">
       <div className="font-bold">{"PMH:"}</div>
       {pastMedicalHistory
         ?.sort(
@@ -119,6 +119,6 @@ export default function PMH(props: IPMH) {
         placeholder="Add past medical history"
         onBlurCallback={createPastMedicalHistoryHandler}
       />
-    </>
+    </div>
   );
 }

@@ -28,7 +28,7 @@ export default function PatientHistory(props: IPatientHistoryProps) {
     <>
       <Accordion className="rounded-none" collapseAll>
         <AccordionPanel className="py-1 focus:outline-none rounded-none">
-          <AccordionTitle className="text-black rounded-none">
+          <AccordionTitle className="text-black rounded-none bg-green-100 hover:bg-green-200">
             History
           </AccordionTitle>
           <AccordionContent className="p-1 bg-white rounded-none caret-accordion">
@@ -73,7 +73,7 @@ export default function PatientHistory(props: IPatientHistoryProps) {
             <Habits
               habits={patientHistory?.habits}
               patientHistoryId={patientHistory?.id}
-              habitsSmokingStatus={patientHistory.habitsSmokingStatus}
+              habitsSmokingStatus={patientHistory?.habitsSmokingStatus}
             />
             <Diet
               diet={patientHistory?.diet}
@@ -86,9 +86,9 @@ export default function PatientHistory(props: IPatientHistoryProps) {
             <SocialHistory
               socialHistory={patientHistory?.socialHistory}
               patientHistoryId={patientHistory?.id}
-              socialHistoryEducation={patientHistory.socialHistoryEducation}
+              socialHistoryEducation={patientHistory?.socialHistoryEducation}
               socialHistoryFinancialStrain={
-                patientHistory.socialHistoryFinancialStrain
+                patientHistory?.socialHistoryFinancialStrain
               }
             />
           </AccordionContent>

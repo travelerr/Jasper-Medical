@@ -113,7 +113,7 @@ export default function PsychologicalStatus(props: IPsychologicalStatus) {
   };
 
   return (
-    <>
+    <div className="bg-green-100 p-1 rounded mb-3">
       <div>
         Stress Level:
         <div className="flex items-center">
@@ -182,6 +182,6 @@ export default function PsychologicalStatus(props: IPsychologicalStatus) {
         placeholder="Add psychological status"
         onBlurCallback={createPsychologicalStatusHandler}
       />
-    </>
+    </div>
   );
 }

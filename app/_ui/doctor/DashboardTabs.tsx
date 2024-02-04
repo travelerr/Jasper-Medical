@@ -105,7 +105,7 @@ export default function DashboardTabs(props: IDashboardTabsComponent) {
                 <div>
                   <PatientLookup openPatientTab={openPatientTab} />
                 </div>
-                <div>extra col</div>
+                <div></div>
               </div>
             </div>
           </div>
@@ -135,11 +135,13 @@ export default function DashboardTabs(props: IDashboardTabsComponent) {
             tabId={patient.id}
             canCloseTabFunction={closePatientTab}
           >
-            {patientProfiles[patient.id] && (
-              <PatientDataProvider patientProp={patientProfiles[patient.id]}>
-                <PatientChart />
-              </PatientDataProvider>
-            )}
+            <div className="shiny-light-blue-bg">
+              {patientProfiles[patient.id] && (
+                <PatientDataProvider patientProp={patientProfiles[patient.id]}>
+                  <PatientChart />
+                </PatientDataProvider>
+              )}
+            </div>
           </Tab>
         ))}
       </Tabs>
