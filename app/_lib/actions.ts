@@ -49,10 +49,12 @@ import {
   EditSocialHistoryFinancialStrainInputs,
   EditSocialHistoryInputs,
   State,
+  SurveySubmission,
   UpdateFamilyRelativeInputs,
 } from "./definitions";
 import prisma from "./prisma";
-import { AppointmentStatus } from "@prisma/client";
+import { AppointmentStatus, SurveyResponse } from "@prisma/client";
+import { it } from "node:test";
 
 const FormSchema = z.object({
   id: z.string(),
@@ -1243,4 +1245,72 @@ export async function deleteSocialHistory(formData: DeleteSocialHistoryInputs) {
   }
 }
 
+// #endregion
+
+// #region Survey
+export async function submitSurvey(formData: SurveySubmission) {
+  try {
+    for (const item of formData.responsesArr) {
+      // Check if a record exists with the same surveyId, patientHistoryId, and questionId
+      const existingRecord = await prisma.surveyResponse.findFirst({
+        where: {
+          surveyId: item.surveyId,
+          patientHistoryId: item.patientHistoryId,
+          questionId: item.questionId,
+        },
+      });
+
+      if (existingRecord) {
+        // If the record exists, update it
+        await prisma.surveyResponse.update({
+          where: { id: existingRecord.id },
+          data: {
+            responseBool: item.responseBool,
+            responseInt: item.responseInt,
+            responseText: item.responseText,
+          },
+        });
+      } else {
+        // If the record does not exist, create a new one
+        await prisma.surveyResponse.create({
+          data: item,
+        });
+      }
+    }
+
+    const existingRecord = await prisma.surveyScore.findFirst({
+      where: {
+        surveyId: formData.surveyId,
+        patientHistoryId: formData.patientHistoryId,
+      },
+    });
+
+    if (existingRecord) {
+      // If the record exists, update it
+      await prisma.surveyScore.update({
+        where: { id: existingRecord.id },
+        data: {
+          score: formData.score,
+        },
+      });
+    } else {
+      // If the record does not exist, create a new one
+      await prisma.surveyScore.create({
+        data: {
+          surveyId: formData.surveyId,
+          patientHistoryId: formData.patientHistoryId,
+          score: formData.score,
+          surveyName: formData.surveyName,
+        },
+      });
+    }
+
+    return { message: "Survey responses processed successfully." };
+  } catch (error) {
+    console.error(error);
+    return {
+      message: "Database Error: Failed to process survey responses.",
+    };
+  }
+}
 // #endregion

@@ -126,7 +126,7 @@ export default function DashboardTabs(props: IDashboardTabsComponent) {
           hideLabel={true}
           tabId={-3}
         >
-          Content for Tab 3
+          Create patient tab. Create patient history record also
         </Tab>
         {patientTabs.map((patient) => (
           <Tab

@@ -5,6 +5,7 @@ import {
   PatientEducationLevel,
   PatientFinancialStrain,
   SocialHistory,
+  SurveyName,
 } from "@prisma/client";
 import PatientDataContext from "@/app/_lib/contexts/PatientDataContext";
 import {
@@ -13,6 +14,7 @@ import {
   EditSocialHistoryEducationLevelInputs,
   EditSocialHistoryFinancialStrainInputs,
   EditSocialHistoryInputs,
+  FullPatientProfile,
 } from "@/app/_lib/definitions";
 import {
   createSocialHistory,
@@ -22,6 +24,8 @@ import {
   editSocialHistoryEducationLevel,
 } from "@/app/_lib/actions";
 import { covertPascalCase } from "@/app/_lib/utils";
+import { getSurveyScore } from "../surveys/SurveyFunctions";
+import HARKSurveyModal from "../surveys/HARKSurveyModal";
 
 interface ISocialHistory {
   socialHistory: SocialHistory[];
@@ -37,6 +41,7 @@ export default function SocialHistory(props: ISocialHistory) {
     socialHistoryEducation,
     socialHistoryFinancialStrain,
   } = props;
+  const [openSurveyModal, setOpenSurveyModal] = useState<boolean>(false);
   const [socialHistoryEditMode, setSocialHistoryEditMode] = useState<
     Record<number, boolean>
   >({});
@@ -49,7 +54,10 @@ export default function SocialHistory(props: ISocialHistory) {
   const [financialStrainToggleMode, setFinancialStrainToggleMode] =
     useState<boolean>(false);
 
-  const { refetchPatientData } = useContext(PatientDataContext);
+  const { refetchPatientData, patient } = useContext<{
+    refetchPatientData: Function;
+    patient: FullPatientProfile;
+  }>(PatientDataContext);
 
   useEffect(() => {
     if (socialHistoryEducation) {
@@ -155,106 +163,127 @@ export default function SocialHistory(props: ISocialHistory) {
   };
 
   return (
-    <div className="bg-green-100 p-1 rounded mb-3">
-      <div className="font-bold">{"Social History:"}</div>
-      <div>
-        Financial Strain:
-        <div className="flex items-center">
-          <FaCaretRight
-            onClick={() =>
-              setFinancialStrainToggleMode(!financialStrainToggleMode)
-            }
-          />
-          {financialStrainToggleMode ? (
-            <div className="flex m-1">
-              <select
-                className="p-0 px-2.5 rounded text-sm w-full"
-                value={financialStrain}
-                onChange={onChangeUpdateFinancialStrain}
-              >
-                {Object.values(PatientFinancialStrain).map((el, index) => (
-                  <option className="text-sm" key={index} value={el}>
-                    {covertPascalCase(el)}
-                  </option>
-                ))}
-              </select>
-            </div>
-          ) : (
-            <span>
-              {" "}
-              {financialStrain?.length > 0
-                ? covertPascalCase(financialStrain)
-                : "Not set"}
-            </span>
-          )}
+    <>
+      <div className="bg-green-100 p-1 rounded mb-3">
+        <div className="font-bold">{"Social History:"}</div>
+        <div>
+          <span className="link" onClick={() => setOpenSurveyModal(true)}>
+            HARK:{" "}
+            {getSurveyScore(
+              SurveyName.HARK,
+              patient.patientHistory?.surveyScores
+            )}
+          </span>
+          <div></div>
         </div>
-      </div>
-      <div>
-        Education Level:
-        <div className="flex items-center">
-          <FaCaretRight
-            onClick={() =>
-              setEducationLevelToggleMode(!educationLevelToggleMode)
-            }
-          />
-          {educationLevelToggleMode ? (
-            <div className="flex m-1">
-              <select
-                className="p-0 px-2.5 rounded text-sm w-full"
-                value={educationLevel}
-                onChange={onChangeUpdateEducationLevel}
-              >
-                {Object.values(PatientEducationLevel).map((el, index) => (
-                  <option className="text-sm" key={index} value={el}>
-                    {covertPascalCase(el)}
-                  </option>
-                ))}
-              </select>
-            </div>
-          ) : (
-            <span>
-              {educationLevel?.length > 0
-                ? covertPascalCase(educationLevel)
-                : "Not set"}
-            </span>
-          )}
-        </div>
-      </div>
-      {socialHistory
-        ?.sort(
-          (a, b) =>
-            new Date(a.createdDate).getTime() -
-            new Date(b.createdDate).getTime()
-        )
-        .map((sh, index) => (
-          <div
-            key={sh.id}
-            className={`flex items-center ${
-              index !== socialHistory.length - 1 ? "border-b border-black" : ""
-            }`}
-          >
-            <FaCaretRight onClick={() => toggleSocialHistoryEditMode(sh.id)} />
-            {socialHistoryEditMode[sh.id] ? (
+        <div>
+          Financial Strain:
+          <div className="flex items-center">
+            <FaCaretRight
+              onClick={() =>
+                setFinancialStrainToggleMode(!financialStrainToggleMode)
+              }
+            />
+            {financialStrainToggleMode ? (
               <div className="flex m-1">
-                <OnBlurTextInput
-                  initialValue={sh.note}
-                  onBlurCallback={editSocialHistoryHandler}
-                  editId={sh.id}
-                />
-                <FaTrash
-                  className="text-red-500 cursor-pointer ml-1"
-                  onClick={() => deleteSocialHistoryHandler(sh.id)}
-                />
+                <select
+                  className="p-0 px-2.5 rounded text-sm w-full"
+                  value={financialStrain}
+                  onChange={onChangeUpdateFinancialStrain}
+                >
+                  {Object.values(PatientFinancialStrain).map((el, index) => (
+                    <option className="text-sm" key={index} value={el}>
+                      {covertPascalCase(el)}
+                    </option>
+                  ))}
+                </select>
               </div>
             ) : (
-              <span>{sh.note}</span>
+              <span>
+                {" "}
+                {financialStrain?.length > 0
+                  ? covertPascalCase(financialStrain)
+                  : "Not set"}
+              </span>
             )}
           </div>
-        ))}
-      <OnBlurTextInput
-        placeholder="Add social history"
-        onBlurCallback={createSocialHistoryHandler}
+        </div>
+        <div>
+          Education Level:
+          <div className="flex items-center">
+            <FaCaretRight
+              onClick={() =>
+                setEducationLevelToggleMode(!educationLevelToggleMode)
+              }
+            />
+            {educationLevelToggleMode ? (
+              <div className="flex m-1">
+                <select
+                  className="p-0 px-2.5 rounded text-sm w-full"
+                  value={educationLevel}
+                  onChange={onChangeUpdateEducationLevel}
+                >
+                  {Object.values(PatientEducationLevel).map((el, index) => (
+                    <option className="text-sm" key={index} value={el}>
+                      {covertPascalCase(el)}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            ) : (
+              <span>
+                {educationLevel?.length > 0
+                  ? covertPascalCase(educationLevel)
+                  : "Not set"}
+              </span>
+            )}
+          </div>
+        </div>
+        {socialHistory
+          ?.sort(
+            (a, b) =>
+              new Date(a.createdDate).getTime() -
+              new Date(b.createdDate).getTime()
+          )
+          .map((sh, index) => (
+            <div
+              key={sh.id}
+              className={`flex items-center ${
+                index !== socialHistory.length - 1
+                  ? "border-b border-black"
+                  : ""
+              }`}
+            >
+              <FaCaretRight
+                onClick={() => toggleSocialHistoryEditMode(sh.id)}
+              />
+              {socialHistoryEditMode[sh.id] ? (
+                <div className="flex m-1">
+                  <OnBlurTextInput
+                    initialValue={sh.note}
+                    onBlurCallback={editSocialHistoryHandler}
+                    editId={sh.id}
+                  />
+                  <FaTrash
+                    className="text-red-500 cursor-pointer ml-1"
+                    onClick={() => deleteSocialHistoryHandler(sh.id)}
+                  />
+                </div>
+              ) : (
+                <span>{sh.note}</span>
+              )}
+            </div>
+          ))}
+        <OnBlurTextInput
+          placeholder="Add social history"
+          onBlurCallback={createSocialHistoryHandler}
+        />
+      </div>
+      <HARKSurveyModal
+        openSurveyModal={openSurveyModal}
+        setOpenSurveyModal={setOpenSurveyModal}
+        patientHistoryId={patientHistoryId}
       />
-    </div>
+    </>
   );
 }

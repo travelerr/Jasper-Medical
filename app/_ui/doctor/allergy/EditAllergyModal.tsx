@@ -26,7 +26,7 @@ export default function EditAllergyModal(props: IEditAllergyModal) {
   const { viewState, setLoading } = useViewState();
   const [formMessage, setFormMessage] = useState<string>("");
   const router = useRouter();
-  const { refetchPatientData, patient } = useContext(PatientDataContext);
+  const { refetchPatientData } = useContext(PatientDataContext);
 
   const {
     register,

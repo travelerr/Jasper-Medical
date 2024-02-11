@@ -6,10 +6,17 @@ import {
   FullPatientProfile,
   InvoiceForm,
   InvoicesTable,
+  SurveyDataWithRelations,
 } from "./definitions";
 import prisma from "./prisma";
 import { DoctorWithAppointment } from "./prisma";
-import type { Allergen, Drug, ICD10Code, Patient, User } from "@prisma/client";
+import type {
+  Allergen,
+  Drug,
+  ICD10Code,
+  Patient,
+  SurveyName,
+} from "@prisma/client";
 
 const ITEMS_PER_PAGE = 6;
 export async function fetchFilteredInvoices(
@@ -314,6 +321,8 @@ export async function getFullPatientProfileById(
             habits: true,
             diet: true,
             exercise: true,
+            surveyResponse: true,
+            surveyScores: true,
           },
         },
         appointments: true,
@@ -361,6 +370,46 @@ export async function getPatientsTypeAhead(
   } catch (error) {
     console.error("Failed to fetch patients:", error);
     throw new Error("Failed to fetch patients.");
+  }
+}
+
+// #endregion
+
+// #region Surveys
+
+export async function getSurveyByName(
+  surveyName: SurveyName,
+  patientId?: number
+): Promise<SurveyDataWithRelations> {
+  try {
+    let query = {
+      where: {
+        surveyName: surveyName,
+      },
+      include: {
+        questions: true, // Include all questions related to the survey
+        responses: patientId
+          ? {
+              where: {
+                patientHistoryId: patientId, // Filter responses by patient ID if provided
+              },
+            }
+          : false, // Do not include responses if patient ID is not provided
+        SurveyScore: patientId
+          ? {
+              where: {
+                patientHistoryId: patientId, // Filter scores by patient ID if provided
+              },
+            }
+          : false, // Do not include scores if patient ID is not provided
+      },
+    };
+
+    const result = await prisma.survey.findFirst(query);
+    return result;
+  } catch (error) {
+    console.error("Failed to fetch survey:", error);
+    throw new Error("Failed to fetch survey.");
   }
 }
 

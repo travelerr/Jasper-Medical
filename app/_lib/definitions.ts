@@ -40,8 +40,14 @@ import {
   Race,
   Sex,
   SocialHistory,
+  Survey,
+  SurveyName,
+  SurveyQuestion,
+  SurveyResponse,
+  SurveyScore,
   TestResult,
 } from "@prisma/client";
+import { getSurveyByName } from "./data";
 
 // #region Auth
 
@@ -245,6 +251,8 @@ export type FullPatientHistory = {
   diet: Diet[];
   exercise: Exercise[];
   socialHistory: SocialHistory[];
+  surveyResponse: SurveyResponse[];
+  surveyScores: SurveyScore[];
 };
 
 // #endregion
@@ -442,6 +450,25 @@ export type DeleteSocialHistoryInputs = {
 };
 
 // #endregion
+
+// #region Survey
+
+export type SurveyDataWithRelations = Survey & {
+  questions: SurveyQuestion[];
+  responses?: SurveyResponse[];
+  surveyScores?: SurveyScore[];
+};
+
+export type SurveySubmission = {
+  responsesArr: SurveyResponse[];
+  score?: number;
+  surveyId: number;
+  surveyName: SurveyName;
+  patientHistoryId: number;
+};
+
+// #endregion
+
 /*****************/
 export type Customer = {
   id: string;

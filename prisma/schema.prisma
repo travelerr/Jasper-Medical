@@ -314,7 +314,7 @@ model PatientHistory {
   familyHistoryDaughter        String?
   familyHistoryGrandmother     String?
   familyHistoryGrandfather     String?
-  familyHistoryAunt             String?
+  familyHistoryAunt            String?
   familyHistoryUncle           String?
   familyHistoryOther           String?
   socialHistoryEducation       PatientEducationLevel
@@ -322,6 +322,7 @@ model PatientHistory {
   psychologicalStatusStress    PatientStressLevel
   habitsSmokingStatus          PatientSmokingStatus
   surveyScores                 SurveyScore[]
+  surveyResponse               SurveyResponse[]
 }
 
 model PastMedicalHistory {
@@ -446,26 +447,33 @@ model Survey {
 }
 
 model SurveyQuestion {
-  id             Int              @id @default(autoincrement())
-  createdDate    DateTime?        @default(now())
-  updatedDate    DateTime?        @updatedAt
+  id             Int                @id @default(autoincrement())
+  createdDate    DateTime?          @default(now())
+  updatedDate    DateTime?          @updatedAt
   name           String?
-  text           String // The question text
+  text           String
+  sortOrder      Int?
+  type           SurveyQuestionType
   surveyId       Int
-  survey         Survey           @relation(fields: [surveyId], references: [id])
+  survey         Survey             @relation(fields: [surveyId], references: [id])
   SurveyResponse SurveyResponse[]
 }
 
 model SurveyResponse {
-  id          Int            @id @default(autoincrement())
-  createdDate DateTime?      @default(now())
-  updatedDate DateTime?      @updatedAt
-  name        String?
-  response    String // The response to the survey question
-  questionId  Int
-  question    SurveyQuestion @relation(fields: [questionId], references: [id])
-  surveyId    Int
-  survey      Survey         @relation(fields: [surveyId], references: [id])
+  id               Int                @id @default(autoincrement())
+  createdDate      DateTime?          @default(now())
+  updatedDate      DateTime?          @updatedAt
+  name             String?
+  responseText     String?
+  responseInt      Int?
+  responseBool     Boolean?
+  type             SurveyQuestionType
+  questionId       Int
+  question         SurveyQuestion     @relation(fields: [questionId], references: [id])
+  surveyId         Int
+  survey           Survey             @relation(fields: [surveyId], references: [id])
+  patientHistoryId Int // Foreign key reference to the Patient History model
+  patientHistory   PatientHistory     @relation(fields: [patientHistoryId], references: [id])
 }
 
 model SurveyScore {
@@ -474,6 +482,7 @@ model SurveyScore {
   updatedDate      DateTime?      @updatedAt
   name             String?
   score            Int // The score from the survey
+  surveyName       SurveyName
   surveyId         Int
   survey           Survey         @relation(fields: [surveyId], references: [id])
   patientHistoryId Int // Foreign key reference to the Patient History model
@@ -769,4 +778,10 @@ enum PatientSmokingStatus {
   OccasionalSmoker @map("Occasional smoker")
   RegularSmoker    @map("Regular smoker")
   HeavySmoker      @map("Heavy smoker")
+}
+
+enum SurveyQuestionType {
+  Text
+  Number
+  Boolean
 }
