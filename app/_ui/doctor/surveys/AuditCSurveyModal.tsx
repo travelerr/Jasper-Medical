@@ -9,23 +9,47 @@ import {
   SurveyDataWithRelations,
   SurveySubmission,
 } from "@/app/_lib/definitions";
-import SurveyNumberInput from "./SurveyNumberInput";
 import { submitSurvey } from "@/app/_lib/actions";
 import PatientDataContext from "@/app/_lib/contexts/PatientDataContext";
+import SurveyRadioInput from "./SurveyRadioInput";
 
-interface IPHQ9SurveyModal {
+interface IAuditCSurveyModal {
   patientHistoryId?: number;
   openSurveyModal: boolean;
   setOpenSurveyModal: Function;
 }
 
-export default function PHQ9SurveyModal(props: IPHQ9SurveyModal) {
+export default function AuditCSurveyModal(props: IAuditCSurveyModal) {
   const { openSurveyModal, setOpenSurveyModal, patientHistoryId } = props;
   const [surveyData, setSurveyData] = useState<SurveyDataWithRelations>(null);
   const [surveyResponses, setSurveyResponses] =
     useState<SurveyResponse[]>(null);
   const { viewState, setLoading } = useViewState();
   const { refetchPatientData, patient } = useContext(PatientDataContext);
+
+  const radioOptions0 = [
+    { value: "0", label: "Never" },
+    { value: "1", label: "Monthly or less" },
+    { value: "2", label: "Two to four times a month" },
+    { value: "3", label: "Two to three times a week" },
+    { value: "4", label: "Four or more times a week" },
+  ];
+
+  const radioOptions1 = [
+    { value: "0", label: "1 or 2 or less" },
+    { value: "1", label: "3 or 4" },
+    { value: "2", label: "5 or 6" },
+    { value: "3", label: "7 to 9" },
+    { value: "4", label: "10 or more" },
+  ];
+
+  const radioOptions2 = [
+    { value: "0", label: "Never" },
+    { value: "1", label: "Less than monthly" },
+    { value: "2", label: "Monthly" },
+    { value: "3", label: "Weekly" },
+    { value: "4", label: "Daily or almost daily	" },
+  ];
 
   const {
     register,
@@ -58,7 +82,6 @@ export default function PHQ9SurveyModal(props: IPHQ9SurveyModal) {
       }
       dto.responsesArr.push(response);
     });
-
     try {
       setLoading(true);
       await submitSurvey(dto);
@@ -75,11 +98,14 @@ export default function PHQ9SurveyModal(props: IPHQ9SurveyModal) {
     try {
       setLoading(true);
       if (patientHistoryId) {
-        const result = await getSurveyByName(SurveyName.PHQ9, patientHistoryId);
+        const result = await getSurveyByName(
+          SurveyName.AUDITC,
+          patientHistoryId
+        );
         setSurveyData(result);
         setSurveyResponses(result.responses);
       } else {
-        const result = await getSurveyByName(SurveyName.PHQ9);
+        const result = await getSurveyByName(SurveyName.AUDITC);
         setSurveyData(result);
       }
       setLoading(false);
@@ -106,12 +132,6 @@ export default function PHQ9SurveyModal(props: IPHQ9SurveyModal) {
         // Determine the answer type and value
         let answerValue;
         switch (answer.type) {
-          case "Boolean":
-            answerValue = answer.responseBool.toString();
-            break;
-          case "Text":
-            answerValue = answer.responseText;
-            break;
           case "Number":
             answerValue = answer.responseInt;
             break;
@@ -120,7 +140,7 @@ export default function PHQ9SurveyModal(props: IPHQ9SurveyModal) {
         }
         // Set the value using setValue, assuming field names are `question_${questionId}`
         const fieldName = answer.questionId.toString();
-        setValue(fieldName, answerValue);
+        setValue(fieldName, answerValue.toString());
       });
     }
   }, [surveyResponses]);
@@ -134,7 +154,7 @@ export default function PHQ9SurveyModal(props: IPHQ9SurveyModal) {
     >
       <FlowBiteModal.Header>
         <div>
-          <div>{SurveyName.PHQ9}</div>
+          <div>{SurveyName.AUDITC}</div>
         </div>
       </FlowBiteModal.Header>
       <form onSubmit={handleSubmit(onSubmit)} className="overflow-scroll">
@@ -152,12 +172,19 @@ export default function PHQ9SurveyModal(props: IPHQ9SurveyModal) {
                   <div className="w-1/2 flex my-5" key={q.id}>
                     <div className="text-2xl mr-3">{index + 1}</div>
                     {q.type == SurveyQuestionType.Number ? (
-                      <SurveyNumberInput
+                      <SurveyRadioInput
                         questionText={q.text}
                         questionId={q.id}
                         register={register}
-                        min={0}
-                        max={3}
+                        radioOptions={
+                          index === 0
+                            ? radioOptions0
+                            : index === 1
+                            ? radioOptions1
+                            : index === 2
+                            ? radioOptions2
+                            : null
+                        }
                       />
                     ) : null}
                   </div>

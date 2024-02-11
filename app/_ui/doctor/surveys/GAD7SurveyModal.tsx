@@ -67,7 +67,6 @@ export default function GAD7SurveyModal(props: IGAD7SurveyModal) {
       reset();
       setOpenSurveyModal(false);
     } catch (error) {
-      // setFormMessage("There was an error creating the appointment");
       setLoading(false);
     }
   };

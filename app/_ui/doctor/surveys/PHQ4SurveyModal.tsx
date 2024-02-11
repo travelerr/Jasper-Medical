@@ -67,7 +67,6 @@ export default function PHQ4SurveyModal(props: IPHQ4SurveyModal) {
       reset();
       setOpenSurveyModal(false);
     } catch (error) {
-      // setFormMessage("There was an error creating the appointment");
       setLoading(false);
     }
   };

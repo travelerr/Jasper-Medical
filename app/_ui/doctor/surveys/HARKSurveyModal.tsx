@@ -76,7 +76,6 @@ export default function HARKSurveyModal(props: IHARKSurveyModal) {
       reset();
       setOpenSurveyModal(false);
     } catch (error) {
-      // setFormMessage("There was an error creating the appointment");
       setLoading(false);
     }
   };

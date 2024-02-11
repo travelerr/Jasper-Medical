@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import OnBlurTextInput from "./OnBlurTextInput";
 import { FaCaretRight, FaTrash } from "react-icons/fa6";
-import { Habits, PatientSmokingStatus } from "@prisma/client";
+import { Habits, PatientSmokingStatus, SurveyName } from "@prisma/client";
 import PatientDataContext from "@/app/_lib/contexts/PatientDataContext";
 import {
   CreateHabitInputs,
@@ -16,6 +16,8 @@ import {
   editHabitSmokingStatus,
 } from "@/app/_lib/actions";
 import { covertPascalCase } from "@/app/_lib/utils";
+import { getSurveyScore } from "../surveys/SurveyFunctions";
+import AuditCSurveyModal from "../surveys/AuditCSurveyModal";
 
 interface IHabits {
   habits: Habits[];
@@ -28,11 +30,12 @@ export default function Habits(props: IHabits) {
   const [habitsEditMode, setHabitEditMode] = useState<Record<number, boolean>>(
     {}
   );
+  const [openSurveyModal, setOpenSurveyModal] = useState<boolean>(false);
   const [smokingStatus, setSmokingStatus] =
     useState<PatientSmokingStatus>(null);
   const [smokingStatusToggleMode, setSmokingStatusToggleMode] =
     useState<boolean>(false);
-  const { refetchPatientData } = useContext(PatientDataContext);
+  const { refetchPatientData, patient } = useContext(PatientDataContext);
 
   useEffect(() => {
     if (habitsSmokingStatus) {
@@ -114,73 +117,92 @@ export default function Habits(props: IHabits) {
   };
 
   return (
-    <div className="bg-green-100 p-1 rounded mb-3">
-      <div>
-        Smoking Status:
-        <div className="flex items-center">
-          <FaCaretRight
-            onClick={() => setSmokingStatusToggleMode(!smokingStatusToggleMode)}
-          />
-          {smokingStatusToggleMode ? (
-            <div className="flex m-1">
-              <select
-                className="p-0 px-2.5 rounded text-sm w-full"
-                value={smokingStatus}
-                onChange={onChangeUpdateSmokingStatus}
-              >
-                {Object.values(PatientSmokingStatus).map((ss, index) => (
-                  <option className="text-sm" key={index} value={ss}>
-                    {covertPascalCase(ss)}
-                  </option>
-                ))}
-              </select>
-            </div>
-          ) : (
-            <span>
-              {" "}
-              {smokingStatus?.length > 0
-                ? covertPascalCase(smokingStatus)
-                : "Not set"}
-            </span>
-          )}
+    <>
+      <div className="bg-green-100 p-1 rounded mb-3">
+        <div id="AUDITC">
+          <span className="link" onClick={() => setOpenSurveyModal(true)}>
+            Audit-C:{" "}
+            {getSurveyScore(
+              SurveyName.AUDITC,
+              patient.patientHistory?.surveyScores
+            )}
+          </span>
+          <div></div>
         </div>
-      </div>
-      <div className="font-bold">{"Habits:"}</div>
-      {habits
-        ?.sort(
-          (a, b) =>
-            new Date(a.createdDate).getTime() -
-            new Date(b.createdDate).getTime()
-        )
-        .map((h, index) => (
-          <div
-            key={h.id}
-            className={`flex items-center ${
-              index !== habits.length - 1 ? "border-b border-black" : ""
-            }`}
-          >
-            <FaCaretRight onClick={() => toggleHabitEditMode(h.id)} />
-            {habitsEditMode[h.id] ? (
+        <div>
+          Smoking Status:
+          <div className="flex items-center">
+            <FaCaretRight
+              onClick={() =>
+                setSmokingStatusToggleMode(!smokingStatusToggleMode)
+              }
+            />
+            {smokingStatusToggleMode ? (
               <div className="flex m-1">
-                <OnBlurTextInput
-                  initialValue={h.note}
-                  onBlurCallback={editHabitHandler}
-                  editId={h.id}
-                />
-                <FaTrash
-                  className="text-red-500 cursor-pointer ml-1"
-                  onClick={() => deleteHabitHandler(h.id)}
-                />
+                <select
+                  className="p-0 px-2.5 rounded text-sm w-full"
+                  value={smokingStatus}
+                  onChange={onChangeUpdateSmokingStatus}
+                >
+                  {Object.values(PatientSmokingStatus).map((ss, index) => (
+                    <option className="text-sm" key={index} value={ss}>
+                      {covertPascalCase(ss)}
+                    </option>
+                  ))}
+                </select>
               </div>
             ) : (
-              <span>{h.note}</span>
+              <span>
+                {" "}
+                {smokingStatus?.length > 0
+                  ? covertPascalCase(smokingStatus)
+                  : "Not set"}
+              </span>
             )}
           </div>
-        ))}
-      <OnBlurTextInput
-        placeholder="Add habit"
-        onBlurCallback={createHabitHandler}
+        </div>
+        <div className="font-bold">{"Habits:"}</div>
+        {habits
+          ?.sort(
+            (a, b) =>
+              new Date(a.createdDate).getTime() -
+              new Date(b.createdDate).getTime()
+          )
+          .map((h, index) => (
+            <div
+              key={h.id}
+              className={`flex items-center ${
+                index !== habits.length - 1 ? "border-b border-black" : ""
+              }`}
+            >
+              <FaCaretRight onClick={() => toggleHabitEditMode(h.id)} />
+              {habitsEditMode[h.id] ? (
+                <div className="flex m-1">
+                  <OnBlurTextInput
+                    initialValue={h.note}
+                    onBlurCallback={editHabitHandler}
+                    editId={h.id}
+                  />
+                  <FaTrash
+                    className="text-red-500 cursor-pointer ml-1"
+                    onClick={() => deleteHabitHandler(h.id)}
+                  />
+                </div>
+              ) : (
+                <span>{h.note}</span>
+              )}
+            </div>
+          ))}
+        <OnBlurTextInput
+          placeholder="Add habit"
+          onBlurCallback={createHabitHandler}
+        />
+      </div>
+      <AuditCSurveyModal
+        openSurveyModal={openSurveyModal}
+        setOpenSurveyModal={setOpenSurveyModal}
+        patientHistoryId={patientHistoryId}
       />
-    </div>
+    </>
   );
 }
