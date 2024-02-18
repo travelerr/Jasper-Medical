@@ -20,9 +20,12 @@ import {
   Exercise,
   FamilyHistory,
   FunctionalStatus,
+  Gender,
+  GenderMarker,
   Habits,
   ICD10Code,
   Insurance,
+  NameSuffix,
   PastMedicalHistory,
   PastSurgicalHistory,
   Patient,
@@ -35,6 +38,7 @@ import {
   ProblemList,
   ProblemListICD10Code,
   ProblemListStatus,
+  Pronouns,
   Provider,
   PsychologicalStatus,
   Race,
@@ -88,6 +92,22 @@ export type State = {
     status?: string[];
   };
   message?: string | null;
+};
+
+export type CreatePatientInputs = {
+  email: string;
+  firstName: string;
+  middleName?: string;
+  lastName: string;
+  suffix?: NameSuffix;
+  dob: Date;
+  sexAtBirth: Sex;
+  gender?: Gender;
+  genderMarker?: GenderMarker;
+  race?: Race;
+  pronouns?: Pronouns;
+  ethnicity: Ethnicity;
+  contact: Contact;
 };
 
 // #endregion

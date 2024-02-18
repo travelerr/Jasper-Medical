@@ -24,7 +24,7 @@ import {
 } from "@/app/_lib/actions";
 import PatientDataContext from "@/app/_lib/contexts/PatientDataContext";
 import { HiX } from "react-icons/hi";
-import ICD10CodeLookup from "./ICD10CodeLookup";
+import ICD10CodeLookup from "../../../_lib/inputs/lookups/ICD10CodeLookup";
 
 interface IEditProblemListModal {
   openEditModal: boolean;

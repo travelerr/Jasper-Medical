@@ -1,7 +1,7 @@
 "use client";
 
-import { getDrugsTypeAhead, getICD10CodesTypeAhead } from "@/app/_lib/data";
-import { Drug, ICD10Code } from "@prisma/client";
+import { getICD10CodesTypeAhead } from "@/app/_lib/data";
+import { ICD10Code } from "@prisma/client";
 import { Label } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";

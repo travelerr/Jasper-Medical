@@ -5,7 +5,7 @@ import {
   formatPatientName,
 } from "@/app/_lib/utils";
 import { useContext, useEffect } from "react";
-import ImageWithFallback from "./ImageWithFallback";
+import ImageWithFallback from "../../_lib/ImageWithFallback";
 import { FaUserDoctor, FaAddressCard } from "react-icons/fa6";
 import { Sex } from "@prisma/client";
 import { IoMale, IoFemale, IoMaleFemale, IoMedical } from "react-icons/io5";
@@ -132,7 +132,7 @@ export default function PatientChartSideBar() {
           <div className="grid grid-cols-2 gap-2"></div>
           {patient && <PatientAllergy allergies={patient.allergy} />}
         </div>
-        <div id="patient-sidebard-allergy" className="pt-2">
+        <div id="patient-sidebard-drug-intolerance" className="pt-2">
           <div className="grid grid-cols-2 gap-2"></div>
           {patient && (
             <PatientDrugIntolerances intolerances={patient.drugIntolerance} />
@@ -142,7 +142,7 @@ export default function PatientChartSideBar() {
           <div className="grid grid-cols-2 gap-2"></div>
           {patient && <PatientProblemList problemList={patient.problemList} />}
         </div>
-        <div id="patient-sidebard-problem-list" className="pt-2">
+        <div id="patient-sidebard-history" className="pt-2">
           <div className="grid grid-cols-2 gap-2"></div>
           {patient && (
             <PatientHistory patientHistory={patient.patientHistory} />

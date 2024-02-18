@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import OnBlurTextInput from "./OnBlurTextInput";
+import OnBlurTextInput from "../../../_lib/inputs/blur/OnBlurTextInput";
 import { FaCaretRight, FaTrash } from "react-icons/fa6";
 import { PastMedicalHistory } from "@prisma/client";
 import {
@@ -80,7 +80,7 @@ export default function PMH(props: IPMH) {
   };
 
   return (
-    <div className="bg-green-100 p-1 rounded my-3">
+    <div className="bg-green-100 border-b border-black p-1 rounded my-3">
       <div className="font-bold">{"PMH:"}</div>
       {pastMedicalHistory
         ?.sort(

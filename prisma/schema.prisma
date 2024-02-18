@@ -118,9 +118,9 @@ model Contact {
   updatedDate       DateTime?       @updatedAt
   name              String?
   primaryPhone      String?
-  primaryType       PhoneType?      @default(MOBILE)
+  primaryType       PhoneType?      @default(Mobile)
   secondaryPhone    String?
-  secondaryType     PhoneType?      @default(HOME)
+  secondaryType     PhoneType?      @default(Home)
   street            String?
   apt               String?
   city              String?
@@ -520,9 +520,9 @@ model Appointment {
 }
 
 enum AppointmentStatus {
-  SCHEDULED
-  CANCELLED
-  COMPLETED
+  Scheduled
+  Cancelled
+  Completed
 }
 
 enum UserRole {
@@ -532,10 +532,10 @@ enum UserRole {
 }
 
 enum PhoneType {
-  HOME
-  MOBILE
-  WORK
-  OTHER
+  Home
+  Mobile
+  Work
+  Other
 }
 
 enum State {

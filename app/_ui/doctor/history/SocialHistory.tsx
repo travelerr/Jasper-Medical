@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import OnBlurTextInput from "./OnBlurTextInput";
+import OnBlurTextInput from "../../../_lib/inputs/blur/OnBlurTextInput";
 import { FaCaretRight, FaTrash } from "react-icons/fa6";
 import {
   PatientEducationLevel,
@@ -24,7 +24,7 @@ import {
   editSocialHistoryEducationLevel,
 } from "@/app/_lib/actions";
 import { covertPascalCase } from "@/app/_lib/utils";
-import { getSurveyScore } from "../surveys/SurveyFunctions";
+import { getSurveyScore } from "../../../_lib/inputs/surveys/SurveyFunctions";
 import HARKSurveyModal from "../surveys/HARKSurveyModal";
 
 interface ISocialHistory {
@@ -164,7 +164,7 @@ export default function SocialHistory(props: ISocialHistory) {
 
   return (
     <>
-      <div className="bg-green-100 p-1 rounded mb-3">
+      <div className="bg-green-100 border-b border-black p-1 rounded mb-3">
         <div className="font-bold">{"Social History:"}</div>
         <div>
           <span className="link" onClick={() => setOpenSurveyModal(true)}>

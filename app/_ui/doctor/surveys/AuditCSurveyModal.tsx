@@ -11,7 +11,7 @@ import {
 } from "@/app/_lib/definitions";
 import { submitSurvey } from "@/app/_lib/actions";
 import PatientDataContext from "@/app/_lib/contexts/PatientDataContext";
-import SurveyRadioInput from "./SurveyRadioInput";
+import SurveyRadioInput from "../../../_lib/inputs/surveys/SurveyRadioInput";
 
 interface IAuditCSurveyModal {
   patientHistoryId?: number;

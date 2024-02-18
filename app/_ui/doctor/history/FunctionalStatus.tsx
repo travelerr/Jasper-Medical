@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import OnBlurTextInput from "./OnBlurTextInput";
+import OnBlurTextInput from "../../../_lib/inputs/blur/OnBlurTextInput";
 import { FaCaretRight, FaTrash } from "react-icons/fa6";
 import { FunctionalStatus } from "@prisma/client";
 import PatientDataContext from "@/app/_lib/contexts/PatientDataContext";
@@ -80,7 +80,7 @@ export default function FunctionalStatus(props: IFunctionalStatus) {
   };
 
   return (
-    <div className="bg-green-100 p-1 rounded mb-3">
+    <div className="bg-green-100 border-b border-black p-1 rounded mb-3">
       <div className="font-bold">{"Functional Status:"}</div>
       {functionalStatus
         ?.sort(

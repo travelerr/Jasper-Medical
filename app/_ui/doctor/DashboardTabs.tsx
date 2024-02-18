@@ -6,10 +6,11 @@ import { Patient } from "@prisma/client";
 import PatientDataProvider from "@/app/_lib/contexts/PatientDataProvider";
 import { getFullPatientProfileById } from "@/app/_lib/data";
 import CalendarComponent from "./appointments/CalendarComponent";
-import PatientLookup from "./PatientLookup";
-import { Tab, Tabs } from "./Tabs";
+import PatientLookup from "../../_lib/inputs/lookups/PatientLookup";
+import { Tab, Tabs } from "../../_lib/Tabs";
 import PatientChart from "./PatientChart";
 import { FullPatientProfile } from "@/app/_lib/definitions";
+import CreatePatient from "../doctor-admin/CreatePatient";
 
 interface IDashboardTabsComponent {
   appointments: any[];
@@ -126,7 +127,11 @@ export default function DashboardTabs(props: IDashboardTabsComponent) {
           hideLabel={true}
           tabId={-3}
         >
-          Create patient tab. Create patient history record also
+          <div className="p-10">
+            <div>
+              <CreatePatient />
+            </div>
+          </div>
         </Tab>
         {patientTabs.map((patient) => (
           <Tab

@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import OnBlurTextInput from "./OnBlurTextInput";
+import OnBlurTextInput from "../../../_lib/inputs/blur/OnBlurTextInput";
 import { FaCaretRight, FaTrash } from "react-icons/fa6";
 import {
   PatientStressLevel,
@@ -20,7 +20,7 @@ import {
   editPsychologicalStatusStressLevel,
 } from "@/app/_lib/actions";
 import { covertPascalCase } from "@/app/_lib/utils";
-import { getSurveyScore } from "../surveys/SurveyFunctions";
+import { getSurveyScore } from "../../../_lib/inputs/surveys/SurveyFunctions";
 import SurveyModal from "../surveys/HARKSurveyModal";
 import GAD7SurveyModal from "../surveys/GAD7SurveyModal";
 import PHQ2SurveyModal from "../surveys/PHQ2SurveyModal";
@@ -132,7 +132,8 @@ export default function PsychologicalStatus(props: IPsychologicalStatus) {
 
   return (
     <>
-      <div className="bg-green-100 p-1 rounded mb-3">
+      <div className="bg-green-100 border-b border-black p-1 rounded mb-3">
+        <div className="font-bold">{"Psychological Status:"}</div>
         <div id="GAD7">
           <span className="link" onClick={() => setOpenGAD7SurveyModal(true)}>
             GAD-7:{" "}
@@ -203,7 +204,6 @@ export default function PsychologicalStatus(props: IPsychologicalStatus) {
             )}
           </div>
         </div>
-        <div className="font-bold">{"Psychological Status:"}</div>
         {psychologicalStatus
           ?.sort(
             (a, b) =>

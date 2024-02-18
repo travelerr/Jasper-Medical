@@ -103,3 +103,24 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .link {
   color: #0ea5e9 !important;
 }
+
+input {
+  border-radius: 0px !important;
+}
+
+select {
+  border-radius: 0px !important;
+}
+
+.btn-primary {
+  padding: 1.5rem 3rem;
+  border-radius: 5rem;
+  border: none;
+  cursor: pointer;
+  font-size: 1.3rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #ffffff;
+  text-align: center;
+  background-color: #000000;
+}

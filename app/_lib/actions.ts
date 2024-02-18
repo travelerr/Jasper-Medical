@@ -18,6 +18,7 @@ import {
   CreateHabitInputs,
   CreatePastMedicalHistoryInputs,
   CreatePastSurgicalHistoryInputs,
+  CreatePatientInputs,
   CreateProblemInputs,
   CreatePsychologicalStatusInputs,
   CreateSocialHistoryInputs,
@@ -53,8 +54,9 @@ import {
   UpdateFamilyRelativeInputs,
 } from "./definitions";
 import prisma from "./prisma";
-import { AppointmentStatus, SurveyResponse } from "@prisma/client";
-import { it } from "node:test";
+import { AppointmentStatus } from "@prisma/client";
+import bcrypt from "bcrypt";
+import { generateRandomPassword } from "./utils";
 
 const FormSchema = z.object({
   id: z.string(),
@@ -162,10 +164,7 @@ export async function deleteInvoice(id: string) {
 
 // #region Auth
 
-export async function authenticate(
-  prevState: string | undefined,
-  formData: FormData
-) {
+export async function authenticate(formData: FormData) {
   try {
     await signIn("credentials", Object.fromEntries(formData));
   } catch (error) {
@@ -173,6 +172,94 @@ export async function authenticate(
       return "CredentialsSignin";
     }
     throw error;
+  }
+}
+
+export async function createUserAndPatient(formData: CreatePatientInputs) {
+  const {
+    email,
+    firstName,
+    middleName,
+    lastName,
+    suffix,
+    dob,
+    sexAtBirth,
+    gender,
+    genderMarker,
+    race,
+    pronouns,
+    ethnicity,
+    contact,
+  } = formData;
+
+  const hashedPassword = await bcrypt.hash(generateRandomPassword(), 10);
+
+  try {
+    const result = await prisma.$transaction(async (prisma) => {
+      // First, create the User record
+      const user = await prisma.user.create({
+        data: {
+          email: email,
+          username: email, // Assuming the email is used as username
+          password: hashedPassword,
+          role: "PATIENT", // Assuming role is set to 'PATIENT' by default
+        },
+      });
+
+      // Then, create the Patient record linked to the newly created User
+      const patient = await prisma.patient.create({
+        data: {
+          firstName: firstName,
+          middleName: middleName,
+          lastName: lastName,
+          suffix: suffix,
+          dob: new Date(dob),
+          sexAtBirth: sexAtBirth,
+          gender: gender,
+          genderMarker: genderMarker,
+          race: race,
+          pronouns: pronouns,
+          ethnicity: ethnicity,
+          contact: {
+            create: {
+              primaryPhone: contact.primaryPhone,
+              primaryType: contact.primaryType,
+              secondaryType: contact.secondaryType,
+              street: contact.street,
+              apt: contact.apt,
+              city: contact.city,
+              zip: contact.zip,
+              pharmacy: contact.pharmacy,
+              secondaryPharmacy: contact.secondaryPharmacy,
+              secondaryStreet: contact.secondaryStreet,
+              secondaryApt: contact.secondaryApt,
+              secondaryCity: contact.secondaryCity,
+              secondaryState: contact.secondaryState,
+              secondaryZip: contact.secondaryZip,
+              ecFirstName: contact.ecFirstName,
+              ecLastName: contact.ecLastName,
+              ecRelationship: contact.ecRelationship,
+              ecPhone: contact.ecPhone,
+              ecStreet: contact.ecStreet,
+              ecApt: contact.ecApt,
+              ecCity: contact.ecCity,
+              ecState: contact.ecState,
+              ecZip: contact.ecZip,
+            },
+          },
+          userId: user.id,
+        },
+      });
+
+      return { user, patient };
+    });
+
+    return { message: "User and Patient created successfully.", result };
+  } catch (error) {
+    console.error(error);
+    return {
+      message: "Database Error: Failed to create user and patient.",
+    };
   }
 }
 
@@ -193,7 +280,7 @@ export async function createAppointment(formData: CreateAppointmentInputs) {
         details: details,
         doctorId: Number(session?.user.id),
         patientId: parseInt(patient),
-        status: AppointmentStatus.SCHEDULED,
+        status: AppointmentStatus.Scheduled,
       },
     });
 
@@ -225,7 +312,7 @@ export async function updateAppointment(
         details: details,
         doctorId: Number(session?.user.id),
         patientId: parseInt(patient),
-        status: AppointmentStatus.SCHEDULED,
+        status: AppointmentStatus.Scheduled,
       },
     });
     return { message: "Appointment updated successfully." };

@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import OnBlurTextInput from "./OnBlurTextInput";
+import OnBlurTextInput from "../../../_lib/inputs/blur/OnBlurTextInput";
 import { FaCaretRight, FaTrash } from "react-icons/fa6";
 import { Exercise } from "@prisma/client";
 import PatientDataContext from "@/app/_lib/contexts/PatientDataContext";
@@ -79,7 +79,7 @@ export default function Exercise(props: IExercise) {
   };
 
   return (
-    <div className="bg-green-100 p-1 rounded mb-3">
+    <div className="bg-green-100 border-b border-black p-1 rounded mb-3">
       <div className="font-bold">{"Exercise:"}</div>
       {exercise
         ?.sort(

@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import OnBlurTextInput from "./OnBlurTextInput";
+import OnBlurTextInput from "../../../_lib/inputs/blur/OnBlurTextInput";
 import { FaCaretRight, FaTrash } from "react-icons/fa6";
 import { Habits, PatientSmokingStatus, SurveyName } from "@prisma/client";
 import PatientDataContext from "@/app/_lib/contexts/PatientDataContext";
@@ -16,7 +16,7 @@ import {
   editHabitSmokingStatus,
 } from "@/app/_lib/actions";
 import { covertPascalCase } from "@/app/_lib/utils";
-import { getSurveyScore } from "../surveys/SurveyFunctions";
+import { getSurveyScore } from "../../../_lib/inputs/surveys/SurveyFunctions";
 import AuditCSurveyModal from "../surveys/AuditCSurveyModal";
 
 interface IHabits {
@@ -118,7 +118,8 @@ export default function Habits(props: IHabits) {
 
   return (
     <>
-      <div className="bg-green-100 p-1 rounded mb-3">
+      <div className="bg-green-100 border-b border-black p-1 rounded mb-3">
+        <div className="font-bold">{"Habits:"}</div>
         <div id="AUDITC">
           <span className="link" onClick={() => setOpenSurveyModal(true)}>
             Audit-C:{" "}
@@ -161,7 +162,6 @@ export default function Habits(props: IHabits) {
             )}
           </div>
         </div>
-        <div className="font-bold">{"Habits:"}</div>
         {habits
           ?.sort(
             (a, b) =>

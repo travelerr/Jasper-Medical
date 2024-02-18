@@ -7,7 +7,7 @@ import { useState } from "react";
 
 interface IAllergenLookup {
   handleSelectedAllergen: Function;
-  register: any;
+  register: Function;
 }
 
 export default function AllergenLookup(props: IAllergenLookup) {

@@ -14,7 +14,7 @@ import { CreateProblemInputs } from "@/app/_lib/definitions";
 import { ICD10Code, ProblemListStatus } from "@prisma/client";
 import { createProblem } from "@/app/_lib/actions";
 import PatientDataContext from "@/app/_lib/contexts/PatientDataContext";
-import ICD10CodeLookup from "./ICD10CodeLookup";
+import ICD10CodeLookup from "../../../_lib/inputs/lookups/ICD10CodeLookup";
 import { HiX } from "react-icons/hi";
 
 interface IAddNewProblemModal {

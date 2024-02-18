@@ -9,7 +9,7 @@ import {
   SurveyDataWithRelations,
   SurveySubmission,
 } from "@/app/_lib/definitions";
-import SurveyBooleanInput from "./SurveyBooleanInput";
+import SurveyBooleanInput from "../../../_lib/inputs/surveys/SurveyBooleanInput";
 import { submitSurvey } from "@/app/_lib/actions";
 import PatientDataContext from "@/app/_lib/contexts/PatientDataContext";
 
