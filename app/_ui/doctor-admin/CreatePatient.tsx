@@ -17,6 +17,7 @@ import {
   State,
 } from "@prisma/client";
 import { SubmitHandler, useForm } from "react-hook-form";
+import LoadingOverlay from "../loadingWidget";
 
 interface ICreatePatient {}
 export default function CreatePatient(props: ICreatePatient) {
@@ -45,6 +46,7 @@ export default function CreatePatient(props: ICreatePatient) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
+      <LoadingOverlay isLoading={viewState.loading} />
       <div className="w-full">
         {/* Auth */}
         <div className="flex gap-10 pb-10">
@@ -258,7 +260,7 @@ export default function CreatePatient(props: ICreatePatient) {
               <SelectInputFormGroup
                 register={register}
                 errors={errors}
-                formIdentifier="contact.primaryType"
+                formIdentifier="contact.primaryPhoneType"
                 required={true}
                 labelText="Type"
                 options={PhoneType}
@@ -276,7 +278,7 @@ export default function CreatePatient(props: ICreatePatient) {
               <SelectInputFormGroup
                 register={register}
                 errors={errors}
-                formIdentifier="contact.secondaryType"
+                formIdentifier="contact.secondaryPhoneType"
                 labelText="Type"
                 options={PhoneType}
                 nullOptionLabel={"Select"}

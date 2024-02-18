@@ -104,7 +104,7 @@ export default function DashboardTabs(props: IDashboardTabsComponent) {
             <div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <PatientLookup openPatientTab={openPatientTab} />
+                  <PatientLookup callback={openPatientTab} />
                 </div>
                 <div></div>
               </div>

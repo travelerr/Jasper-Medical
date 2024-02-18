@@ -89,7 +89,7 @@ async function seedContactData(client, patientId) {
   await client.sql`
     INSERT INTO "Contact" (
       "primaryPhone", 
-      "primaryType", 
+      "primaryPhoneType", 
       "street", 
       "city", 
       "state", 

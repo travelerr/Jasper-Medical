@@ -1,11 +1,11 @@
 import React from "react";
 import { Controller, FieldErrors, Control } from "react-hook-form";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
+import TimePicker from "react-time-picker"; // Ensure you have this package or a similar one
+import "react-time-picker/dist/TimePicker.css"; // Adjust the import based on the actual package
 import { ErrorMessage } from "@hookform/error-message";
 
-interface IDatePickerFormGroup {
-  control: Control<any>; // Add Control type
+interface ITimePickerFormGroup {
+  control: Control<any>;
   errors: FieldErrors<any>;
   formIdentifier: string;
   disabled?: boolean;
@@ -13,10 +13,10 @@ interface IDatePickerFormGroup {
   requiredMessage?: string;
   labelText?: string;
   placeholderText?: string;
-  dateFormat?: string;
+  format?: string; // Time format, e.g., "HH:mm"
 }
 
-const DatePickerFormGroup: React.FC<IDatePickerFormGroup> = ({
+const TimePickerFormGroup: React.FC<ITimePickerFormGroup> = ({
   control,
   errors,
   formIdentifier,
@@ -24,8 +24,8 @@ const DatePickerFormGroup: React.FC<IDatePickerFormGroup> = ({
   required,
   requiredMessage,
   labelText,
-  placeholderText = "Select date...",
-  dateFormat = "MMMM d, yyyy",
+  placeholderText = "Select time...",
+  format,
 }) => {
   return (
     <div className="form-group flex flex-col">
@@ -44,15 +44,16 @@ const DatePickerFormGroup: React.FC<IDatePickerFormGroup> = ({
             : false,
         }}
         render={({ field }) => (
-          <DatePicker
+          <TimePicker
             {...field}
-            selected={field.value}
-            onChange={(date) => field.onChange(date)}
-            dateFormat={dateFormat}
-            placeholderText={placeholderText}
+            value={field.value}
+            onChange={field.onChange}
+            format={format}
             disabled={disabled}
-            className={`form-control form-control block w-full border disabled:cursor-not-allowed disabled:opacity-50 bg-gray-50 border-gray-300 text-gray-900 focus:border-cyan-500 focus:ring-cyan-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500 p-2.5 text-sm rounded-lg
+            disableClock={true}
+            className={`form-control form-control block w-full border disabled:cursor-not-allowed disabled:opacity-50 bg-gray-50 border-gray-300 text-gray-900 focus:border-cyan-500 focus:ring-cyan-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500 p-2.5
               ${errors[formIdentifier] ? "is-invalid" : ""}`}
+            clearIcon={null} // Adjust or remove based on your TimePicker component's props
           />
         )}
       />
@@ -67,4 +68,4 @@ const DatePickerFormGroup: React.FC<IDatePickerFormGroup> = ({
   );
 };
 
-export default DatePickerFormGroup;
+export default TimePickerFormGroup;

@@ -1,12 +1,6 @@
 "use client";
-import {
-  Button,
-  TextInput,
-  Label,
-  Select,
-  Textarea,
-  Modal as FlowBiteModal,
-} from "flowbite-react";
+import { Button, Label, Modal as FlowBiteModal } from "flowbite-react";
+import { HiX } from "react-icons/hi";
 import { useRouter } from "next/navigation";
 import { updateAppointment, deleteAppointmentByID } from "@/app/_lib/actions";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -18,6 +12,12 @@ import {
 import { useEffect, useState } from "react";
 import useViewState from "../../../_lib/customHooks/useViewState";
 import LoadingOverlay from "../../loadingWidget";
+import { Patient } from "@prisma/client";
+import PatientLookup from "@/app/_lib/inputs/lookups/PatientLookup";
+import DatePickerFormGroup from "@/app/_lib/inputs/standard/DatePickerFormGroup";
+import TextAreaInputFormGroup from "@/app/_lib/inputs/standard/TextAreaInputFormGroup";
+import TextInputFormGroup from "@/app/_lib/inputs/standard/TextInputFormGroup";
+import TimePickerFormGroup from "@/app/_lib/inputs/standard/TimePickerFormGroup";
 interface IEditAppointmentModalProps {
   openEditModal: boolean;
   setOpenEditModal: Function;
@@ -30,6 +30,7 @@ export function EditAppointmentModal(props: IEditAppointmentModalProps) {
   const { openEditModal, setOpenEditModal, patients, aptToEdit } = props;
   const { viewState, setLoading } = useViewState();
   const [formMessage, setFormMessage] = useState<string>("");
+  const [selectedPatient, setSelectedPatient] = useState<Patient>();
   const router = useRouter();
 
   const {
@@ -38,11 +39,15 @@ export function EditAppointmentModal(props: IEditAppointmentModalProps) {
     watch,
     reset,
     setValue,
+    control,
     formState: { errors },
   } = useForm<CreateAppointmentInputs>();
   const onSubmit: SubmitHandler<CreateAppointmentInputs> = async (data) => {
     if (!validateDates()) {
       setFormMessage("Start date must come before end date.");
+    }
+    if (selectedPatient && selectedPatient.id) {
+      data.patient = selectedPatient.id.toString();
     }
     try {
       setLoading(true);
@@ -97,6 +102,7 @@ export function EditAppointmentModal(props: IEditAppointmentModalProps) {
       setValue("title", aptToEdit.title);
       setValue("patient", aptToEdit.patientId.toString());
       setValue("details", aptToEdit.details);
+      setSelectedPatient(patients.find((x) => x.id === aptToEdit.patientId));
     }
   }, [aptToEdit, setValue]);
 
@@ -110,6 +116,10 @@ export function EditAppointmentModal(props: IEditAppointmentModalProps) {
       return true; // No validation if one of the dates is missing
     }
     return isStartBeforeEnd(startDate, startTime, endDate, endTime);
+  };
+
+  const handleSelectedPatient = (patient: Patient) => {
+    setSelectedPatient(patient);
   };
 
   return (
@@ -137,100 +147,72 @@ export function EditAppointmentModal(props: IEditAppointmentModalProps) {
             )}
           </div>
           <div className="grid gap-6 mb-6 md:grid-cols-2">
-            <div>
-              <Label htmlFor="title" value="Appointment Title" />
-              <TextInput
-                id="title"
-                {...register("title", { required: true })}
-              />
-              <div id="title-error" aria-live="polite" aria-atomic="true">
-                {errors.title && <p>{errors.title.message}</p>}
+            <TextInputFormGroup
+              register={register}
+              errors={errors}
+              formIdentifier="title"
+              required={true}
+              labelText="Appointment Title"
+            />
+            {selectedPatient ? (
+              <div>
+                <div className="flex w-full border-b">
+                  <div className="w-11/12 font-bold">Patient</div>
+                  <div className="w-1/12 font-bold">DOB</div>
+                </div>
+                <div className="flex w-full text-left">
+                  <div className="w-8/12">
+                    {selectedPatient.firstName} {selectedPatient.lastName}
+                  </div>
+                  <div className="w-4/12 text-right">
+                    {selectedPatient.dob.toDateString()}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedPatient(null)}
+                  >
+                    <HiX className="text-red-500" />
+                  </button>
+                </div>
               </div>
-            </div>
-            <div>
-              <Label htmlFor="patient" value="Patients" />
-              <Select id="patient" {...register("patient", { required: true })}>
-                {patients.map((user, index) => (
-                  <option key={index} value={`${user.id}`}>
-                    {`${user.firstName} ${user.lastName}`}
-                  </option>
-                ))}
-              </Select>
-              <div id="patient-error" aria-live="polite" aria-atomic="true">
-                {" "}
-                {errors.patient && <p>{errors.patient.message}</p>}
-              </div>
-            </div>
-            <div style={{ display: "flex", flexDirection: "column" }}>
-              <Label htmlFor="startDate" value="Start Date" />
-              <input
-                type="date"
-                id="startDate"
-                {...register("startDate")}
-                className="block w-full border disabled:cursor-not-allowed disabled:opacity-50 bg-gray-50 border-gray-300 text-gray-900 focus:border-cyan-500 focus:ring-cyan-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500 p-2.5 text-sm rounded-lg"
-              />
-              <div id="startDate-error" aria-live="polite" aria-atomic="true">
-                {" "}
-                {errors.startDate && <p>{errors.startDate.message}</p>}
-              </div>
-            </div>
-            <div style={{ display: "flex", flexDirection: "column" }}>
-              <Label htmlFor="endDate" value="End Date" />
-              <input
-                id="endDate"
-                type="date"
-                {...register("endDate", {
-                  required: true,
-                })}
-                className="block w-full border disabled:cursor-not-allowed disabled:opacity-50 bg-gray-50 border-gray-300 text-gray-900 focus:border-cyan-500 focus:ring-cyan-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500 p-2.5 text-sm rounded-lg"
-              />
-              <div id="endDate-error" aria-live="polite" aria-atomic="true">
-                {" "}
-                {errors.startDate && <p>{errors.startDate.message}</p>}
-              </div>
-            </div>
-            <div>
-              <Label htmlFor="startTime" value="Start Time" />
-              <input
-                type="time"
-                id="startTime"
-                {...register("startTime", {
-                  required: true,
-                })}
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              />
-              <div id="startTime-error" aria-live="polite" aria-atomic="true">
-                {" "}
-                {errors.startTime && <p>{errors.startTime.message}</p>}
-              </div>
-            </div>
-            <div>
-              <Label htmlFor="endTime" value="End Time" />
-              <input
-                type="time"
-                id="endTime"
-                {...register("endTime", {
-                  required: true,
-                })}
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                required
-              />
-              <div id="endTime-error" aria-live="polite" aria-atomic="true">
-                {" "}
-                {errors.endTime && <p>{errors.endTime.message}</p>}
-              </div>
-            </div>
-            <div>
-              <Label htmlFor="details" value="Details" />
-              <Textarea
-                id="details"
-                {...register("details", { required: false })}
-              />
-              <div id="details-error" aria-live="polite" aria-atomic="true">
-                {" "}
-                {errors.details && <p>{errors.details.message}</p>}
-              </div>
-            </div>
+            ) : (
+              <PatientLookup callback={handleSelectedPatient} />
+            )}
+            <DatePickerFormGroup
+              control={control}
+              errors={errors}
+              formIdentifier="startDate"
+              required={true}
+              labelText="Start Date"
+            />
+            <DatePickerFormGroup
+              control={control}
+              errors={errors}
+              formIdentifier="endDate"
+              required={true}
+              labelText="End Date"
+            />
+            <TimePickerFormGroup
+              control={control}
+              errors={errors}
+              formIdentifier="startTime"
+              required={true}
+              labelText="Start Time"
+            />
+            <TimePickerFormGroup
+              control={control}
+              errors={errors}
+              formIdentifier="endTime"
+              required={true}
+              labelText="End Time"
+            />
+            <TextAreaInputFormGroup
+              register={register}
+              errors={errors}
+              formIdentifier="details"
+              required={true}
+              labelText="Details"
+            />
           </div>
         </FlowBiteModal.Body>
         <FlowBiteModal.Footer>

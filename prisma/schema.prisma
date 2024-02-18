@@ -113,37 +113,37 @@ model TestResult {
 }
 
 model Contact {
-  id                Int             @id @default(autoincrement())
-  createdDate       DateTime?       @default(now())
-  updatedDate       DateTime?       @updatedAt
-  name              String?
-  primaryPhone      String?
-  primaryType       PhoneType?      @default(Mobile)
-  secondaryPhone    String?
-  secondaryType     PhoneType?      @default(Home)
-  street            String?
-  apt               String?
-  city              String?
-  state             State?
-  zip               String?
-  pharmacy          String?
-  secondaryPharmacy String?
-  secondaryStreet   String?
-  secondaryApt      String?
-  secondaryCity     String?
-  secondaryState    State?
-  secondaryZip      String?
-  ecFirstName       String?
-  ecLastName        String?
-  ecRelationship    ECRelationship?
-  ecPhone           String?
-  ecStreet          String?
-  ecApt             String?
-  ecCity            String?
-  ecState           State?
-  ecZip             String?
-  patientId         Int             @unique // Foreign key reference to the Patient model
-  patient           Patient         @relation(fields: [patientId], references: [id])
+  id                 Int             @id @default(autoincrement())
+  createdDate        DateTime?       @default(now())
+  updatedDate        DateTime?       @updatedAt
+  name               String?
+  primaryPhone       String?
+  primaryPhoneType   PhoneType?      @default(Mobile)
+  secondaryPhone     String?
+  secondaryPhoneType PhoneType?      @default(Home)
+  street             String?
+  apt                String?
+  city               String?
+  state              State?
+  zip                String?
+  pharmacy           String?
+  secondaryPharmacy  String?
+  secondaryStreet    String?
+  secondaryApt       String?
+  secondaryCity      String?
+  secondaryState     State?
+  secondaryZip       String?
+  ecFirstName        String?
+  ecLastName         String?
+  ecRelationship     ECRelationship?
+  ecPhone            String?
+  ecStreet           String?
+  ecApt              String?
+  ecCity             String?
+  ecState            State?
+  ecZip              String?
+  patientId          Int             @unique // Foreign key reference to the Patient model
+  patient            Patient         @relation(fields: [patientId], references: [id])
 }
 
 model Insurance {

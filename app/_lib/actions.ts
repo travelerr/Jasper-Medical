@@ -164,7 +164,10 @@ export async function deleteInvoice(id: string) {
 
 // #region Auth
 
-export async function authenticate(formData: FormData) {
+export async function authenticate(
+  prevState: string | undefined,
+  formData: FormData
+) {
   try {
     await signIn("credentials", Object.fromEntries(formData));
   } catch (error) {
@@ -223,8 +226,8 @@ export async function createUserAndPatient(formData: CreatePatientInputs) {
           contact: {
             create: {
               primaryPhone: contact.primaryPhone,
-              primaryType: contact.primaryType,
-              secondaryType: contact.secondaryType,
+              primaryPhoneType: contact.primaryPhoneType,
+              secondaryPhoneType: contact.secondaryPhoneType,
               street: contact.street,
               apt: contact.apt,
               city: contact.city,

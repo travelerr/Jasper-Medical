@@ -37,47 +37,43 @@ export default function PatientProblemList(props: IProblemListProps) {
 
   return (
     <>
-      {problemList?.length ? (
-        <Accordion className="rounded-none" collapseAll>
-          <AccordionPanel className="py-1 focus:outline-none">
-            <AccordionTitle className="text-black bg-yellow-100 hover:bg-yellow-200">
-              Problem List
-            </AccordionTitle>
-            <AccordionContent className="p-1 bg-white">
-              <button
-                className="border divide-gray-200 flex justify-between p-1 w-full bg-amber-400 hover:bg-amber-500"
-                onClick={() => setOpenCreateModal(true)}
+      <Accordion className="rounded-none" collapseAll>
+        <AccordionPanel className="py-1 focus:outline-none">
+          <AccordionTitle className="text-black bg-yellow-100 hover:bg-yellow-200">
+            {problemList?.length ? " Problem List" : "No Problem List"}
+          </AccordionTitle>
+          <AccordionContent className="p-1 bg-white">
+            <button
+              className="border divide-gray-200 flex justify-between p-1 w-full bg-amber-400 hover:bg-amber-500"
+              onClick={() => setOpenCreateModal(true)}
+            >
+              <span className="font-medium">Add Problem</span>
+              <HiPlus className="h-5 w-5" />
+            </button>
+            {problemList.map((problem, index) => (
+              <div
+                key={problem.id}
+                className={`flex flex-col ${
+                  index !== problemList.length - 1
+                    ? "border-b border-black bg-yellow-100 p-1 rounded my-1"
+                    : "bg-yellow-100 p-1 rounded my-1"
+                }`}
               >
-                <span className="font-medium">Add Problem</span>
-                <HiPlus className="h-5 w-5" />
-              </button>
-              {problemList.map((problem, index) => (
-                <div
-                  key={problem.id}
-                  className={`flex flex-col ${
-                    index !== problemList.length - 1
-                      ? "border-b border-black bg-yellow-100 p-1 rounded my-1"
-                      : "bg-yellow-100 p-1 rounded my-1"
-                  }`}
+                <p
+                  className="link font-bold"
+                  onClick={() => handleEditClick(problem)}
                 >
-                  <p
-                    className="link font-bold"
-                    onClick={() => handleEditClick(problem)}
-                  >
-                    {problem.name}
-                  </p>
-                  <small className="text-black">Status: {problem.status}</small>
-                  <small className="text-black">
-                    Dx Date: {problem.dxDate.toDateString()}
-                  </small>
-                </div>
-              ))}
-            </AccordionContent>
-          </AccordionPanel>
-        </Accordion>
-      ) : (
-        <span className="text-black italic">No Problem List</span>
-      )}
+                  {problem.name}
+                </p>
+                <small className="text-black">Status: {problem.status}</small>
+                <small className="text-black">
+                  Dx Date: {problem.dxDate.toDateString()}
+                </small>
+              </div>
+            ))}
+          </AccordionContent>
+        </AccordionPanel>
+      </Accordion>
       <NewProblemModal
         setOpenCreateModal={setOpenCreateModal}
         openCreateModal={openCreateModal}

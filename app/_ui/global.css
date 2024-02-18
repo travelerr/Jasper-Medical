@@ -112,6 +112,18 @@ select {
   border-radius: 0px !important;
 }
 
+textarea {
+  border-radius: 0px !important;
+}
+
+.react-time-picker__inputGroup select {
+  background-image: none !important;
+}
+
+.react-time-picker__wrapper {
+  border: none !important;
+}
+
 .btn-primary {
   padding: 1.5rem 3rem;
   border-radius: 5rem;

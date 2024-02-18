@@ -338,7 +338,8 @@ export async function getFullPatientProfileById(
 }
 
 export async function getPatientsTypeAhead(
-  searchValue?: string
+  searchValue: string,
+  limit: number = 5
 ): Promise<Patient[]> {
   try {
     let query = {};
@@ -362,6 +363,7 @@ export async function getPatientsTypeAhead(
             },
           ],
         },
+        take: limit, // Use the limit parameter to restrict the number of results
       };
     }
 

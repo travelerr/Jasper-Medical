@@ -1,13 +1,7 @@
 import useViewState from "@/app/_lib/customHooks/useViewState";
 import { useContext, useEffect, useState } from "react";
 import LoadingOverlay from "../../loadingWidget";
-import {
-  Button,
-  TextInput,
-  Label,
-  Select,
-  Modal as FlowBiteModal,
-} from "flowbite-react";
+import { Button, Label, Modal as FlowBiteModal } from "flowbite-react";
 import { useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { EditProblemInputs } from "@/app/_lib/definitions";
@@ -25,6 +19,9 @@ import {
 import PatientDataContext from "@/app/_lib/contexts/PatientDataContext";
 import { HiX } from "react-icons/hi";
 import ICD10CodeLookup from "../../../_lib/inputs/lookups/ICD10CodeLookup";
+import TextInputFormGroup from "@/app/_lib/inputs/standard/TextInputFormGroup";
+import SelectInputFormGroup from "@/app/_lib/inputs/standard/SelectInputFormGroup";
+import DatePickerFormGroup from "@/app/_lib/inputs/standard/DatePickerFormGroup";
 
 interface IEditProblemListModal {
   openEditModal: boolean;
@@ -37,17 +34,17 @@ interface IEditProblemListModal {
 export default function EditDrugIntoleranceModal(props: IEditProblemListModal) {
   const { openEditModal, setOpenEditModal, problemToEdit } = props;
   const { viewState, setLoading } = useViewState();
-  const [formMessage, setFormMessage] = useState<string>("");
   const [existingICD10Codes, setExistingICD10Codes] = useState<ICD10Code[]>([]);
   const [newICD10Codes, setNewICD10Codes] = useState<ICD10Code[]>([]);
   const router = useRouter();
-  const { refetchPatientData, patient } = useContext(PatientDataContext);
+  const { refetchPatientData } = useContext(PatientDataContext);
 
   const {
     register,
     handleSubmit,
     reset,
     setValue,
+    control,
     formState: { errors },
   } = useForm<EditProblemInputs>();
 
@@ -61,9 +58,7 @@ export default function EditDrugIntoleranceModal(props: IEditProblemListModal) {
       setLoading(false);
       reset();
       setOpenEditModal(false);
-      setFormMessage("");
     } catch (error) {
-      setFormMessage("There was an error creating the problem");
       setLoading(false);
     }
   };
@@ -75,10 +70,8 @@ export default function EditDrugIntoleranceModal(props: IEditProblemListModal) {
       await refetchPatientData();
       setLoading(false);
       setOpenEditModal(false);
-      setFormMessage("");
       router.refresh();
     } catch (error) {
-      setFormMessage("There was an error deleting the problem");
       setLoading(false);
     }
   }
@@ -88,7 +81,8 @@ export default function EditDrugIntoleranceModal(props: IEditProblemListModal) {
       setValue("name", problemToEdit.name);
       setValue("synopsis", problemToEdit.synopsis);
       setValue("status", problemToEdit.status);
-      setValue("dxDate", problemToEdit.dxDate?.toISOString().split("T")[0]);
+      setValue("dxDate", new Date(problemToEdit.dxDate).toDateString());
+      console.log(problemToEdit.dxDate);
       if (problemToEdit.icd10Codes.length) {
         let x = problemToEdit.icd10Codes.map((code) => ({
           ...code.icd10Code,
@@ -135,8 +129,13 @@ export default function EditDrugIntoleranceModal(props: IEditProblemListModal) {
         <FlowBiteModal.Body>
           <LoadingOverlay isLoading={viewState.loading} />
           <div className="mb-6">
-            <Label value="Title" />
-            <TextInput id="name" {...register("name", { required: true })} />
+            <TextInputFormGroup
+              register={register}
+              errors={errors}
+              formIdentifier="name"
+              required={true}
+              labelText="Title"
+            />
           </div>
           <div className="grid gap-6 mb-6 md:grid-cols-2">
             <div>
@@ -180,43 +179,29 @@ export default function EditDrugIntoleranceModal(props: IEditProblemListModal) {
                   ))}
               </ul>
             </div>
-            <div>
-              <Label htmlFor="synopsis" value="Synopsis" />
-              <TextInput
-                id="synopsis"
-                {...register("synopsis", { required: true })}
-              />
-              <div id="title-error" aria-live="polite" aria-atomic="true">
-                {errors.synopsis && <p>{errors.synopsis.message}</p>}
-              </div>
-            </div>
-            <div>
-              <Label htmlFor="status" value="Status" />
-              <Select id="status" {...register("status", { required: true })}>
-                {Object.values(ProblemListStatus).map((status, index) => (
-                  <option key={index} value={status}>
-                    {status}
-                  </option>
-                ))}
-              </Select>
-              <div id="status-error" aria-live="polite" aria-atomic="true">
-                {" "}
-                {errors.status && <p>{errors.status.message}</p>}
-              </div>
-            </div>
-            <div style={{ display: "flex", flexDirection: "column" }}>
-              <Label htmlFor="dxDate" value="Diagnosis Date" />
-              <input
-                type="date"
-                id="onsetDate"
-                {...register("dxDate")}
-                className="block w-full border disabled:cursor-not-allowed disabled:opacity-50 bg-gray-50 border-gray-300 text-gray-900 focus:border-cyan-500 focus:ring-cyan-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500 p-2.5 text-sm rounded-lg"
-              />
-              <div id="onsetDate-error" aria-live="polite" aria-atomic="true">
-                {" "}
-                {errors.dxDate && <p>{errors.dxDate.message}</p>}
-              </div>
-            </div>
+            <TextInputFormGroup
+              register={register}
+              errors={errors}
+              formIdentifier="synopsis"
+              required={true}
+              labelText="Synopsis"
+            />
+            <SelectInputFormGroup
+              register={register}
+              errors={errors}
+              formIdentifier="status"
+              required={true}
+              labelText="Status"
+              options={ProblemListStatus}
+              nullOptionLabel={"Select"}
+            />
+            <DatePickerFormGroup
+              control={control}
+              errors={errors}
+              formIdentifier="dxDate"
+              required={true}
+              labelText="Diagnosis Date"
+            />
           </div>
         </FlowBiteModal.Body>
         <FlowBiteModal.Footer>

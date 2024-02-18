@@ -58,7 +58,6 @@ export default function CalendarComponent(props: ICalendarComponent) {
       <CreateAppointmentModal
         setOpenCreateModal={setOpenCreateModal}
         openCreateModal={openCreateModal}
-        patients={patients}
         slotInfo={selectedSlot}
       ></CreateAppointmentModal>
       <EditAppointmentModal
