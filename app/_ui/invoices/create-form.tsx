@@ -8,7 +8,6 @@ import {
   CurrencyDollarIcon,
   UserCircleIcon,
 } from "@heroicons/react/24/outline";
-import { Button } from "@/app/_ui/button";
 import { createInvoice } from "@/app/_lib/actions";
 import { useFormState } from "react-dom";
 
@@ -150,7 +149,6 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
         >
           Cancel
         </Link>
-        <Button type="submit">Create Invoice</Button>
       </div>
     </form>
   );
