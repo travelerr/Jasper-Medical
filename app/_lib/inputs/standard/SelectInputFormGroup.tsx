@@ -1,6 +1,6 @@
 import { ErrorMessage } from "@hookform/error-message";
-import React from "react";
-import { FieldErrors, UseFormRegister } from "react-hook-form";
+import React, { useEffect } from "react";
+import { FieldErrors, UseFormRegister, UseFormSetValue } from "react-hook-form";
 import { covertPascalCase } from "../../utils";
 
 interface ISelectOption {
@@ -13,6 +13,7 @@ type SelectOptionsInput = ISelectOption[] | Record<string, string | number>;
 
 interface ISelectInputFormGroup {
   register: UseFormRegister<any>;
+  setValue?: UseFormSetValue<any>;
   errors: FieldErrors<any>;
   formIdentifier: string;
   disabled?: boolean;
@@ -31,6 +32,7 @@ interface ISelectInputFormGroup {
 export default function SelectInputFormGroup(props: ISelectInputFormGroup) {
   const {
     register,
+    setValue,
     errors,
     formIdentifier,
     disabled,
@@ -44,6 +46,12 @@ export default function SelectInputFormGroup(props: ISelectInputFormGroup) {
     nullOptionLabel,
     parseHumanReadable,
   } = props;
+
+  useEffect(() => {
+    if (setValue) {
+      setValue(formIdentifier, null);
+    }
+  }, [register, setValue]);
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     if (onChange) {

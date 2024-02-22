@@ -18,6 +18,7 @@ import {
 } from "@prisma/client";
 import { SubmitHandler, useForm } from "react-hook-form";
 import LoadingOverlay from "../loadingWidget";
+import PharmacyLookup from "@/app/_lib/inputs/lookups/PharmacyLookup";
 
 interface ICreatePatient {}
 export default function CreatePatient(props: ICreatePatient) {
@@ -26,14 +27,12 @@ export default function CreatePatient(props: ICreatePatient) {
     register,
     handleSubmit,
     control,
-    watch,
     reset,
     setValue,
     formState: { errors },
   } = useForm<CreatePatientInputs>();
 
   const onSubmit: SubmitHandler<CreatePatientInputs> = async (data) => {
-    console.log(data);
     try {
       setLoading(true);
       await createUserAndPatient(data);
@@ -42,6 +41,16 @@ export default function CreatePatient(props: ICreatePatient) {
     } catch (error) {
       setLoading(false);
     }
+  };
+
+  const selectedPharmacy = (pharmacy: google.maps.places.PlaceResult) => {
+    setValue("contact.pharmacy", pharmacy.name);
+  };
+
+  const selectedSecondaryPharmacy = (
+    pharmacy: google.maps.places.PlaceResult
+  ) => {
+    setValue("contact.secondaryPharmacy", pharmacy.name);
   };
 
   return (
@@ -95,6 +104,7 @@ export default function CreatePatient(props: ICreatePatient) {
               />
               <SelectInputFormGroup
                 register={register}
+                setValue={setValue}
                 errors={errors}
                 formIdentifier="suffix"
                 required={false}
@@ -115,6 +125,7 @@ export default function CreatePatient(props: ICreatePatient) {
             <div className="grid gap-6 mb-6 md:grid-cols-3">
               <SelectInputFormGroup
                 register={register}
+                setValue={setValue}
                 errors={errors}
                 formIdentifier="sexAtBirth"
                 required={true}
@@ -124,6 +135,7 @@ export default function CreatePatient(props: ICreatePatient) {
               />
               <SelectInputFormGroup
                 register={register}
+                setValue={setValue}
                 errors={errors}
                 formIdentifier="gender"
                 required={true}
@@ -134,6 +146,7 @@ export default function CreatePatient(props: ICreatePatient) {
               />
               <SelectInputFormGroup
                 register={register}
+                setValue={setValue}
                 errors={errors}
                 formIdentifier="genderMarker"
                 required={false}
@@ -145,6 +158,7 @@ export default function CreatePatient(props: ICreatePatient) {
             <div className="grid gap-6 mb-6 md:grid-cols-3">
               <SelectInputFormGroup
                 register={register}
+                setValue={setValue}
                 errors={errors}
                 formIdentifier="race"
                 required={false}
@@ -155,6 +169,7 @@ export default function CreatePatient(props: ICreatePatient) {
               />
               <SelectInputFormGroup
                 register={register}
+                setValue={setValue}
                 errors={errors}
                 formIdentifier="pronouns"
                 required={false}
@@ -165,6 +180,7 @@ export default function CreatePatient(props: ICreatePatient) {
               />
               <SelectInputFormGroup
                 register={register}
+                setValue={setValue}
                 errors={errors}
                 formIdentifier="ethnicity"
                 required={false}
@@ -182,18 +198,14 @@ export default function CreatePatient(props: ICreatePatient) {
             <div className="uppercase font-bold">Pharmacy</div>
           </div>
           <div className="w-full">
-            <div className="grid gap-6 mb-6 md:grid-cols-3">
-              <TextInputFormGroup
-                register={register}
-                errors={errors}
-                formIdentifier="contact.pharmacy"
-                labelText="Pharmacy"
+            <div className="grid gap-6 mb-6 md:grid-cols-2">
+              <PharmacyLookup
+                onSelect={selectedPharmacy}
+                labelText={"Pharmacy"}
               />
-              <TextInputFormGroup
-                register={register}
-                errors={errors}
-                formIdentifier="contact.secondaryPharmacy"
-                labelText="Secondary Pharmacy"
+              <PharmacyLookup
+                onSelect={selectedSecondaryPharmacy}
+                labelText={"Secondary Pharmacy"}
               />
             </div>
           </div>
@@ -204,18 +216,14 @@ export default function CreatePatient(props: ICreatePatient) {
             <div className="uppercase font-bold">Insurance</div>
           </div>
           <div className="w-full">
-            <div className="grid gap-6 mb-6 md:grid-cols-3">
-              <TextInputFormGroup
-                register={register}
-                errors={errors}
-                formIdentifier="contact.pharmacy"
-                labelText="Pharmacy"
+            <div className="grid gap-6 mb-6 md:grid-cols-2">
+              <PharmacyLookup
+                onSelect={selectedPharmacy}
+                labelText={"Pharmacy"}
               />
-              <TextInputFormGroup
-                register={register}
-                errors={errors}
-                formIdentifier="contact.secondaryPharmacy"
-                labelText="Secondary Pharmacy"
+              <PharmacyLookup
+                onSelect={selectedSecondaryPharmacy}
+                labelText={"Secondary Pharmacy"}
               />
             </div>
           </div>
@@ -226,18 +234,14 @@ export default function CreatePatient(props: ICreatePatient) {
             <div className="uppercase font-bold">Provider</div>
           </div>
           <div className="w-full">
-            <div className="grid gap-6 mb-6 md:grid-cols-3">
-              <TextInputFormGroup
-                register={register}
-                errors={errors}
-                formIdentifier="contact.pharmacy"
-                labelText="Pharmacy"
+            <div className="grid gap-6 mb-6 md:grid-cols-2">
+              <PharmacyLookup
+                onSelect={selectedPharmacy}
+                labelText={"Pharmacy"}
               />
-              <TextInputFormGroup
-                register={register}
-                errors={errors}
-                formIdentifier="contact.secondaryPharmacy"
-                labelText="Secondary Pharmacy"
+              <PharmacyLookup
+                onSelect={selectedSecondaryPharmacy}
+                labelText={"Secondary Pharmacy"}
               />
             </div>
           </div>
@@ -259,6 +263,7 @@ export default function CreatePatient(props: ICreatePatient) {
               />
               <SelectInputFormGroup
                 register={register}
+                setValue={setValue}
                 errors={errors}
                 formIdentifier="contact.primaryPhoneType"
                 required={true}
@@ -277,6 +282,7 @@ export default function CreatePatient(props: ICreatePatient) {
               />
               <SelectInputFormGroup
                 register={register}
+                setValue={setValue}
                 errors={errors}
                 formIdentifier="contact.secondaryPhoneType"
                 labelText="Type"
@@ -317,6 +323,7 @@ export default function CreatePatient(props: ICreatePatient) {
               />
               <SelectInputFormGroup
                 register={register}
+                setValue={setValue}
                 errors={errors}
                 formIdentifier="contact.state"
                 labelText="State"
@@ -363,6 +370,7 @@ export default function CreatePatient(props: ICreatePatient) {
               />
               <SelectInputFormGroup
                 register={register}
+                setValue={setValue}
                 errors={errors}
                 formIdentifier="contact.secondaryState"
                 labelText="State"
@@ -399,6 +407,7 @@ export default function CreatePatient(props: ICreatePatient) {
               />
               <SelectInputFormGroup
                 register={register}
+                setValue={setValue}
                 errors={errors}
                 formIdentifier="contact.ecRelationship"
                 labelText="Relationship"
@@ -438,6 +447,7 @@ export default function CreatePatient(props: ICreatePatient) {
                 />
                 <SelectInputFormGroup
                   register={register}
+                  setValue={setValue}
                   errors={errors}
                   formIdentifier="contact.ecState"
                   labelText="State"

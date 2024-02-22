@@ -76,23 +76,23 @@ export default function TextInputFormGroup(props: ITextInputFormGroup) {
     validate: {
       ...(isEmail && {
         email: (value: string) =>
-          /^\S+@\S+\.\S+$/.test(value) || "Invalid email address",
+          !value || /^\S+@\S+\.\S+$/.test(value) || "Invalid email address",
       }),
       ...(isPhone && {
         phone: (value: string) =>
-          /^\+?(\d.*){3,}$/.test(value) || "Invalid phone number",
+          !value || /^\+?(\d.*){3,}$/.test(value) || "Invalid phone number",
       }),
       ...(isFax && {
         fax: (value: string) =>
-          /^\+?(\d.*){3,}$/.test(value) || "Invalid fax number",
+          !value || /^\+?(\d.*){3,}$/.test(value) || "Invalid fax number",
       }),
       ...(isUsername && {
         username: (value: string) =>
-          /^[a-zA-Z0-9_.-]*$/.test(value) || "Invalid username",
+          !value || /^[a-zA-Z0-9_.-]*$/.test(value) || "Invalid username",
       }),
       ...(isPassword && {
         pas: (value: string) =>
-          /^[a-zA-Z0-9_.-]*$/.test(value) || "Invalid username",
+          !value || /^[a-zA-Z0-9_.-]*$/.test(value) || "Invalid username",
       }),
     },
   };
