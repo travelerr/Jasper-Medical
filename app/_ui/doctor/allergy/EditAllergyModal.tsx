@@ -94,8 +94,7 @@ export default function EditAllergyModal(props: IEditAllergyModal) {
               labelText="Reaction"
             />
             <SelectInputFormGroup
-              register={register}
-              errors={errors}
+              control={control}
               formIdentifier="status"
               required={true}
               labelText="Status"
@@ -103,7 +102,7 @@ export default function EditAllergyModal(props: IEditAllergyModal) {
               nullOptionLabel={"Select"}
             />
             <SelectInputFormGroup
-              register={register}
+              control={control}
               errors={errors}
               formIdentifier="severity"
               required={true}

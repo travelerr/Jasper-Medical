@@ -84,7 +84,7 @@ export default function AddNewDrugIntoleranceModal(
               labelText="Reaction"
             />
             <SelectInputFormGroup
-              register={register}
+              control={control}
               errors={errors}
               formIdentifier="status"
               required={true}
@@ -93,7 +93,7 @@ export default function AddNewDrugIntoleranceModal(
               nullOptionLabel={"Select"}
             />
             <SelectInputFormGroup
-              register={register}
+              control={control}
               errors={errors}
               formIdentifier="severity"
               required={true}

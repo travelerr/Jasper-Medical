@@ -1,6 +1,6 @@
 import { createUserAndPatient } from "@/app/_lib/actions";
 import useViewState from "@/app/_lib/customHooks/useViewState";
-import { CreatePatientInputs } from "@/app/_lib/definitions";
+import { ActionResponse, CreatePatientInputs } from "@/app/_lib/definitions";
 import DatePickerFormGroup from "@/app/_lib/inputs/standard/DatePickerFormGroup";
 import SelectInputFormGroup from "@/app/_lib/inputs/standard/SelectInputFormGroup";
 import TextInputFormGroup from "@/app/_lib/inputs/standard/TextInputFormGroup";
@@ -20,10 +20,13 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import LoadingOverlay from "../loadingWidget";
 import PharmacyLookup from "@/app/_lib/inputs/lookups/PharmacyLookup";
 import CheckboxInputFormGroup from "@/app/_lib/inputs/standard/CheckboxInputFormGroup";
+import { useState } from "react";
+import { ActionResponseMessage } from "../shared/ActionResponseMessage";
 
-interface ICreatePatient {}
-export default function CreatePatient(props: ICreatePatient) {
+export default function CreatePatient() {
   const { viewState, setLoading } = useViewState();
+  const [submissionResponse, setSubmissionResponse] =
+    useState<ActionResponse>();
   const {
     register,
     handleSubmit,
@@ -36,9 +39,10 @@ export default function CreatePatient(props: ICreatePatient) {
   const onSubmit: SubmitHandler<CreatePatientInputs> = async (data) => {
     try {
       setLoading(true);
-      await createUserAndPatient(data);
+      const result = await createUserAndPatient(data);
+      setSubmissionResponse(result);
       setLoading(false);
-      reset();
+      // reset();
     } catch (error) {
       setLoading(false);
     }
@@ -111,14 +115,14 @@ export default function CreatePatient(props: ICreatePatient) {
                 labelText="Last Name"
               />
               <SelectInputFormGroup
-                register={register}
-                setValue={setValue}
+                control={control}
                 errors={errors}
                 formIdentifier="suffix"
                 required={false}
                 labelText="Suffix"
                 options={NameSuffix}
                 nullOptionLabel={"Select"}
+                defaultValue={null}
               />
             </div>
             <div className="grid gap-6 mb-6 md:grid-cols-3">
@@ -132,18 +136,17 @@ export default function CreatePatient(props: ICreatePatient) {
             </div>
             <div className="grid gap-6 mb-6 md:grid-cols-3">
               <SelectInputFormGroup
-                register={register}
-                setValue={setValue}
+                control={control}
                 errors={errors}
                 formIdentifier="sexAtBirth"
                 required={true}
                 labelText="Sex"
                 options={Sex}
                 nullOptionLabel={"Select"}
+                defaultValue={null}
               />
               <SelectInputFormGroup
-                register={register}
-                setValue={setValue}
+                control={control}
                 errors={errors}
                 formIdentifier="gender"
                 required={true}
@@ -151,22 +154,22 @@ export default function CreatePatient(props: ICreatePatient) {
                 options={Gender}
                 nullOptionLabel={"Select"}
                 parseHumanReadable={true}
+                defaultValue={null}
               />
               <SelectInputFormGroup
-                register={register}
-                setValue={setValue}
+                control={control}
                 errors={errors}
                 formIdentifier="genderMarker"
                 required={false}
                 labelText="Gender Marker"
                 options={GenderMarker}
                 nullOptionLabel={"Select"}
+                defaultValue={null}
               />
             </div>
             <div className="grid gap-6 mb-6 md:grid-cols-3">
               <SelectInputFormGroup
-                register={register}
-                setValue={setValue}
+                control={control}
                 errors={errors}
                 formIdentifier="race"
                 required={false}
@@ -174,10 +177,10 @@ export default function CreatePatient(props: ICreatePatient) {
                 options={Race}
                 nullOptionLabel={"Select"}
                 parseHumanReadable={true}
+                defaultValue={null}
               />
               <SelectInputFormGroup
-                register={register}
-                setValue={setValue}
+                control={control}
                 errors={errors}
                 formIdentifier="pronouns"
                 required={false}
@@ -185,10 +188,10 @@ export default function CreatePatient(props: ICreatePatient) {
                 options={Pronouns}
                 nullOptionLabel={"Select"}
                 parseHumanReadable={true}
+                defaultValue={null}
               />
               <SelectInputFormGroup
-                register={register}
-                setValue={setValue}
+                control={control}
                 errors={errors}
                 formIdentifier="ethnicity"
                 required={false}
@@ -196,6 +199,7 @@ export default function CreatePatient(props: ICreatePatient) {
                 options={Ethnicity}
                 nullOptionLabel={"Select"}
                 parseHumanReadable={true}
+                defaultValue={null}
               />
             </div>
           </div>
@@ -270,14 +274,14 @@ export default function CreatePatient(props: ICreatePatient) {
                 isPhone={true}
               />
               <SelectInputFormGroup
-                register={register}
-                setValue={setValue}
+                control={control}
                 errors={errors}
                 formIdentifier="contact.primaryPhoneType"
                 required={true}
                 labelText="Type"
                 options={PhoneType}
                 nullOptionLabel={"Select"}
+                defaultValue={null}
               />
             </div>
             <div className="grid gap-6 mb-6 md:grid-cols-3">
@@ -289,13 +293,13 @@ export default function CreatePatient(props: ICreatePatient) {
                 isPhone={true}
               />
               <SelectInputFormGroup
-                register={register}
-                setValue={setValue}
+                control={control}
                 errors={errors}
                 formIdentifier="contact.secondaryPhoneType"
                 labelText="Type"
                 options={PhoneType}
                 nullOptionLabel={"Select"}
+                defaultValue={null}
               />
             </div>
           </div>
@@ -330,14 +334,14 @@ export default function CreatePatient(props: ICreatePatient) {
                 required={true}
               />
               <SelectInputFormGroup
-                register={register}
-                setValue={setValue}
+                control={control}
                 errors={errors}
                 formIdentifier="contact.state"
                 labelText="State"
                 options={State}
                 nullOptionLabel={"Select"}
                 required={true}
+                defaultValue={null}
               />
               <TextInputFormGroup
                 register={register}
@@ -377,13 +381,13 @@ export default function CreatePatient(props: ICreatePatient) {
                 labelText="City"
               />
               <SelectInputFormGroup
-                register={register}
-                setValue={setValue}
+                control={control}
                 errors={errors}
                 formIdentifier="contact.secondaryState"
                 labelText="State"
                 options={State}
                 nullOptionLabel={"Select"}
+                defaultValue={null}
               />
               <TextInputFormGroup
                 register={register}
@@ -414,14 +418,14 @@ export default function CreatePatient(props: ICreatePatient) {
                 labelText="Last Name"
               />
               <SelectInputFormGroup
-                register={register}
-                setValue={setValue}
+                control={control}
                 errors={errors}
                 formIdentifier="contact.ecRelationship"
                 labelText="Relationship"
                 options={ECRelationship}
                 nullOptionLabel={"Select"}
                 parseHumanReadable={true}
+                defaultValue={null}
               />
             </div>
             <div className="w-full">
@@ -454,13 +458,13 @@ export default function CreatePatient(props: ICreatePatient) {
                   labelText="City"
                 />
                 <SelectInputFormGroup
-                  register={register}
-                  setValue={setValue}
+                  control={control}
                   errors={errors}
                   formIdentifier="contact.ecState"
                   labelText="State"
                   options={State}
                   nullOptionLabel={"Select"}
+                  defaultValue={null}
                 />
                 <TextInputFormGroup
                   register={register}
@@ -472,9 +476,16 @@ export default function CreatePatient(props: ICreatePatient) {
             </div>
           </div>
         </div>
-        <button className="btn-primary" type="submit">
-          Submit
-        </button>
+        <div className="flex items-center">
+          <button className="btn-primary" type="submit">
+            Submit
+          </button>
+          <div className="w-full text-center">
+            {submissionResponse && (
+              <ActionResponseMessage actionResponse={submissionResponse} />
+            )}
+          </div>
+        </div>
       </div>
     </form>
   );

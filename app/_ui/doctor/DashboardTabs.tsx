@@ -94,21 +94,16 @@ export default function DashboardTabs(props: IDashboardTabsComponent) {
     <div className="flex flex-col gap-3">
       <Tabs activeTab={activeTab} setActiveTab={setActiveTab}>
         <Tab icon={HiHome} key="home" label="home" hideLabel={true} tabId={-1}>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
+          <div className="flex w-full">
+            <div className="w-1/4 p-5">
+              <PatientLookup callback={openPatientTab} />
+            </div>
+            <div className="w-3/4 p-5">
               <CalendarComponent
                 appointments={appointments}
                 patients={patients}
                 currentUserId={currentUserId}
               />
-            </div>
-            <div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <PatientLookup callback={openPatientTab} />
-                </div>
-                <div></div>
-              </div>
             </div>
           </div>
         </Tab>

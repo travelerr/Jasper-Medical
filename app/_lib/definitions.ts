@@ -53,6 +53,16 @@ import {
 } from "@prisma/client";
 import { getSurveyByName } from "./data";
 
+// #region API
+
+export type ActionResponse = {
+  message: string;
+  actionSuceeded: boolean;
+  result?: any;
+};
+
+// #endregion
+
 // #region Auth
 
 export enum UserRole {

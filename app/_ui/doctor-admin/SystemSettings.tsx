@@ -33,7 +33,7 @@ export default function SystemSettings(props: ISystemSettings) {
             System Settings
           </h1>
         </div>
-        <div className="grid gap-6 mb-6 md:grid-cols-2">
+        <div className="grid gap-6 mb-6 md:grid-cols-4">
           <form onSubmit={handleSubmitTestEmail(onSubmitTestEmail)}>
             <TextInputFormGroup
               register={registerTestEmail}

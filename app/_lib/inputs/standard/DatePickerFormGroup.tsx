@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  Controller,
-  FieldErrors,
-  UseFormRegister,
-  Control,
-} from "react-hook-form";
+import { Controller, FieldErrors, Control } from "react-hook-form";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { ErrorMessage } from "@hookform/error-message";

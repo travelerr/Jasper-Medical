@@ -123,7 +123,7 @@ export default function AddNewProblemModal(props: IAddNewProblemModal) {
               labelText="Synopsis"
             />
             <SelectInputFormGroup
-              register={register}
+              control={control}
               errors={errors}
               formIdentifier="status"
               required={true}

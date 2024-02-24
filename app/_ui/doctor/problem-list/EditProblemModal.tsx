@@ -187,7 +187,7 @@ export default function EditDrugIntoleranceModal(props: IEditProblemListModal) {
               labelText="Synopsis"
             />
             <SelectInputFormGroup
-              register={register}
+              control={control}
               errors={errors}
               formIdentifier="status"
               required={true}
