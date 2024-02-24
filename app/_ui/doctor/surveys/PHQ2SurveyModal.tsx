@@ -1,5 +1,5 @@
 import { Button, Modal as FlowBiteModal } from "flowbite-react";
-import LoadingOverlay from "../../loadingWidget";
+import LoadingOverlay from "../../shared/loadingWidget";
 import useViewState from "@/app/_lib/customHooks/useViewState";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useContext, useEffect, useState } from "react";

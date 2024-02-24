@@ -17,11 +17,11 @@ import {
   State,
 } from "@prisma/client";
 import { SubmitHandler, useForm } from "react-hook-form";
-import LoadingOverlay from "../loadingWidget";
+import LoadingOverlay from "./loadingWidget";
 import PharmacyLookup from "@/app/_lib/inputs/lookups/PharmacyLookup";
 import CheckboxInputFormGroup from "@/app/_lib/inputs/standard/CheckboxInputFormGroup";
 import { useState } from "react";
-import { ActionResponseMessage } from "../shared/ActionResponseMessage";
+import { ActionResponseMessage } from "./ActionResponseMessage";
 
 export default function CreatePatient() {
   const { viewState, setLoading } = useViewState();

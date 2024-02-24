@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import DashboardSkeleton from "@/app/_ui/skeletons";
+import DashboardSkeleton from "@/app/_ui/shared/skeletons";
 import { auth } from "../../../auth";
 import { getPatients, getAppointmentsByUserID } from "@/app/_lib/data";
 import { formatAppointmentsForCalendar } from "@/app/_lib/utils";

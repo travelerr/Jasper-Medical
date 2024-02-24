@@ -8,7 +8,7 @@ import { isStartBeforeEnd } from "../../../_lib/utils";
 import { CreateAppointmentInputs } from "../../../_lib/definitions";
 import { useEffect, useState } from "react";
 import useViewState from "../../../_lib/customHooks/useViewState";
-import LoadingOverlay from "../../loadingWidget";
+import LoadingOverlay from "../../shared/loadingWidget";
 import TextInputFormGroup from "@/app/_lib/inputs/standard/TextInputFormGroup";
 import PatientLookup from "@/app/_lib/inputs/lookups/PatientLookup";
 import { Patient } from "@prisma/client";

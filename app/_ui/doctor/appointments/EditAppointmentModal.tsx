@@ -11,7 +11,7 @@ import {
 } from "../../../_lib/definitions";
 import { useEffect, useState } from "react";
 import useViewState from "../../../_lib/customHooks/useViewState";
-import LoadingOverlay from "../../loadingWidget";
+import LoadingOverlay from "../../shared/loadingWidget";
 import { Patient } from "@prisma/client";
 import PatientLookup from "@/app/_lib/inputs/lookups/PatientLookup";
 import DatePickerFormGroup from "@/app/_lib/inputs/standard/DatePickerFormGroup";

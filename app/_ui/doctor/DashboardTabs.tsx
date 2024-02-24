@@ -10,8 +10,8 @@ import PatientLookup from "../../_lib/inputs/lookups/PatientLookup";
 import { Tab, Tabs } from "../../_lib/Tabs";
 import PatientChart from "./PatientChart";
 import { FullPatientProfile } from "@/app/_lib/definitions";
-import CreatePatient from "../doctor-admin/CreatePatient";
-import SystemSettings from "../doctor-admin/SystemSettings";
+import CreatePatient from "../shared/CreatePatient";
+import SystemSettings from "../shared/SystemSettings";
 
 interface IDashboardTabsComponent {
   appointments: any[];

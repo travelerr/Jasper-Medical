@@ -1,6 +1,6 @@
 import useViewState from "@/app/_lib/customHooks/useViewState";
 import { useContext, useState } from "react";
-import LoadingOverlay from "../../loadingWidget";
+import LoadingOverlay from "../../shared/loadingWidget";
 import { Button, Label, Modal as FlowBiteModal } from "flowbite-react";
 import { useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";

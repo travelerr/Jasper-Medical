@@ -1,6 +1,6 @@
 import useViewState from "@/app/_lib/customHooks/useViewState";
 import { useContext, useEffect } from "react";
-import LoadingOverlay from "../../loadingWidget";
+import LoadingOverlay from "../../shared/loadingWidget";
 import { Button, Modal as FlowBiteModal } from "flowbite-react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { EditAllergenInputs } from "@/app/_lib/definitions";
