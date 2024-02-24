@@ -57,6 +57,7 @@ import prisma from "./prisma";
 import { AppointmentStatus } from "@prisma/client";
 import bcrypt from "bcrypt";
 import { generateRandomPassword } from "./utils";
+import { sendEmailTemplate } from "./email-provider";
 
 const FormSchema = z.object({
   id: z.string(),
@@ -162,6 +163,29 @@ export async function deleteInvoice(id: string) {
   }
 }
 
+// #region System Setting & Testing
+
+export async function sendTestEmail(formData: { testEmail: string }) {
+  try {
+    await sendEmailTemplate({
+      to: formData.testEmail,
+      subject: "Welcome to Jasper Medical!",
+      template: "Testing",
+      templateData: {
+        text: "Testing email",
+      },
+    });
+    console.log("Email sent");
+  } catch (error: any) {
+    console.error(error);
+    if (error.response) {
+      console.error(error.response.body);
+    }
+  }
+}
+
+// #endregion
+
 // #region Auth
 
 export async function authenticate(
@@ -193,6 +217,7 @@ export async function createUserAndPatient(formData: CreatePatientInputs) {
     pronouns,
     ethnicity,
     contact,
+    sendEmail,
   } = formData;
 
   const hashedPassword = await bcrypt.hash(generateRandomPassword(), 10);
@@ -253,6 +278,27 @@ export async function createUserAndPatient(formData: CreatePatientInputs) {
           userId: user.id,
         },
       });
+
+      // Then, send portal invite email if chosen
+      if (sendEmail) {
+        try {
+          await sendEmailTemplate({
+            to: email,
+            subject: "Welcome to Jasper Medical",
+            template: "NewPatientRegPortalLogin",
+            templateData: {
+              url: "http://example.com/create-password",
+            },
+          });
+          console.log("Email sent");
+        } catch (error: any) {
+          console.error(error);
+          if (error.response) {
+            console.error(error.response.body);
+          }
+          // TODO: Consider how to handle email send failure, perhaps with a user-friendly message
+        }
+      }
 
       return { user, patient };
     });

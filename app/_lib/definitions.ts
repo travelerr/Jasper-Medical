@@ -108,7 +108,25 @@ export type CreatePatientInputs = {
   pronouns?: Pronouns;
   ethnicity: Ethnicity;
   contact: Contact;
+  sendEmail: boolean;
 };
+
+// #endregion
+
+// #region Email Templates
+
+export type TemplateDataMap = {
+  NewPatientRegPortalLogin: NewPatientRegPortalLoginData;
+  Testing: Testing;
+};
+
+export interface NewPatientRegPortalLoginData {
+  url: string;
+}
+
+export interface Testing {
+  text: string;
+}
 
 // #endregion
 

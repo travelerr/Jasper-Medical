@@ -1,5 +1,10 @@
 import React from "react";
-import { Controller, FieldErrors, Control } from "react-hook-form";
+import {
+  Controller,
+  FieldErrors,
+  UseFormRegister,
+  Control,
+} from "react-hook-form";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { ErrorMessage } from "@hookform/error-message";
@@ -38,6 +43,7 @@ const DatePickerFormGroup: React.FC<IDatePickerFormGroup> = ({
       <Controller
         name={formIdentifier}
         control={control}
+        defaultValue={null}
         rules={{
           required: required
             ? requiredMessage || "This field is required"

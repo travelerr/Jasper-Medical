@@ -2,6 +2,42 @@
 @tailwind components;
 @tailwind utilities;
 
+h1 {
+  font-size: 2rem; /* Equivalent to 32px if the root font-size is 16px */
+  font-weight: bold;
+  line-height: 1.2;
+}
+
+h2 {
+  font-size: 1.5rem; /* Equivalent to 24px if the root font-size is 16px */
+  font-weight: bold;
+  line-height: 1.3;
+}
+
+h3 {
+  font-size: 1.17rem; /* Roughly equivalent to 18.72px if the root font-size is 16px */
+  font-weight: bold;
+  line-height: 1.4;
+}
+
+h4 {
+  font-size: 1rem; /* Equivalent to 16px if the root font-size is 16px */
+  font-weight: bold;
+  line-height: 1.5;
+}
+
+h5 {
+  font-size: 0.83rem; /* Roughly equivalent to 13.28px if the root font-size is 16px */
+  font-weight: bold;
+  line-height: 1.6;
+}
+
+h6 {
+  font-size: 0.67rem; /* Roughly equivalent to 10.72px if the root font-size is 16px */
+  font-weight: bold;
+  line-height: 1.6;
+}
+
 input[type="number"] {
   -moz-appearance: textfield;
   appearance: textfield;
@@ -76,6 +112,10 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   width: auto;
 }
 
+input[type="checkbox"]:checked {
+  background-size: 1rem 1em !important;
+}
+
 .caret-accordion [data-testid="flowbite-accordion-arrow"] {
   display: none;
 }
@@ -126,6 +166,19 @@ textarea {
 
 .btn-primary {
   padding: 1.5rem 3rem;
+  border-radius: 5rem;
+  border: none;
+  cursor: pointer;
+  font-size: 1.3rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #ffffff;
+  text-align: center;
+  background-color: #000000;
+}
+
+.btn-primary-md {
+  padding: 0.5rem 1rem;
   border-radius: 5rem;
   border: none;
   cursor: pointer;

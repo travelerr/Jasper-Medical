@@ -19,6 +19,7 @@ import {
 import { SubmitHandler, useForm } from "react-hook-form";
 import LoadingOverlay from "../loadingWidget";
 import PharmacyLookup from "@/app/_lib/inputs/lookups/PharmacyLookup";
+import CheckboxInputFormGroup from "@/app/_lib/inputs/standard/CheckboxInputFormGroup";
 
 interface ICreatePatient {}
 export default function CreatePatient(props: ICreatePatient) {
@@ -70,7 +71,14 @@ export default function CreatePatient(props: ICreatePatient) {
                 formIdentifier="email"
                 required={true}
                 isEmail={true}
-                labelText="Email (Used for patient portal login)"
+                labelText="Email - Used for patient portal login"
+              />
+              <CheckboxInputFormGroup
+                register={register}
+                errors={errors}
+                inputClasses="p-5"
+                formIdentifier="sendEmail"
+                labelText="Send patient portal login email"
               />
             </div>
           </div>
