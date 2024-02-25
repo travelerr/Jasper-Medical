@@ -135,7 +135,8 @@ export interface NewPatientRegPortalLoginData {
 }
 
 export interface Testing {
-  text: string;
+  testUrl: string;
+  testReplacement: string;
 }
 
 // #endregion

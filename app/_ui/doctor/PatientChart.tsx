@@ -4,7 +4,7 @@ import PatientChartSideBar from "./PatientChartSideBar";
 
 export default function PatientChart() {
   const { refetchPatientData, patient } = useContext(PatientDataContext);
-  console.log("patient chart", patient);
+  console.log("Patient Chart", patient);
   return (
     <div>
       <PatientChartSideBar />

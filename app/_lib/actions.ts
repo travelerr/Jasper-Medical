@@ -57,11 +57,9 @@ import {
 import prisma from "./prisma";
 import { AppointmentStatus } from "@prisma/client";
 import bcrypt from "bcrypt";
-import { generateRandomPassword } from "./utils";
+import { generatePasswordResetToken, generateRandomPassword } from "./utils";
 import { sendEmailTemplate } from "./email-provider";
-import { Action } from "@prisma/client/runtime/library";
-import { ActionResult } from "next/dist/server/app-render/types";
-import { Result } from "postcss";
+import jwt from "jsonwebtoken";
 
 const FormSchema = z.object({
   id: z.string(),
@@ -171,12 +169,15 @@ export async function deleteInvoice(id: string) {
 
 export async function sendTestEmail(formData: { testEmail: string }) {
   try {
+    const token = generatePasswordResetToken(1);
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
     await sendEmailTemplate({
       to: formData.testEmail,
       subject: "Welcome to Jasper Medical!",
       template: "Testing",
       templateData: {
-        text: "Testing email",
+        testUrl: `${baseUrl}/auth/create-password/?token=${token}`,
+        testReplacement: `${baseUrl}/auth/create-password/?token=${token}`,
       },
     });
     console.log("Email sent");
@@ -191,6 +192,17 @@ export async function sendTestEmail(formData: { testEmail: string }) {
 // #endregion
 
 // #region Auth
+
+export const verifyToken = (token: string) => {
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    // @ts-ignore
+    return { userId: decoded.userId, valid: true };
+  } catch (error) {
+    console.error(error);
+    return { valid: false };
+  }
+};
 
 export async function authenticate(
   prevState: string | undefined,
@@ -285,13 +297,15 @@ export async function createUserAndPatient(
       });
       // Then, send portal invite email if chosen
       if (sendEmail) {
+        const token = generatePasswordResetToken(user?.id);
+        const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
         try {
           await sendEmailTemplate({
             to: email,
             subject: "Welcome to Jasper Medical",
             template: "NewPatientRegPortalLogin",
             templateData: {
-              url: "http://example.com/create-password",
+              url: `${baseUrl}/auth/create-password/?token=${token}`,
             },
           });
         } catch (error: any) {
@@ -313,6 +327,40 @@ export async function createUserAndPatient(
     console.error(error);
     return {
       message: "Database Error: Failed to create user and patient.",
+      actionSuceeded: false,
+    };
+  }
+}
+
+export async function updateUserPasswordWithJWT(formData: {
+  password: string;
+  token: string;
+}): Promise<ActionResponse> {
+  const hashedPassword = await bcrypt.hash(formData.password, 10);
+  const decoded = verifyToken(formData.token);
+  if (decoded.valid === false) {
+    return {
+      message: "Password creation failes.",
+      actionSuceeded: false,
+    };
+  }
+  try {
+    const result = await prisma.user.update({
+      where: {
+        id: decoded.userId,
+      },
+      data: {
+        password: hashedPassword,
+      },
+    });
+    return {
+      message: "Password updated successfully.",
+      actionSuceeded: true,
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      message: "Database Error: Failed to update password.",
       actionSuceeded: false,
     };
   }
@@ -494,7 +542,7 @@ export async function deleteAllergyByID(id: number): Promise<ActionResponse> {
       result: result,
     };
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return {
       message: "Database Error: Failed to delete allergy.",
       actionSuceeded: false,
@@ -996,7 +1044,7 @@ export async function updateFamilyRelative(
       dto = { familyHistoryOther: value };
       break;
     default:
-      console.log("error in switch statement");
+      console.error("error in switch statement");
   }
   try {
     const result = await prisma.patientHistory.update({

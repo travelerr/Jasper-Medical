@@ -4,8 +4,8 @@ export default function LoginPage() {
   return (
     <main className="flex items-center justify-center h-screen">
       <div>
-        <a href="mailto:justin.sacco@jaspermed.com" className="link">
-          justin.sacco@jaspermed.com
+        <a href={`mailto:${process.env.ADMIN_EMAIL}`} className="link">
+          {process.env.ADMIN_EMAIL}
         </a>
       </div>
     </main>

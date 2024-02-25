@@ -1,7 +1,10 @@
 import React from "react";
-import { ErrorMessage } from "@hookform/error-message"; // Assuming you are using react-hook-form for form handling
-import { Tooltip } from "flowbite-react";
+import { ErrorMessage } from "@hookform/error-message";
+import { Tooltip } from "react-tooltip";
+import "react-tooltip/dist/react-tooltip.css";
 import { FieldErrors, RegisterOptions, UseFormRegister } from "react-hook-form";
+import { BsInfoCircle } from "react-icons/bs";
+
 interface ITextInputFormGroup {
   register: UseFormRegister<any>;
   errors: FieldErrors<any>;
@@ -13,7 +16,7 @@ interface ITextInputFormGroup {
   requiredMessage?: string;
   labelText?: string;
   tooltipText?: string;
-  leftIcon?: React.ReactNode; // Assuming these can be any React node (e.g., icons)
+  leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
   inputClasses?: string;
   formClasses?: string;
@@ -92,7 +95,7 @@ export default function TextInputFormGroup(props: ITextInputFormGroup) {
       }),
       ...(isPassword && {
         pas: (value: string) =>
-          !value || /^[a-zA-Z0-9_.-]*$/.test(value) || "Invalid username",
+          !value || /^[a-zA-Z0-9_.-]*$/.test(value) || "Invalid password",
       }),
     },
   };
@@ -109,21 +112,27 @@ export default function TextInputFormGroup(props: ITextInputFormGroup) {
 
   return (
     <div className={formClasses || "form-group"}>
-      {labelText && (
-        <label htmlFor={formIdentifier}>
-          {labelText}{" "}
-          {required ? <span className="text-red-500">*</span> : null}
-        </label>
-      )}
-      {tooltipText && (
-        <Tooltip
-          placement="right"
-          className="in"
-          id="tooltip-right"
-          content={tooltipText}
-        />
-      )}
-      <div className="input-group">
+      <div className="flex items-center">
+        {labelText && (
+          <label htmlFor={formIdentifier}>
+            {labelText}{" "}
+            {required ? <span className="text-red-500">*</span> : null}
+          </label>
+        )}
+        {tooltipText && (
+          <>
+            <a
+              className="ml-2"
+              data-tooltip-id={formIdentifier}
+              data-tooltip-content={tooltipText}
+            >
+              <BsInfoCircle />
+            </a>
+            <Tooltip id={formIdentifier} />
+          </>
+        )}
+      </div>
+      <div className="input-group relative">
         {leftIcon && (
           <div className="input-group-prepend">
             <span className="input-group-text">{leftIcon}</span>
@@ -137,7 +146,8 @@ export default function TextInputFormGroup(props: ITextInputFormGroup) {
           placeholder={placeholder}
           {...register(formIdentifier, validationRules)}
           onChange={handleChange}
-          className={`form-control block w-full border disabled:cursor-not-allowed disabled:opacity-50 bg-gray-50 border-gray-300 text-gray-900 focus:border-cyan-500 focus:ring-cyan-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500 p-2.5 text-sm rounded-lg
+          className={`form-control block w-full border disabled:cursor-not-allowed disabled:opacity-50 bg-gray-50 border-gray-300 text-gray-900 focus:border-cyan-500 focus:ring-cyan-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500 text-sm rounded-lg p-2.5
+            ${leftIcon ? "pl-10" : ""}
             ${inputClasses ?? ""} ${
               errors[formIdentifier] ? "is-invalid" : ""
             }`}

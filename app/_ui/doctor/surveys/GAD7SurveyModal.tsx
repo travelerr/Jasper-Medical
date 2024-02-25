@@ -84,7 +84,7 @@ export default function GAD7SurveyModal(props: IGAD7SurveyModal) {
       }
       setLoading(false);
     } catch (error) {
-      console.log(error, "There was an error fetching the survey");
+      console.error(error, "There was an error fetching the survey");
       setLoading(false);
     }
   }

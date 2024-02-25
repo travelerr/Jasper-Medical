@@ -62,7 +62,7 @@ export default function FH(props: IFH) {
       await createFamilyHistory(dto);
       await refetchPatientData();
     } catch {
-      console.log("Error creating family history");
+      console.error("Error creating family history");
     }
   };
 
@@ -80,7 +80,7 @@ export default function FH(props: IFH) {
         return updatedEditMode;
       });
     } catch {
-      console.log("Error creating family history");
+      console.error("Error creating family history");
     }
   };
 
@@ -97,7 +97,7 @@ export default function FH(props: IFH) {
         return updatedEditMode;
       });
     } catch {
-      console.log("Error creating family history");
+      console.error("Error creating family history");
     }
   };
 
@@ -134,10 +134,10 @@ export default function FH(props: IFH) {
           return updatedEditMode;
         });
       } else {
-        console.log("Invalid relative type");
+        console.error("Invalid relative type");
       }
     } catch (error) {
-      console.log("Error updating family history relative:", error);
+      console.error("Error updating family history relative:", error);
     }
   };
 

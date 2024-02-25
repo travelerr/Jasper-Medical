@@ -84,7 +84,7 @@ export default function PHQ4SurveyModal(props: IPHQ4SurveyModal) {
       }
       setLoading(false);
     } catch (error) {
-      console.log(error, "There was an error fetching the survey");
+      console.error(error, "There was an error fetching the survey");
       setLoading(false);
     }
   }

@@ -19,7 +19,7 @@ export default function SystemSettings(props: ISystemSettings) {
       setTestEmailSuccess(true);
       setTimeout(() => setTestEmailSuccess(null), 5000);
     } catch (error) {
-      console.log(error);
+      console.error(error);
       setTestEmailSuccess(false);
       setTimeout(() => setTestEmailSuccess(null), 5000);
     }

@@ -77,7 +77,7 @@ export default function SocialHistory(props: ISocialHistory) {
       await createSocialHistory(dto);
       await refetchPatientData();
     } catch {
-      console.log("Error creating social history");
+      console.error("Error creating social history");
     }
   };
 
@@ -95,7 +95,7 @@ export default function SocialHistory(props: ISocialHistory) {
         return updatedEditMode;
       });
     } catch {
-      console.log("Error creating social history");
+      console.error("Error creating social history");
     }
   };
 
@@ -112,7 +112,7 @@ export default function SocialHistory(props: ISocialHistory) {
         return updatedEditMode;
       });
     } catch {
-      console.log("Error creating social history");
+      console.error("Error creating social history");
     }
   };
 
@@ -137,7 +137,7 @@ export default function SocialHistory(props: ISocialHistory) {
       await refetchPatientData();
       setEducationLevelToggleMode(false);
     } catch {
-      console.log("Error setting social history education level");
+      console.error("Error setting social history education level");
     }
   };
 
@@ -158,7 +158,7 @@ export default function SocialHistory(props: ISocialHistory) {
       await refetchPatientData();
       setFinancialStrainToggleMode(false);
     } catch {
-      console.log("Error setting social history financial strain");
+      console.error("Error setting social history financial strain");
     }
   };
 

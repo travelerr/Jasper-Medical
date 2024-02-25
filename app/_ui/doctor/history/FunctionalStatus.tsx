@@ -33,7 +33,7 @@ export default function FunctionalStatus(props: IFunctionalStatus) {
       await createFunctionalStatus(dto);
       await refetchPatientData();
     } catch {
-      console.log("Error creating functional status");
+      console.error("Error creating functional status");
     }
   };
 
@@ -54,7 +54,7 @@ export default function FunctionalStatus(props: IFunctionalStatus) {
         return updatedEditMode;
       });
     } catch {
-      console.log("Error creating functional status");
+      console.error("Error creating functional status");
     }
   };
 
@@ -71,7 +71,7 @@ export default function FunctionalStatus(props: IFunctionalStatus) {
         return updatedEditMode;
       });
     } catch {
-      console.log("Error creating functional status");
+      console.error("Error creating functional status");
     }
   };
 

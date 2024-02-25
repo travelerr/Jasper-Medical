@@ -93,7 +93,7 @@ export default function HARKSurveyModal(props: IHARKSurveyModal) {
       }
       setLoading(false);
     } catch (error) {
-      console.log(error, "There was an error fetching the survey");
+      console.error(error, "There was an error fetching the survey");
       setLoading(false);
     }
   }

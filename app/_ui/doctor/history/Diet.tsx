@@ -29,7 +29,7 @@ export default function Diet(props: IDiet) {
       await createDiet(dto);
       await refetchPatientData();
     } catch {
-      console.log("Error creating diet");
+      console.error("Error creating diet");
     }
   };
 
@@ -47,7 +47,7 @@ export default function Diet(props: IDiet) {
         return updatedEditMode;
       });
     } catch {
-      console.log("Error creating diet");
+      console.error("Error creating diet");
     }
   };
 
@@ -64,7 +64,7 @@ export default function Diet(props: IDiet) {
         return updatedEditMode;
       });
     } catch {
-      console.log("Error creating diet");
+      console.error("Error creating diet");
     }
   };
 

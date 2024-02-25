@@ -52,7 +52,7 @@ export default function Habits(props: IHabits) {
       await createHabit(dto);
       await refetchPatientData();
     } catch {
-      console.log("Error creating habit");
+      console.error("Error creating habit");
     }
   };
 
@@ -70,7 +70,7 @@ export default function Habits(props: IHabits) {
         return updatedEditMode;
       });
     } catch {
-      console.log("Error creating habit");
+      console.error("Error creating habit");
     }
   };
 
@@ -87,7 +87,7 @@ export default function Habits(props: IHabits) {
         return updatedEditMode;
       });
     } catch {
-      console.log("Error creating habit");
+      console.error("Error creating habit");
     }
   };
 
@@ -112,7 +112,7 @@ export default function Habits(props: IHabits) {
       await refetchPatientData();
       setSmokingStatusToggleMode(false);
     } catch {
-      console.log("Error setting social history financial strain");
+      console.error("Error setting social history financial strain");
     }
   };
 

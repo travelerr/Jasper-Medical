@@ -33,9 +33,7 @@ export default function OnBlurTextInput(props: IOnBlurTextInput) {
 
   const makeCallback = () => {
     if (inputValue.trim() !== "") {
-      console.log("Making API call with:", inputValue);
       onBlurCallback(inputValue, editId, editString);
-      console.log("Made API call with:", inputValue);
     }
   };
 

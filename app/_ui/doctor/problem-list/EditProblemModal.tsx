@@ -82,7 +82,6 @@ export default function EditDrugIntoleranceModal(props: IEditProblemListModal) {
       setValue("synopsis", problemToEdit.synopsis);
       setValue("status", problemToEdit.status);
       setValue("dxDate", new Date(problemToEdit.dxDate).toDateString());
-      console.log(problemToEdit.dxDate);
       if (problemToEdit.icd10Codes.length) {
         let x = problemToEdit.icd10Codes.map((code) => ({
           ...code.icd10Code,
@@ -107,7 +106,7 @@ export default function EditDrugIntoleranceModal(props: IEditProblemListModal) {
         currentCodes.filter((code) => code.id !== codeToRemove.id)
       );
     } catch {
-      console.log("Error deleting the problem list icd10 code by id.");
+      console.error("Error deleting the problem list icd10 code by id.");
     }
   };
 

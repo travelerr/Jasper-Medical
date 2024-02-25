@@ -1,6 +1,8 @@
 import React from "react";
-import { ErrorMessage } from "@hookform/error-message"; // Assuming you are using react-hook-form for form handling
-import { Tooltip } from "flowbite-react";
+import { ErrorMessage } from "@hookform/error-message";
+import { Tooltip } from "react-tooltip";
+import "react-tooltip/dist/react-tooltip.css";
+import { BsInfoCircle } from "react-icons/bs";
 import { FieldErrors, RegisterOptions, UseFormRegister } from "react-hook-form";
 interface ICheckboxInputFormGroup {
   register: UseFormRegister<any>;
@@ -50,20 +52,26 @@ export default function CheckboxInputFormGroup(props: ICheckboxInputFormGroup) {
         "form-group flex flex-col form-group items-center justify-center"
       }
     >
-      {labelText && (
-        <label htmlFor={formIdentifier}>
-          {labelText}{" "}
-          {required ? <span className="text-red-500">*</span> : null}
-        </label>
-      )}
-      {tooltipText && (
-        <Tooltip
-          placement="right"
-          className="in"
-          id="tooltip-right"
-          content={tooltipText}
-        />
-      )}
+      <div className="flex items-center">
+        {labelText && (
+          <label htmlFor={formIdentifier}>
+            {labelText}{" "}
+            {required ? <span className="text-red-500">*</span> : null}
+          </label>
+        )}
+        {tooltipText && (
+          <>
+            <a
+              className="ml-2"
+              data-tooltip-id={formIdentifier}
+              data-tooltip-content={tooltipText}
+            >
+              <BsInfoCircle />
+            </a>
+            <Tooltip id={formIdentifier} />
+          </>
+        )}
+      </div>
       <div className="input-group">
         <input
           type="checkbox"

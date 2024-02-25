@@ -42,7 +42,7 @@ export default function CreatePatient() {
       const result = await createUserAndPatient(data);
       setSubmissionResponse(result);
       setLoading(false);
-      // reset();
+      reset();
     } catch (error) {
       setLoading(false);
     }
@@ -75,14 +75,16 @@ export default function CreatePatient() {
                 formIdentifier="email"
                 required={true}
                 isEmail={true}
-                labelText="Email - Used for patient portal login"
+                tooltipText="The patient will use this email to log into the portal"
+                labelText="Email"
               />
               <CheckboxInputFormGroup
                 register={register}
                 errors={errors}
                 inputClasses="p-5"
                 formIdentifier="sendEmail"
-                labelText="Send patient portal login email"
+                labelText="Send portal email"
+                tooltipText="This will send an email to the patient to create a password that is valid for 30 days"
               />
             </div>
           </div>

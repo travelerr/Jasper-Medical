@@ -33,7 +33,7 @@ export default function PMH(props: IPMH) {
       await createPastMedicalHistory(dto);
       await refetchPatientData();
     } catch {
-      console.log("Error creating past medical history");
+      console.error("Error creating past medical history");
     }
   };
 
@@ -54,7 +54,7 @@ export default function PMH(props: IPMH) {
         return updatedEditMode;
       });
     } catch {
-      console.log("Error creating past medical history");
+      console.error("Error creating past medical history");
     }
   };
 
@@ -71,7 +71,7 @@ export default function PMH(props: IPMH) {
         return updatedEditMode;
       });
     } catch {
-      console.log("Error creating past medical history");
+      console.error("Error creating past medical history");
     }
   };
 

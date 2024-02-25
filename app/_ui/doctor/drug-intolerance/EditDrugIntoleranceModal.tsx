@@ -74,7 +74,6 @@ export default function EditDrugIntoleranceModal(
       setValue("reaction", drugIntoleranceToEdit.reaction);
       setValue("severity", drugIntoleranceToEdit.severity);
       setValue("status", drugIntoleranceToEdit.status);
-      console.log(drugIntoleranceToEdit.onsetDate);
       setValue(
         "onsetDate",
         new Date(drugIntoleranceToEdit.onsetDate).toDateString()

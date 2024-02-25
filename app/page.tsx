@@ -34,6 +34,13 @@ export default function Page() {
             <span>Contact Us</span> <ArrowRightIcon className="w-5 md:w-6" />
           </Link>
           <Link
+            href="/auth/create-password"
+            className="flex items-center gap-5 self-start rounded-lg bg-blue-500 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-blue-400 md:text-base"
+          >
+            <span>Create Password</span>{" "}
+            <ArrowRightIcon className="w-5 md:w-6" />
+          </Link>
+          <Link
             href="/auth/forgot-password"
             className="flex items-center gap-5 self-start rounded-lg bg-blue-500 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-blue-400 md:text-base"
           >

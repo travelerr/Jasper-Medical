@@ -35,7 +35,7 @@ export default function Exercise(props: IExercise) {
       await createExercise(dto);
       await refetchPatientData();
     } catch {
-      console.log("Error creating exercise");
+      console.error("Error creating exercise");
     }
   };
 
@@ -53,7 +53,7 @@ export default function Exercise(props: IExercise) {
         return updatedEditMode;
       });
     } catch {
-      console.log("Error creating exercise");
+      console.error("Error creating exercise");
     }
   };
 
@@ -70,7 +70,7 @@ export default function Exercise(props: IExercise) {
         return updatedEditMode;
       });
     } catch {
-      console.log("Error creating exercise");
+      console.error("Error creating exercise");
     }
   };
 

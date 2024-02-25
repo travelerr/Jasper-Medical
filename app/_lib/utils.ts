@@ -1,5 +1,6 @@
 import { Patient } from "@prisma/client";
 import { GetAppointmentsByUserID, Revenue } from "./definitions";
+import jwt from "jsonwebtoken";
 
 export const formatCurrency = (amount: number) => {
   return (amount / 100).toLocaleString("en-US", {
@@ -158,4 +159,14 @@ export const generateRandomPassword = (length = 12) => {
     password += charset[randomIndex];
   }
   return password;
+};
+
+export const generatePasswordResetToken = (userId: number) => {
+  return jwt.sign(
+    {
+      userId: userId,
+      exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30, // 30 days from now
+    },
+    process.env.JWT_SECRET
+  );
 };

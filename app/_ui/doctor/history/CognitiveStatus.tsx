@@ -33,7 +33,7 @@ export default function CognitiveStatus(props: ICognitiveStatus) {
       await createCognitiveStatus(dto);
       await refetchPatientData();
     } catch {
-      console.log("Error creating cognitive status");
+      console.error("Error creating cognitive status");
     }
   };
 
@@ -51,7 +51,7 @@ export default function CognitiveStatus(props: ICognitiveStatus) {
         return updatedEditMode;
       });
     } catch {
-      console.log("Error creating cognitive status");
+      console.error("Error creating cognitive status");
     }
   };
 
@@ -68,7 +68,7 @@ export default function CognitiveStatus(props: ICognitiveStatus) {
         return updatedEditMode;
       });
     } catch {
-      console.log("Error creating cognitive status");
+      console.error("Error creating cognitive status");
     }
   };
 

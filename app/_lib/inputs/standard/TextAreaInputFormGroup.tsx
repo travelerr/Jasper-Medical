@@ -1,5 +1,5 @@
 import React from "react";
-import { ErrorMessage } from "@hookform/error-message"; // Assuming you are using react-hook-form for form handling
+import { ErrorMessage } from "@hookform/error-message";
 import { Tooltip } from "flowbite-react";
 import { FieldErrors, RegisterOptions, UseFormRegister } from "react-hook-form";
 interface ITextAreaInputFormGroup {

@@ -33,7 +33,7 @@ export default function PSH(props: IPSH) {
       await createPastSurgicalHistory(dto);
       await refetchPatientData();
     } catch {
-      console.log("Error creating past surgical history");
+      console.error("Error creating past surgical history");
     }
   };
 
@@ -54,7 +54,7 @@ export default function PSH(props: IPSH) {
         return updatedEditMode;
       });
     } catch {
-      console.log("Error creating past surgical history");
+      console.error("Error creating past surgical history");
     }
   };
 
@@ -71,7 +71,7 @@ export default function PSH(props: IPSH) {
         return updatedEditMode;
       });
     } catch {
-      console.log("Error creating past surgical history");
+      console.error("Error creating past surgical history");
     }
   };
 

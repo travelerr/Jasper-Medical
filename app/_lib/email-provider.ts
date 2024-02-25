@@ -49,11 +49,11 @@ export const sendEmailTemplate = async <T extends TemplateNames>(
   const {
     to,
     from = {
-      email: process.env.SENDGRID_EMAIL || "",
+      email: process.env.ADMIN_EMAIL || "",
       name: "Jasper Medical",
     },
     subject,
-    text = "testing",
+    text,
     template,
     templateData,
   } = options;
@@ -68,11 +68,8 @@ export const sendEmailTemplate = async <T extends TemplateNames>(
     html: emailBody,
   };
 
-  console.log(msg);
-
   try {
     const result = await sgMail.send(msg);
-    console.log("Email sent successfully", result);
   } catch (error: any) {
     console.error("Error sending email:", error.message);
     if (error.response) {

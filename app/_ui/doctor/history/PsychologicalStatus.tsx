@@ -65,7 +65,7 @@ export default function PsychologicalStatus(props: IPsychologicalStatus) {
       await createPsychologicalStatus(dto);
       await refetchPatientData();
     } catch {
-      console.log("Error creating psychological status");
+      console.error("Error creating psychological status");
     }
   };
 
@@ -86,7 +86,7 @@ export default function PsychologicalStatus(props: IPsychologicalStatus) {
         return updatedEditMode;
       });
     } catch {
-      console.log("Error creating psychological status");
+      console.error("Error creating psychological status");
     }
   };
 
@@ -103,7 +103,7 @@ export default function PsychologicalStatus(props: IPsychologicalStatus) {
         return updatedEditMode;
       });
     } catch {
-      console.log("Error creating psychological status");
+      console.error("Error creating psychological status");
     }
   };
 
@@ -126,7 +126,7 @@ export default function PsychologicalStatus(props: IPsychologicalStatus) {
       await refetchPatientData();
       setStressLevelToggleMode(false);
     } catch {
-      console.log("Error setting social history financial strain");
+      console.error("Error setting social history financial strain");
     }
   };
 
