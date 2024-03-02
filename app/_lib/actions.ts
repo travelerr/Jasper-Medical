@@ -4,7 +4,7 @@ import { z } from "zod";
 import { sql } from "@vercel/postgres";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { signIn } from "@/auth";
+import { signIn, signOut } from "@/auth";
 import { auth } from "../../auth";
 import {
   ActionResponse,
@@ -176,8 +176,8 @@ export async function sendTestEmail(formData: { testEmail: string }) {
       subject: "Welcome to Jasper Medical!",
       template: "Testing",
       templateData: {
-        testUrl: `${baseUrl}/auth/create-password/?token=${token}`,
-        testReplacement: `${baseUrl}/auth/create-password/?token=${token}`,
+        testUrl: `${baseUrl}/authentication/create-password/?token=${token}`,
+        testReplacement: `${baseUrl}/authentication/create-password/?token=${token}`,
       },
     });
     console.log("Email sent");
@@ -210,6 +210,17 @@ export async function authenticate(
 ) {
   try {
     await signIn("credentials", Object.fromEntries(formData));
+  } catch (error) {
+    if ((error as Error).message.includes("CredentialsSignin")) {
+      return "CredentialsSignin";
+    }
+    throw error;
+  }
+}
+
+export async function SignOut() {
+  try {
+    await signOut();
   } catch (error) {
     if ((error as Error).message.includes("CredentialsSignin")) {
       return "CredentialsSignin";
@@ -305,7 +316,7 @@ export async function createUserAndPatient(
             subject: "Welcome to Jasper Medical",
             template: "NewPatientRegPortalLogin",
             templateData: {
-              url: `${baseUrl}/auth/create-password/?token=${token}`,
+              url: `${baseUrl}/authentication/create-password/?token=${token}`,
             },
           });
         } catch (error: any) {
@@ -361,6 +372,52 @@ export async function updateUserPasswordWithJWT(formData: {
     console.error(error);
     return {
       message: "Database Error: Failed to update password.",
+      actionSuceeded: false,
+    };
+  }
+}
+
+export async function sendResetPasswordEmailWithJWT(formData: {
+  email: string;
+}): Promise<ActionResponse> {
+  try {
+    const result = await prisma.user.findUnique({
+      where: {
+        email: formData.email,
+      },
+      select: {
+        id: true, // Only select the id field
+      },
+    });
+    if (result) {
+      const token = generatePasswordResetToken(result?.id);
+      const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+      try {
+        await sendEmailTemplate({
+          to: formData.email,
+          subject: "Jasper Medical - Password Reset",
+          template: "ResetPasswordEmail",
+          templateData: {
+            url: `${baseUrl}/authentication/reset-password/?token=${token}`,
+          },
+        });
+      } catch (error: any) {
+        console.error(error);
+        if (error.response) {
+          console.error(error.response.body);
+        }
+      }
+    } else {
+      // If no user is found
+      return {
+        message: "User not found.",
+        actionSuceeded: false,
+      };
+    }
+  } catch (error) {
+    console.error(error);
+    return {
+      message: "Database Error: Failed to find user.",
       actionSuceeded: false,
     };
   }

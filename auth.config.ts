@@ -3,7 +3,7 @@ import { UserRole } from "@/app/_lib/definitions";
 
 export const authConfig = {
   pages: {
-    signIn: "/auth/login",
+    signIn: "/authentication/login",
   },
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {

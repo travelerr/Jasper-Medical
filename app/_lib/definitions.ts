@@ -128,9 +128,14 @@ export type CreatePatientInputs = {
 export type TemplateDataMap = {
   NewPatientRegPortalLogin: NewPatientRegPortalLoginData;
   Testing: Testing;
+  ResetPasswordEmail: ResetPasswordEmail;
 };
 
 export interface NewPatientRegPortalLoginData {
+  url: string;
+}
+
+export interface ResetPasswordEmail {
   url: string;
 }
 

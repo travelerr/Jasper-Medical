@@ -10,7 +10,7 @@ import LoadingOverlay from "../shared/loadingWidget";
 import { ActionResponse } from "@/app/_lib/definitions";
 import { ActionResponseMessage } from "../shared/ActionResponseMessage";
 
-export default function CreatePassword() {
+export default function ResetPassword() {
   const [passwordsDoNotMatch, setPasswordsDoNotMatch] = useState<boolean>();
   const [tokenErrorMessage, setTokenErrorMessage] = useState<boolean>();
   const [redirectMessage, setRedirectMessage] = useState<boolean>();
@@ -37,6 +37,7 @@ export default function CreatePassword() {
       setTimeout(() => {
         setPasswordsDoNotMatch(false);
       }, 5000);
+      return;
     }
     if (!token) {
       setTokenErrorMessage(true);
@@ -50,13 +51,15 @@ export default function CreatePassword() {
         password: data.password1,
         token: token,
       });
+      if (result.actionSuceeded) {
+        setRedirectMessage(true);
+        reset();
+        setTimeout(() => {
+          router.push("/authentication/login");
+        }, 2000);
+      }
       setSubmissionResponse(result);
       setLoading(false);
-      reset();
-      setRedirectMessage(true);
-      setTimeout(() => {
-        router.push("/auth/login");
-      }, 5000);
     } catch (error) {
       setLoading(false);
     }
@@ -65,7 +68,7 @@ export default function CreatePassword() {
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
       <LoadingOverlay isLoading={viewState.loading} />
       <div className="flex-1 rounded-lg bg-gray-50 px-6 pb-4 pt-8">
-        <h1 className={`mb-3 text-2xl`}>Create your password.</h1>
+        <h1 className={`mb-3 text-2xl`}>Reset your password.</h1>
         <div className="w-full">
           <TextInputFormGroup
             register={register}
@@ -92,7 +95,7 @@ export default function CreatePassword() {
           />
         </div>
         <button className="btn-primary-md flex items-center w-full justify-center mt-10">
-          Create Password{" "}
+          Reset Password{" "}
         </button>
         <div
           className="flex h-8 items-end space-x-1"

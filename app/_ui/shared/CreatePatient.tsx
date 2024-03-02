@@ -42,7 +42,9 @@ export default function CreatePatient() {
       const result = await createUserAndPatient(data);
       setSubmissionResponse(result);
       setLoading(false);
-      reset();
+      if (result.actionSuceeded) {
+        reset();
+      }
     } catch (error) {
       setLoading(false);
     }

@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { ErrorMessage } from "@hookform/error-message";
 import { Tooltip } from "react-tooltip";
 import "react-tooltip/dist/react-tooltip.css";
 import { FieldErrors, RegisterOptions, UseFormRegister } from "react-hook-form";
-import { BsInfoCircle } from "react-icons/bs";
+import { BsInfoCircle, BsEyeSlash, BsEye } from "react-icons/bs";
 
 interface ITextInputFormGroup {
   register: UseFormRegister<any>;
@@ -36,6 +36,7 @@ interface ITextInputFormGroup {
 }
 
 export default function TextInputFormGroup(props: ITextInputFormGroup) {
+  const [showPassword, setShowPassword] = useState(false);
   const {
     register,
     errors,
@@ -66,6 +67,10 @@ export default function TextInputFormGroup(props: ITextInputFormGroup) {
     isPassword,
   } = props;
 
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
   // Construct the validation object for react-hook-form
   const validationRules: RegisterOptions = {
     required: required ? requiredMessage || "This field is required" : false,
@@ -95,7 +100,11 @@ export default function TextInputFormGroup(props: ITextInputFormGroup) {
       }),
       ...(isPassword && {
         pas: (value: string) =>
-          !value || /^[a-zA-Z0-9_.-]*$/.test(value) || "Invalid password",
+          !value ||
+          (/.{8,}/.test(value) && // Checks for minimum length of 8 characters
+            /[A-Z]/.test(value) && // Checks for at least one uppercase letter
+            /[!@#$%^&*(),.?":{}|<>]/.test(value)) || // Checks for at least one special character
+          "Invalid password. Must be at least 8 characters long, include an uppercase letter and a special character.",
       }),
     },
   };
@@ -139,7 +148,7 @@ export default function TextInputFormGroup(props: ITextInputFormGroup) {
           </div>
         )}
         <input
-          type={isPassword ? "password" : "text"}
+          type={isPassword && !showPassword ? "password" : "text"}
           id={formIdentifier}
           name={formIdentifier}
           disabled={disabled}
@@ -154,6 +163,15 @@ export default function TextInputFormGroup(props: ITextInputFormGroup) {
           minLength={minLength}
           maxLength={maxLength}
         />
+        {isPassword && (
+          <button
+            type="button"
+            onClick={togglePasswordVisibility}
+            className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
+          >
+            {showPassword ? <BsEyeSlash /> : <BsEye />}
+          </button>
+        )}
         {rightIcon && (
           <div className="input-group-append">
             <span className="input-group-text">{rightIcon}</span>

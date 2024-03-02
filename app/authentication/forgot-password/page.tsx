@@ -1,5 +1,5 @@
 import JasperLogo from "@/app/_ui/shared/jasper-logo";
-import LoginForm from "@/app/_ui/auth/login-form";
+import ForgotPassword from "@/app/_ui/authentication/ForgotPassword";
 
 export default function LoginPage() {
   return (
@@ -10,7 +10,7 @@ export default function LoginPage() {
             <JasperLogo />
           </div>
         </div>
-        <LoginForm />
+        <ForgotPassword />
       </div>
     </main>
   );

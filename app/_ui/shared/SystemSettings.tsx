@@ -3,6 +3,7 @@ import TextInputFormGroup from "@/app/_lib/inputs/standard/TextInputFormGroup";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { IoSettingsSharp } from "react-icons/io5";
+import { SignOutButton } from "../authentication/SignOutButton";
 
 interface ISystemSettings {}
 export default function SystemSettings(props: ISystemSettings) {
@@ -57,6 +58,9 @@ export default function SystemSettings(props: ISystemSettings) {
               </span>
             ) : null}
           </form>
+          <div>
+            <SignOutButton />
+          </div>
         </div>
       </div>
     </div>
