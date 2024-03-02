@@ -1,9 +1,14 @@
 import { lusitana } from "@/app/_ui/fonts";
+import PatientSideNav from "@/app/_ui/patient/PatientSideNav";
 
 export default async function Page() {
   return (
-    <main>
-      <h1 className={`mb-4 text-xl md:text-2xl`}>Patient Dashboard</h1>
-    </main>
+    <></>
+    // <div className="flex h-screen flex-col md:flex-row md:overflow-hidden">
+    //   <div className="w-full flex-none md:w-64">
+    //     <PatientSideNav />
+    //   </div>
+    //   <div className="flex-grow p-6 md:overflow-y-auto md:p-12">{children}</div>
+    // </div>
   );
 }

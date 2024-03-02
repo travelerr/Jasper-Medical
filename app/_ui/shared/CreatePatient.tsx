@@ -85,7 +85,7 @@ export default function CreatePatient() {
                 errors={errors}
                 inputClasses="p-5"
                 formIdentifier="sendEmail"
-                labelText="Send portal email"
+                labelText="Send portal welcome email"
                 tooltipText="This will send an email to the patient to create a password that is valid for 30 days"
               />
             </div>

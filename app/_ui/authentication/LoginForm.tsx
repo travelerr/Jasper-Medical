@@ -7,6 +7,7 @@ import {
 import { ArrowRightIcon } from "@heroicons/react/20/solid";
 import { useFormState, useFormStatus } from "react-dom";
 import { authenticate } from "@/app/_lib/actions";
+import Link from "next/link";
 
 export default function LoginForm() {
   const [state, dispatch] = useFormState(authenticate, undefined);
@@ -57,6 +58,12 @@ export default function LoginForm() {
           </div>
         </div>
         <LoginButton />
+        <Link
+          href="/authentication/forgot-password"
+          className="flex mt-4 h-[48px] grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3"
+        >
+          Forgot Password
+        </Link>
         <div
           className="flex h-8 items-end space-x-1"
           aria-live="polite"
@@ -78,8 +85,11 @@ function LoginButton() {
   const { pending } = useFormStatus();
 
   return (
-    <button className="mt-4 w-full" aria-disabled={pending}>
-      Log in <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50" />
+    <button
+      className="flex mt-4 h-[48px] grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3"
+      aria-disabled={pending}
+    >
+      Log in <ArrowRightIcon className="ml-auto h-5 w-5  hover:text-blue-600" />
     </button>
   );
 }

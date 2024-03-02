@@ -56,8 +56,8 @@ export default function ForgotPassword() {
             }
           />
         </div>
-        <button className="btn-primary-md flex items-center w-full justify-center mt-10">
-          Forgot Password{" "}
+        <button className="flex h-[48px] grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3">
+          Send Reset Password Email{" "}
         </button>
         <div
           className="flex h-8 items-end space-x-1"

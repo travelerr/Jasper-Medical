@@ -1,0 +1,839 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table Session {
+  id Int [pk, increment]
+  sessionToken String [unique, not null]
+  userId Int [not null]
+  expires DateTime [not null]
+  user User [not null]
+}
+
+Table User {
+  id Int [pk, increment]
+  createdDate DateTime [default: `now()`]
+  updatedDate DateTime
+  name String
+  username String [not null]
+  email String [unique, not null]
+  password String [not null]
+  image String
+  sessions Session [not null]
+  role UserRole [not null, default: 'PATIENT']
+  doctor Doctor
+  patient Patient
+  admin Admin
+  doctorId Int
+  patientId Int
+  adminId Int
+}
+
+Table Doctor {
+  id Int [pk, increment]
+  createdDate DateTime [default: `now()`]
+  updatedDate DateTime
+  name String
+  firstName String
+  lastName String
+  appointments Appointment [not null]
+  user User [not null]
+  userId Int [unique, not null]
+  specialty String [not null]
+}
+
+Table Patient {
+  id Int [pk, increment]
+  createdDate DateTime [default: `now()`]
+  updatedDate DateTime
+  name String
+  firstName String
+  middleName String
+  lastName String
+  status PatientStatus [default: 'Active']
+  suffix NameSuffix
+  altName String
+  dob DateTime
+  sexAtBirth Sex
+  gender Gender
+  ssn String
+  maidenName String
+  genderMarker GenderMarker
+  pronouns Pronouns
+  race Race
+  ethnicity Ethnicity
+  contact Contact
+  insurance Insurance
+  provider Provider
+  patientHistory PatientHistory
+  allergy Allergy [not null]
+  problemList ProblemList [not null]
+  appointments Appointment [not null]
+  consults Consult [not null]
+  testResults TestResult [not null]
+  drugIntolerance DrugIntolerance [not null]
+  user User [not null]
+  userId Int [unique, not null]
+}
+
+Table Consult {
+  id Int [pk, increment]
+  createdDate DateTime [default: `now()`]
+  updatedDate DateTime
+  name String
+  date DateTime [not null]
+  notes String [not null]
+  patientId Int [not null]
+  patient Patient [not null]
+}
+
+Table TestResult {
+  id Int [pk, increment]
+  createdDate DateTime [default: `now()`]
+  updatedDate DateTime
+  name String
+  date DateTime [not null]
+  notes String [not null]
+  patientId Int [not null]
+  patient Patient [not null]
+}
+
+Table Contact {
+  id Int [pk, increment]
+  createdDate DateTime [default: `now()`]
+  updatedDate DateTime
+  name String
+  primaryPhone String
+  primaryPhoneType PhoneType [default: 'Mobile']
+  secondaryPhone String
+  secondaryPhoneType PhoneType [default: 'Home']
+  street String
+  apt String
+  city String
+  state State
+  zip String
+  pharmacy String
+  secondaryPharmacy String
+  secondaryStreet String
+  secondaryApt String
+  secondaryCity String
+  secondaryState State
+  secondaryZip String
+  ecFirstName String
+  ecLastName String
+  ecRelationship ECRelationship
+  ecPhone String
+  ecStreet String
+  ecApt String
+  ecCity String
+  ecState State
+  ecZip String
+  patientId Int [unique, not null]
+  patient Patient [not null]
+}
+
+Table Insurance {
+  id Int [pk, increment]
+  createdDate DateTime [default: `now()`]
+  updatedDate DateTime
+  name String
+  cardImageFront String
+  cardImageBack String
+  insuanceName String
+  planName String
+  groupId String
+  memberId String
+  copay Decimal
+  deductible Decimal
+  effectiveDate DateTime
+  endDate DateTime
+  primaryHolder PrimaryHolder [default: 'Self']
+  secondaryCardImageFront String
+  secondaryCardImageBack String
+  secondaryInsuanceName String
+  secondaryPlanName String
+  secondaryGroupId String
+  secondaryMemberId String
+  secondaryCopay Decimal
+  secondaryDeductible Decimal
+  secondaryEffectiveDate DateTime
+  secondaryEndDate DateTime
+  secondaryPrimaryHolder PrimaryHolder [default: 'Self']
+  tertiaryCardImageFront String
+  tertiaryCardImageBack String
+  tertiaryInsuanceName String
+  tertiaryPlanName String
+  tertiaryGroupId String
+  tertiaryMemberId String
+  tertiaryCopay Decimal
+  tertiaryDeductible Decimal
+  tertiaryEffectiveDate DateTime
+  tertiaryEndDate DateTime
+  tertiaryPrimaryHolder PrimaryHolder [default: 'Self']
+  patientId Int [unique, not null]
+  patient Patient [not null]
+}
+
+Table Provider {
+  id Int [pk, increment]
+  createdDate DateTime [default: `now()`]
+  updatedDate DateTime
+  name String
+  provider String
+  pcp String
+  state State
+  patientId Int [unique, not null]
+  patient Patient [not null]
+}
+
+Table Allergy {
+  id Int [pk, increment]
+  createdDate DateTime [default: `now()`]
+  updatedDate DateTime
+  name String
+  reaction String
+  severity AllergySeverity [not null]
+  status AllergyStatus [not null]
+  onsetDate DateTime [not null]
+  allergen Allergen [not null]
+  patientId Int [not null]
+  patient Patient [not null]
+}
+
+Table Allergen {
+  id Int [pk, increment]
+  createdDate DateTime [default: `now()`]
+  updatedDate DateTime
+  name String
+  allergyId Int [not null]
+  allergy Allergy [not null]
+}
+
+Table ProblemList {
+  id Int [pk, increment]
+  createdDate DateTime [default: `now()`]
+  updatedDate DateTime
+  name String
+  dxDate DateTime
+  status ProblemListStatus [not null, default: 'Active']
+  synopsis String
+  patientId Int [not null]
+  patient Patient [not null]
+  icd10Codes ProblemListICD10Code [not null]
+}
+
+Table ICD10Code {
+  id Int [pk, increment]
+  createdDate DateTime [default: `now()`]
+  updatedDate DateTime
+  name String
+  code String [not null]
+  shortDescription String
+  longDescription String
+  problemLists ProblemListICD10Code [not null]
+}
+
+Table ProblemListICD10Code {
+  id Int [pk, increment]
+  problemListId Int [not null]
+  icd10CodeId Int [not null]
+  problemList ProblemList [not null]
+  icd10Code ICD10Code [not null]
+}
+
+Table DrugIntolerance {
+  id Int [pk, increment]
+  createdDate DateTime [default: `now()`]
+  updatedDate DateTime
+  name String
+  reaction String
+  severity DrugIntoleranceSeverity [not null]
+  status DrugIntoleranceStatus [not null]
+  onsetDate DateTime
+  drugId Int [not null]
+  drug Drug [not null]
+  patientId Int [not null]
+  patient Patient [not null]
+}
+
+Table Drug {
+  id Int [pk, increment]
+  createdDate DateTime [default: `now()`]
+  updatedDate DateTime
+  name String
+  ndc String [not null]
+  type DrugType [not null]
+  proprietaryName String
+  proprietaryNameSuffix String
+  nonProprietaryName String
+  dosageFormName String
+  routeName String
+  manufacturerName String
+  substanceName String
+  activeNumeratorStrength String
+  activeIngredientUnit String
+  pharmClasses String
+  deaSchedule String
+  drugIntolerances DrugIntolerance [not null]
+}
+
+Table PatientHistory {
+  id Int [pk, increment]
+  patientId Int [unique, not null]
+  patient Patient [not null]
+  pastMedicalHistory PastMedicalHistory [not null]
+  pastSurgicalHistory PastSurgicalHistory [not null]
+  familyHistory FamilyHistory [not null]
+  socialHistory SocialHistory [not null]
+  cognitiveStatus CognitiveStatus [not null]
+  functionalStatus FunctionalStatus [not null]
+  psychologicalStatus PsychologicalStatus [not null]
+  habits Habits [not null]
+  diet Diet [not null]
+  exercise Exercise [not null]
+  familyHistoryMother String
+  familyHistoryFather String
+  familyHistoryBrother String
+  familyHistorySister String
+  familyHistorySon String
+  familyHistoryDaughter String
+  familyHistoryGrandmother String
+  familyHistoryGrandfather String
+  familyHistoryAunt String
+  familyHistoryUncle String
+  familyHistoryOther String
+  socialHistoryEducation PatientEducationLevel [not null]
+  socialHistoryFinancialStrain PatientFinancialStrain [not null]
+  psychologicalStatusStress PatientStressLevel [not null]
+  habitsSmokingStatus PatientSmokingStatus [not null]
+  surveyScores SurveyScore [not null]
+  surveyResponse SurveyResponse [not null]
+}
+
+Table PastMedicalHistory {
+  id Int [pk, increment]
+  createdDate DateTime [default: `now()`]
+  updatedDate DateTime
+  name String
+  sortOrder Int
+  note String
+  patientHistoryId Int [not null]
+  patientHistory PatientHistory [not null]
+}
+
+Table PastSurgicalHistory {
+  id Int [pk, increment]
+  createdDate DateTime [default: `now()`]
+  updatedDate DateTime
+  name String
+  sortOrder Int
+  note String
+  patientHistoryId Int [not null]
+  patientHistory PatientHistory [not null]
+}
+
+Table FamilyHistory {
+  id Int [pk, increment]
+  createdDate DateTime [default: `now()`]
+  updatedDate DateTime
+  name String
+  sortOrder Int
+  note String
+  patientHistoryId Int [not null]
+  patientHistory PatientHistory [not null]
+}
+
+Table SocialHistory {
+  id Int [pk, increment]
+  createdDate DateTime [default: `now()`]
+  updatedDate DateTime
+  name String
+  sortOrder Int
+  note String
+  patientHistoryId Int [not null]
+  patientHistory PatientHistory [not null]
+}
+
+Table CognitiveStatus {
+  id Int [pk, increment]
+  createdDate DateTime [default: `now()`]
+  updatedDate DateTime
+  name String
+  sortOrder Int
+  note String
+  patientHistoryId Int [not null]
+  patientHistory PatientHistory [not null]
+}
+
+Table FunctionalStatus {
+  id Int [pk, increment]
+  createdDate DateTime [default: `now()`]
+  updatedDate DateTime
+  name String
+  sortOrder Int
+  note String
+  patientHistoryId Int [not null]
+  patientHistory PatientHistory [not null]
+}
+
+Table PsychologicalStatus {
+  id Int [pk, increment]
+  createdDate DateTime [default: `now()`]
+  updatedDate DateTime
+  name String
+  sortOrder Int
+  note String
+  patientHistoryId Int [not null]
+  patientHistory PatientHistory [not null]
+}
+
+Table Habits {
+  id Int [pk, increment]
+  createdDate DateTime [default: `now()`]
+  updatedDate DateTime
+  name String
+  sortOrder Int
+  note String
+  patientHistoryId Int [not null]
+  patientHistory PatientHistory [not null]
+}
+
+Table Diet {
+  id Int [pk, increment]
+  createdDate DateTime [default: `now()`]
+  updatedDate DateTime
+  name String
+  sortOrder Int
+  note String
+  patientHistoryId Int [not null]
+  patientHistory PatientHistory [not null]
+}
+
+Table Exercise {
+  id Int [pk, increment]
+  createdDate DateTime [default: `now()`]
+  updatedDate DateTime
+  name String
+  sortOrder Int
+  note String
+  patientHistoryId Int [not null]
+  patientHistory PatientHistory [not null]
+}
+
+Table Survey {
+  id Int [pk, increment]
+  createdDate DateTime [default: `now()`]
+  updatedDate DateTime
+  name String
+  surveyName SurveyName [not null]
+  questions SurveyQuestion [not null]
+  responses SurveyResponse [not null]
+  SurveyScore SurveyScore [not null]
+}
+
+Table SurveyQuestion {
+  id Int [pk, increment]
+  createdDate DateTime [default: `now()`]
+  updatedDate DateTime
+  name String
+  text String [not null]
+  sortOrder Int
+  type SurveyQuestionType [not null]
+  surveyId Int [not null]
+  survey Survey [not null]
+  SurveyResponse SurveyResponse [not null]
+}
+
+Table SurveyResponse {
+  id Int [pk, increment]
+  createdDate DateTime [default: `now()`]
+  updatedDate DateTime
+  name String
+  responseText String
+  responseInt Int
+  responseBool Boolean
+  type SurveyQuestionType [not null]
+  questionId Int [not null]
+  question SurveyQuestion [not null]
+  surveyId Int [not null]
+  survey Survey [not null]
+  patientHistoryId Int [not null]
+  patientHistory PatientHistory [not null]
+}
+
+Table SurveyScore {
+  id Int [pk, increment]
+  createdDate DateTime [default: `now()`]
+  updatedDate DateTime
+  name String
+  score Int [not null]
+  surveyName SurveyName [not null]
+  surveyId Int [not null]
+  survey Survey [not null]
+  patientHistoryId Int [not null]
+  patientHistory PatientHistory [not null]
+}
+
+Table Admin {
+  id Int [pk, increment]
+  createdDate DateTime [default: `now()`, not null]
+  updatedDate DateTime [not null]
+  name String
+  firstName String
+  lastName String
+  user User [not null]
+  userId Int [unique, not null]
+}
+
+Table Appointment {
+  id Int [pk, increment]
+  createdDate DateTime [default: `now()`]
+  updatedDate DateTime
+  name String
+  title String
+  startTime DateTime [not null]
+  endTime DateTime [not null]
+  details String [not null]
+  status AppointmentStatus [not null]
+  doctorId Int [not null]
+  patientId Int [not null]
+  doctor Doctor [not null]
+  patient Patient [not null]
+}
+
+Enum AppointmentStatus {
+  Scheduled
+  Cancelled
+  Completed
+}
+
+Enum UserRole {
+  DOCTOR
+  PATIENT
+  ADMIN
+}
+
+Enum PhoneType {
+  Home
+  Mobile
+  Work
+  Other
+}
+
+Enum State {
+  AL
+  AK
+  AZ
+  AR
+  CA
+  CO
+  CT
+  DE
+  FL
+  GA
+  HI
+  ID
+  IL
+  IN
+  IA
+  KS
+  KY
+  LA
+  ME
+  MD
+  MA
+  MI
+  MN
+  MS
+  MO
+  MT
+  NE
+  NV
+  NH
+  NJ
+  NM
+  NY
+  NC
+  ND
+  OH
+  OK
+  OR
+  PA
+  RI
+  SC
+  SD
+  TN
+  TX
+  UT
+  VT
+  VA
+  WA
+  WV
+  WI
+  WY
+}
+
+Enum ECRelationship {
+  Parent
+  Child
+  Spouse
+  Other
+}
+
+Enum NameSuffix {
+  Jr
+  Sr
+  II
+  III
+  IV
+  MD
+  PhD
+  Esq
+  CPA
+  RN
+  JD
+  DDS
+  DVM
+  LPN
+}
+
+Enum Sex {
+  Female
+  Male
+  Intersex
+  Unknown
+}
+
+Enum Gender {
+  Man
+  Woman
+  TransgenderMan
+  TransgenderWoman
+  NonBinary
+  PreferNotToSay
+  Unknown
+}
+
+Enum Race {
+  CaucasianOrWhite
+  BlackOrAfricanAmerican
+  HispanicOrLatino
+  Asian
+  NativeAmericanOrAlaskaNative
+  NativeHawaiianOrOtherPacificIslander
+  TwoOrMoreRaces
+  OtherRace
+}
+
+Enum GenderMarker {
+  M
+  F
+  X
+}
+
+Enum Pronouns {
+  HeHimHis
+  SheHerHers
+  TheyThemTheirs
+  ZeHirHirs
+}
+
+Enum Languages {
+  English
+  Spanish
+  MandarinChinese
+  Hindi
+  French
+  StandardArabic
+  Bengali
+  Russian
+  Portuguese
+  Indonesian
+}
+
+Enum Ethnicity {
+  Asian
+  BlackAfricanDescent
+  HispanicLatino
+  CaucasianWhite
+  MiddleEastern
+  NativeAmerican
+  PacificIslander
+  SouthAsian
+  SoutheastAsian
+  MixedRaceEthnicity
+}
+
+Enum PrimaryHolder {
+  Self
+  Child
+  Spouse
+  Other
+}
+
+Enum PatientStatus {
+  Active
+  Inactive
+  Prospect
+  Deceased
+}
+
+Enum AllergyStatus {
+  Active
+  Prior
+}
+
+Enum AllergySeverity {
+  Mild
+  Moderate
+  Severe
+}
+
+Enum ProblemListStatus {
+  Active
+  Controlled
+  Resolved
+}
+
+Enum DrugIntoleranceSeverity {
+  Mild
+  Moderate
+  Severe
+}
+
+Enum DrugIntoleranceStatus {
+  Active
+  Prior
+}
+
+Enum DrugType {
+  CellularTherapy
+  HumanOtcDrug
+  HumanPrescriptionDrug
+  NonStandardizedAllergenic
+  PlasmaDerivative
+  StandardizedAllergenic
+  Vaccine
+}
+
+Enum PatientEducationLevel {
+  NoFormalEducation
+  SomePrimaryEducation
+  CompletedPrimary
+  SomeSecondary
+  CompletedSecondary
+  SomeCollege
+  AssociatesDegree
+  BachelorsDegree
+  MastersDegree
+  ProfessionalDegree
+  Doctorate
+}
+
+Enum PatientFinancialStrain {
+  NoStrain
+  MinorStrain
+  ModerateStrain
+  SignificantStrain
+}
+
+Enum SurveyName {
+  HARK
+  SNI
+  PHQ2
+  PHQ4
+  PHQ9
+  GAD7
+  AUDITC
+}
+
+Enum PatientStressLevel {
+  NoStress
+  MinorStress
+  ModerateStress
+  SignificantStress
+}
+
+Enum PatientSmokingStatus {
+  NeverSmoked
+  FormerSmoker
+  OccasionalSmoker
+  RegularSmoker
+  HeavySmoker
+}
+
+Enum SurveyQuestionType {
+  Text
+  Number
+  Boolean
+}
+
+Ref: Session.userId > User.id [delete: Cascade]
+
+Ref: Doctor.userId - User.id
+
+Ref: Patient.userId - User.id
+
+Ref: Consult.patientId > Patient.id
+
+Ref: TestResult.patientId > Patient.id
+
+Ref: Contact.patientId - Patient.id
+
+Ref: Insurance.patientId - Patient.id
+
+Ref: Provider.patientId - Patient.id
+
+Ref: Allergy.patientId > Patient.id
+
+Ref: Allergen.allergyId > Allergy.id
+
+Ref: ProblemList.patientId > Patient.id
+
+Ref: ProblemListICD10Code.problemListId > ProblemList.id
+
+Ref: ProblemListICD10Code.icd10CodeId > ICD10Code.id
+
+Ref: DrugIntolerance.drugId > Drug.id
+
+Ref: DrugIntolerance.patientId > Patient.id
+
+Ref: PatientHistory.patientId - Patient.id
+
+Ref: PastMedicalHistory.patientHistoryId > PatientHistory.id
+
+Ref: PastSurgicalHistory.patientHistoryId > PatientHistory.id
+
+Ref: FamilyHistory.patientHistoryId > PatientHistory.id
+
+Ref: SocialHistory.patientHistoryId > PatientHistory.id
+
+Ref: CognitiveStatus.patientHistoryId > PatientHistory.id
+
+Ref: FunctionalStatus.patientHistoryId > PatientHistory.id
+
+Ref: PsychologicalStatus.patientHistoryId > PatientHistory.id
+
+Ref: Habits.patientHistoryId > PatientHistory.id
+
+Ref: Diet.patientHistoryId > PatientHistory.id
+
+Ref: Exercise.patientHistoryId > PatientHistory.id
+
+Ref: SurveyQuestion.surveyId > Survey.id
+
+Ref: SurveyResponse.questionId > SurveyQuestion.id
+
+Ref: SurveyResponse.surveyId > Survey.id
+
+Ref: SurveyResponse.patientHistoryId > PatientHistory.id
+
+Ref: SurveyScore.surveyId > Survey.id
+
+Ref: SurveyScore.patientHistoryId > PatientHistory.id
+
+Ref: Admin.userId - User.id
+
+Ref: Appointment.doctorId > Doctor.id
+
+Ref: Appointment.patientId > Patient.id

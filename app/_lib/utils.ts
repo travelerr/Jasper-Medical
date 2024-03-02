@@ -1,5 +1,5 @@
 import { Patient } from "@prisma/client";
-import { GetAppointmentsByUserID, Revenue } from "./definitions";
+import { GetAppointmentsByUserID, Revenue, JWTDuration } from "./definitions";
 import jwt from "jsonwebtoken";
 
 export const formatCurrency = (amount: number) => {
@@ -161,11 +161,14 @@ export const generateRandomPassword = (length = 12) => {
   return password;
 };
 
-export const generatePasswordResetToken = (userId: number) => {
+export const generatePasswordResetToken = (
+  userId: number,
+  duration: JWTDuration
+) => {
   return jwt.sign(
     {
       userId: userId,
-      exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30, // 30 days from now
+      exp: Math.floor(Date.now() / 1000) + duration,
     },
     process.env.JWT_SECRET
   );

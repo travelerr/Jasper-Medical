@@ -71,6 +71,14 @@ export enum UserRole {
   ADMIN = "ADMIN",
 }
 
+export enum JWTDuration {
+  QuarterHour = 15 * 60, // 15 minutes in seconds
+  HalfHour = 30 * 60, // 30 minutes in seconds
+  FullHour = 60 * 60, // 60 minutes in seconds
+  OneDay = 24 * 60 * 60, // 24 hours in seconds
+  ThirtyDays = 30 * 24 * 60 * 60, // 30 days in seconds
+}
+
 export type User = {
   id: number;
   firstName: string;

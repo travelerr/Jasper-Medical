@@ -167,7 +167,7 @@ export default function TextInputFormGroup(props: ITextInputFormGroup) {
           <button
             type="button"
             onClick={togglePasswordVisibility}
-            className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
+            className="absolute flex h-[18px] right-[5px] inset-y-0 items-center pl pointer-events-auto text-gray-500 top-3 w-[18px]"
           >
             {showPassword ? <BsEyeSlash /> : <BsEye />}
           </button>

@@ -50,6 +50,7 @@ import {
   EditSocialHistoryEducationLevelInputs,
   EditSocialHistoryFinancialStrainInputs,
   EditSocialHistoryInputs,
+  JWTDuration,
   State,
   SurveySubmission,
   UpdateFamilyRelativeInputs,
@@ -169,7 +170,7 @@ export async function deleteInvoice(id: string) {
 
 export async function sendTestEmail(formData: { testEmail: string }) {
   try {
-    const token = generatePasswordResetToken(1);
+    const token = generatePasswordResetToken(1, JWTDuration.FullHour);
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
     await sendEmailTemplate({
       to: formData.testEmail,
@@ -218,7 +219,7 @@ export async function authenticate(
   }
 }
 
-export async function SignOut() {
+export async function userSignOut() {
   try {
     await signOut();
   } catch (error) {
@@ -308,7 +309,10 @@ export async function createUserAndPatient(
       });
       // Then, send portal invite email if chosen
       if (sendEmail) {
-        const token = generatePasswordResetToken(user?.id);
+        const token = generatePasswordResetToken(
+          user?.id,
+          JWTDuration.ThirtyDays
+        );
         const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
         try {
           await sendEmailTemplate({
@@ -390,7 +394,10 @@ export async function sendResetPasswordEmailWithJWT(formData: {
       },
     });
     if (result) {
-      const token = generatePasswordResetToken(result?.id);
+      const token = generatePasswordResetToken(
+        result?.id,
+        JWTDuration.QuarterHour
+      );
       const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
       try {
         await sendEmailTemplate({
