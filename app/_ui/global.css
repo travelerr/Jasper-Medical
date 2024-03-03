@@ -116,6 +116,10 @@ input[type="checkbox"]:checked {
   background-size: 1rem 1em !important;
 }
 
+[data-testid="flowbite-accordion-heading"] {
+  font-size: 1rem !important;
+}
+
 .caret-accordion [data-testid="flowbite-accordion-arrow"] {
   display: none;
 }
