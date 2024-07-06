@@ -61,37 +61,38 @@ model Doctor {
 // Patient 
 
 model Patient {
-  id              Int               @id @default(autoincrement())
-  createdDate     DateTime?         @default(now())
-  updatedDate     DateTime?         @updatedAt
-  name            String?
-  firstName       String?
-  middleName      String?
-  lastName        String?
-  status          PatientStatus?    @default(Active)
-  suffix          NameSuffix?
-  altName         String?
-  dob             DateTime?
-  sexAtBirth      Sex?
-  gender          Gender?
-  ssn             String?
-  maidenName      String?
-  genderMarker    GenderMarker?
-  pronouns        Pronouns?
-  race            Race?
-  ethnicity       Ethnicity?
-  contact         Contact?
-  insurance       Insurance?
-  provider        Provider?
-  patientHistory  PatientHistory?
-  allergy         Allergy[]
-  problemList     ProblemList[]
-  appointments    Appointment[] // Establish a one-to-many relationship w Consult
-  consults        Consult[]
-  testResults     TestResult[]
-  drugIntolerance DrugIntolerance[]
-  user            User              @relation(fields: [userId], references: [id])
-  userId          Int               @unique
+  id                Int                @id @default(autoincrement())
+  createdDate       DateTime?          @default(now())
+  updatedDate       DateTime?          @updatedAt
+  name              String?
+  firstName         String?
+  middleName        String?
+  lastName          String?
+  status            PatientStatus?     @default(Active)
+  suffix            NameSuffix?
+  altName           String?
+  dob               DateTime?
+  sexAtBirth        Sex?
+  gender            Gender?
+  ssn               String?
+  maidenName        String?
+  genderMarker      GenderMarker?
+  pronouns          Pronouns?
+  race              Race?
+  ethnicity         Ethnicity?
+  contact           Contact?
+  insurance         Insurance?
+  provider          Provider?
+  patientHistory    PatientHistory?
+  allergy           Allergy[]
+  problemList       ProblemList[]
+  appointments      Appointment[] // Establish a one-to-many relationship w Consult
+  consults          Consult[]
+  testResults       TestResult[]
+  drugIntolerance   DrugIntolerance[]
+  confidentialNotes ConfidentialNote[]
+  user              User               @relation(fields: [userId], references: [id])
+  userId            Int                @unique
 }
 
 model Consult {
@@ -788,4 +789,15 @@ enum SurveyQuestionType {
   Text
   Number
   Boolean
+}
+
+model ConfidentialNote {
+  id          Int       @id @default(autoincrement())
+  createdDate DateTime? @default(now())
+  updatedDate DateTime? @updatedAt
+  name        String?
+  sortOrder   Int?
+  note        String?
+  patientId   Int
+  patient     Patient   @relation(fields: [patientId], references: [id])
 }

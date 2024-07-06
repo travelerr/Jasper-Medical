@@ -67,8 +67,8 @@ export default function CreatePassword() {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
       <LoadingOverlay isLoading={viewState.loading} />
-      <div className="flex-1 rounded-lg bg-gray-50 px-6 pb-4 pt-8">
-        <h1 className={`mb-3 text-2xl`}>Create your password.</h1>
+      <div className="flex-1 rounded-lg bg-gray-50">
+        <h1 className={`my-6 text-2xl text-center`}>Create your password.</h1>
         <div className="w-full">
           <TextInputFormGroup
             register={register}
@@ -94,7 +94,7 @@ export default function CreatePassword() {
             }
           />
         </div>
-        <button className="flex h-[48px] mt-4 grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3">
+        <button className="btn btn-primary hover:bg-teal-400 w-full mt-6">
           Create Password{" "}
         </button>
         <div

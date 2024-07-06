@@ -328,6 +328,7 @@ export async function getFullPatientProfileById(
         appointments: true,
         consults: true,
         testResults: true,
+        confidentialNotes: true,
       },
     });
     return patientProfile as FullPatientProfile;

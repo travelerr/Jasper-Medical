@@ -72,6 +72,7 @@ Table Patient {
   consults Consult [not null]
   testResults TestResult [not null]
   drugIntolerance DrugIntolerance [not null]
+  confidentialNotes ConfidentialNote [not null]
   user User [not null]
   userId Int [unique, not null]
 }
@@ -501,6 +502,17 @@ Table Appointment {
   patient Patient [not null]
 }
 
+Table ConfidentialNote {
+  id Int [pk, increment]
+  createdDate DateTime [default: `now()`]
+  updatedDate DateTime
+  name String
+  sortOrder Int
+  note String
+  patientId Int [not null]
+  patient Patient [not null]
+}
+
 Enum AppointmentStatus {
   Scheduled
   Cancelled
@@ -837,3 +849,5 @@ Ref: Admin.userId - User.id
 Ref: Appointment.doctorId > Doctor.id
 
 Ref: Appointment.patientId > Patient.id
+
+Ref: ConfidentialNote.patientId > Patient.id

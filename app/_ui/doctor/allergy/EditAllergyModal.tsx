@@ -95,6 +95,7 @@ export default function EditAllergyModal(props: IEditAllergyModal) {
             />
             <SelectInputFormGroup
               control={control}
+              errors={errors}
               formIdentifier="status"
               required={true}
               labelText="Status"

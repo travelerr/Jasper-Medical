@@ -1,6 +1,4 @@
-import JasperLogo from "@/app/_ui/shared/jasper-logo";
-
-export default function LoginPage() {
+export default function ContactUsPage() {
   return (
     <main className="flex items-center justify-center h-screen">
       <div>

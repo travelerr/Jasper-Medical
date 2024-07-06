@@ -9,6 +9,7 @@ import {
   Appointment,
   AppointmentStatus,
   CognitiveStatus,
+  ConfidentialNote,
   Consult,
   Contact,
   Diet,
@@ -277,6 +278,26 @@ export type EditProblemInputs = {
 
 // #endregion
 
+// #region Confidential Notes
+
+export type CreateConfidentialNoteInputs = {
+  name?: string;
+  note: string;
+  patientId: number;
+};
+
+export type EditConfidentialNoteInputs = {
+  name?: string;
+  note: string;
+  id: number;
+};
+
+export type DeleteConfidentialNoteInputs = {
+  id: number;
+};
+
+// #endregion
+
 // #region Patient
 
 export type FullPatientProfile = Patient & {
@@ -295,6 +316,7 @@ export type FullPatientProfile = Patient & {
   appointments: Appointment[];
   consults: Consult[];
   testResults: TestResult[];
+  confidentialNotes: ConfidentialNote[];
 };
 
 export type PatientNextAndLastApt = {

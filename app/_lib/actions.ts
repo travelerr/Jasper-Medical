@@ -11,6 +11,7 @@ import {
   CreateAllergenInputs,
   CreateAppointmentInputs,
   CreateCognitiveStatusInputs,
+  CreateConfidentialNoteInputs,
   CreateDietInputs,
   CreateDrugIntoleranceInputs,
   CreateExerciseInputs,
@@ -35,6 +36,7 @@ import {
   DeleteSocialHistoryInputs,
   EditAllergenInputs,
   EditCognitiveStatusInputs,
+  EditConfidentialNoteInputs,
   EditDietInputs,
   EditDrugIntoleranceInputs,
   EditExerciseInputs,
@@ -56,7 +58,7 @@ import {
   UpdateFamilyRelativeInputs,
 } from "./definitions";
 import prisma from "./prisma";
-import { AppointmentStatus } from "@prisma/client";
+import { AppointmentStatus, Patient } from "@prisma/client";
 import bcrypt from "bcrypt";
 import { generatePasswordResetToken, generateRandomPassword } from "./utils";
 import { sendEmailTemplate } from "./email-provider";
@@ -181,7 +183,6 @@ export async function sendTestEmail(formData: { testEmail: string }) {
         testReplacement: `${baseUrl}/authentication/create-password/?token=${token}`,
       },
     });
-    console.log("Email sent");
   } catch (error: any) {
     console.error(error);
     if (error.response) {
@@ -212,7 +213,8 @@ export async function authenticate(
   try {
     await signIn("credentials", Object.fromEntries(formData));
   } catch (error) {
-    if ((error as Error).message.includes("CredentialsSignin")) {
+    // @ts-ignore
+    if (error.type && error.type.includes("CredentialsSignin")) {
       return "CredentialsSignin";
     }
     throw error;
@@ -223,7 +225,8 @@ export async function userSignOut() {
   try {
     await signOut();
   } catch (error) {
-    if ((error as Error).message.includes("CredentialsSignin")) {
+    // @ts-ignore
+    if (error.type && error.type.includes("CredentialsSignin")) {
       return "CredentialsSignin";
     }
     throw error;
@@ -707,6 +710,89 @@ export async function deleteDrugIntoleranceByID(
 
 // #endregion
 
+// #region Confidential Notes
+
+export async function createConfidentialNote(
+  formData: CreateConfidentialNoteInputs
+): Promise<ActionResponse> {
+  const { name, patientId, note } = formData;
+  try {
+    const result = await prisma.confidentialNote.create({
+      data: {
+        name: name,
+        note: note,
+        patientId: patientId,
+      },
+    });
+    return {
+      message: "Confidential note created successfully.",
+      actionSuceeded: true,
+      result: result,
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      message: "Database Error: Failed to create confidential note.",
+      actionSuceeded: false,
+    };
+  }
+}
+
+export async function updateConfidentialNote(
+  formData: EditConfidentialNoteInputs
+): Promise<ActionResponse> {
+  const { id, note, name } = formData;
+  try {
+    const result = await prisma.confidentialNote.update({
+      where: {
+        id: id,
+      },
+      data: {
+        note: note,
+        name: name,
+      },
+    });
+    return {
+      message: "Confidential note updated successfully.",
+      actionSuceeded: true,
+      result: result,
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      message: "Database Error: Failed to update confidential note.",
+      actionSuceeded: false,
+    };
+  }
+}
+
+export async function deleteConfidentialNoteByID(
+  id: number
+): Promise<ActionResponse> {
+  try {
+    const result = await prisma.$transaction(async (prisma) => {
+      return prisma.confidentialNote.delete({
+        where: {
+          id: id,
+        },
+      });
+    });
+    return {
+      message: "Confidential note deleted successfully.",
+      actionSuceeded: true,
+      result: result,
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      message: "Database Error: Failed to delete confidential note.",
+      actionSuceeded: false,
+    };
+  }
+}
+
+// #endregion
+
 // #region Problem List
 
 export async function createProblem(
@@ -836,6 +922,33 @@ export async function deleteProblemListICD10CodeByID(
   }
 }
 
+// #endregion
+
+// #region Patient
+export async function updatePatient(
+  patientId: number,
+  updateData: Partial<Patient>
+): Promise<ActionResponse> {
+  try {
+    const result = await prisma.patient.update({
+      where: { id: patientId },
+      data: {
+        ...updateData,
+      },
+    });
+    return {
+      message: "Patient record updated successfully.",
+      actionSuceeded: true,
+      result: result,
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      message: "Database Error: Failed to update patient record",
+      actionSuceeded: false,
+    };
+  }
+}
 // #endregion
 
 // #region History

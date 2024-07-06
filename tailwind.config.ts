@@ -18,6 +18,10 @@ const config: Config = {
           500: "#0070F3",
           600: "#2F6FEB",
         },
+        teal: {
+          400: "#38AAAA",
+          500: "#008080",
+        },
       },
     },
     keyframes: {
