@@ -202,7 +202,7 @@ textarea {
 }
 
 .text-primary {
-  color: #008080;
+  color: #008080 !important;
 }
 
 .bg-primary {

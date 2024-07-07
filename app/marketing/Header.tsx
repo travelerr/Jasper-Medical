@@ -7,7 +7,6 @@ import { IoMdClose } from "react-icons/io";
 
 const Header: React.FC = () => {
   const [hamburgerMenuOpen, setHamburgerMenuOpen] = useState(false);
-  console.log(hamburgerMenuOpen);
   return (
     <header className="shadow-lg">
       <nav className="flex items-center justify-between flex-wrap bg-white px-4 py-2">
